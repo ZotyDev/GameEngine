@@ -1,0 +1,4 @@
+[submodule "UnnamedEngine/vendor/GLFW"]
+	path = UnnamedEngine/vendor/GLFW
+	url = ../../ZotyDev/glfw.git
+	branch = master
