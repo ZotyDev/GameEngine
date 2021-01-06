@@ -86,6 +86,7 @@
     <ClInclude Include="src\core.h" />
     <ClInclude Include="src\logger\logger.h" />
     <ClInclude Include="src\threadpool\threadpool.h" />
+    <ClInclude Include="src\time\timeManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,6 +2,7 @@
 
 #include "threadpool/threadpool.h"
 #include "logger/logger.h"
+#include "time/timeManager.h"
 
 #include <Windows.h>
 
@@ -11,23 +12,9 @@ int main()
 {
 	ThreadPool pool(6);
 
-	auto f1 = pool.enqueue([] {
-		return 1;
-	});
+	TimeManager::Update();
 
-	auto f2 = pool.enqueue([] {
-		return 1;
-	});
-
-	Sleep(100);
-
-	std::cout << f1._Is_ready() << std::endl;
-
-	std::cout << f1.get() + f2.get();
-
-	std::time_t t = std::time(0);
-
-	Logger::Log("this is just a test :)");
+	LOG_INFO("Happy ", TimeManager::GetYear(), "!");
 
 	std::ofstream ofs;
 	ofs.open("log.txt", std::ofstream::out | std::ofstream::trunc);

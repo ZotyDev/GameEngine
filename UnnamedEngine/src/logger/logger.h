@@ -1,11 +1,9 @@
 #pragma once
 
-#include "core.h"
-
-#define LOG_INFO
-#define LOG_WARN
-#define LOG_ERROR
-#define LOG_FATAL
+#include <iostream>
+#include <list>
+#include <fstream>
+#include <string.h>
 
 namespace Logger
 {
