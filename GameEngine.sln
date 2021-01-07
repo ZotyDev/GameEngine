@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnnamedEngine", "UnnamedEngine\UnnamedEngine.vcxproj", "{6A678AB9-CDD1-45C2-A94B-EB8872A030C6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VoxelGame", "VoxelGame\VoxelGame.vcxproj", "{B4917FEF-91B6-41A3-97C0-4C9061E8F5BC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6A678AB9-CDD1-45C2-A94B-EB8872A030C6} = {6A678AB9-CDD1-45C2-A94B-EB8872A030C6}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -15,6 +20,10 @@ Global
 		{6A678AB9-CDD1-45C2-A94B-EB8872A030C6}.Debug|x64.Build.0 = Debug|x64
 		{6A678AB9-CDD1-45C2-A94B-EB8872A030C6}.Release|x64.ActiveCfg = Release|x64
 		{6A678AB9-CDD1-45C2-A94B-EB8872A030C6}.Release|x64.Build.0 = Release|x64
+		{B4917FEF-91B6-41A3-97C0-4C9061E8F5BC}.Debug|x64.ActiveCfg = Debug|x64
+		{B4917FEF-91B6-41A3-97C0-4C9061E8F5BC}.Debug|x64.Build.0 = Debug|x64
+		{B4917FEF-91B6-41A3-97C0-4C9061E8F5BC}.Release|x64.ActiveCfg = Release|x64
+		{B4917FEF-91B6-41A3-97C0-4C9061E8F5BC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

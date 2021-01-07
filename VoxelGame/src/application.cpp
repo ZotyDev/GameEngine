@@ -4,13 +4,11 @@
 #include "logger/logger.h"
 #include "time/timeManager.h"
 
-#include <Windows.h>
-
-std::list<std::string> LogList;
+__declspec(dllimport) void PrintTest();
 
 int main()
 {
-	ThreadPool pool(6);
+	/*ThreadPool pool(6);
 
 	TimeManager::Update();
 
@@ -20,10 +18,14 @@ int main()
 	ofs.open("log.txt", std::ofstream::out | std::ofstream::trunc);
 	ofs.close();
 
-	pool.enqueue([] 
-	{
-		Logger::ShowLog("log.txt");
-	});
+	pool.enqueue([]
+		{
+			Logger::ShowLog("log.txt");
+		});
+
+	*/
+
+	PrintTest();
 
 	return 0;
 }

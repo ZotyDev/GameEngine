@@ -1,13 +1,15 @@
 #pragma once
 
-#include <iostream>
-#include <list>
-#include <fstream>
-#include <string.h>
+#include "pch.h"
+
+void PrintTest()
+{
+	std::cout << "TEST" << std::endl;
+}
 
 namespace Logger
 {
-	std::list<std::string> LogList;
+	__declspec(dllexport) std::list<std::string> LogList;
 	std::ofstream FileOut;
 
 	template<typename Arg>
@@ -31,7 +33,7 @@ namespace Logger
 		LogList.push_back(out.str());
 	}
 
-	void ShowLog(const char* filePath)
+	__declspec(dllexport) void ShowLog(const char* filePath)
 	{
 		while (!LogList.empty())
 		{
