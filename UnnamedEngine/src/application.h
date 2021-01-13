@@ -1,14 +1,21 @@
 #pragma once
 
-class Application
+#include "Core.h"
+
+namespace UE
 {
-public:
-	Application();
+	class UE_API Application
+	{
+	public:
+		Application();
 
-	virtual ~Application();
+		virtual ~Application();
 
-	void Run();
+		void Run();
 
-private:
+	private:
 
-};
+	};
+
+	Application* CreateApplication();
+}

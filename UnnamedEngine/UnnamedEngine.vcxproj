@@ -57,7 +57,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);UE_PLATFORM_WINDOWS;UE_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src\;$(SolutionDir)UnnamedEngine\vendor\glfw\include;$(SolutionDir)UnnamedEngine\vendor\glm\glm;C:\VulkanSDK\1.2.162.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -75,7 +75,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);UE_PLATFORM_WINDOWS;UE_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src\;$(SolutionDir)UnnamedEngine\vendor\glfw\include;$(SolutionDir)UnnamedEngine\vendor\glm\glm;C:\VulkanSDK\1.2.162.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -90,16 +90,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\application.cpp" />
-    <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Pch.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\application.h" />
-    <ClInclude Include="src\core.h" />
-    <ClInclude Include="src\logger\logger.h" />
-    <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\threadpool\threadpool.h" />
-    <ClInclude Include="src\time\timeManager.h" />
+    <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Core.h" />
+    <ClInclude Include="src\EntryPoint.h" />
+    <ClInclude Include="src\logger\Logger.h" />
+    <ClInclude Include="src\Pch.h" />
+    <ClInclude Include="src\threadpool\ThreadPool.h" />
+    <ClInclude Include="src\time\TimeManager.h" />
+    <ClInclude Include="src\UnnamedEngine.h" />
     <ClInclude Include="vendor\glfw\include\GLFW\glfw3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

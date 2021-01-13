@@ -1,17 +1,19 @@
-#include "application.h"
+#include "Application.h"
 
-Application::Application()
+namespace UE
 {
-}
-
-Application::~Application()
-{
-}
-
-void Application::Run()
-{
-	while (true)
+	Application::Application()
 	{
+	}
 
+	Application::~Application()
+	{
+	}
+
+	void Application::Run()
+	{
+		while (true)
+		{
+		}
 	}
 }

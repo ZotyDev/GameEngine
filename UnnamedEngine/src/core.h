@@ -1,14 +1,11 @@
 #pragma once
 
-#include "logger/logger.h"
-#include "time/timeManager.h"
-
-#ifdef 
-
-#endif // 
-
-
-#define LOG_INFO(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][INFO] : ", __VA_ARGS__)
-#define LOG_WARN(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][WARN] : ", __VA_ARGS__)
-#define LOG_ERROR(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][ERROR] : ", __VA_ARGS__)
-#define LOG_FATAL(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][FATAL] : ", __VA_ARGS__)
+#ifdef UE_PLATFORM_WINDOWS
+	#ifdef UE_BUILD_DLL
+		#define UE_API __declspec(dllexport)
+	#else
+		#define UE_API __declspec(dllimport)
+	#endif
+#else
+	#error Unnamed Engine only support Windows!
+#endif 

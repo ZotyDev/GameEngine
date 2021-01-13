@@ -1,50 +1,54 @@
 #pragma once
 
-#include "pch.h"
+#include "Core.h"
+#include "Pch.h"
 
-void PrintTest()
+#define LOG_INFO(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][INFO] : ", __VA_ARGS__)
+#define LOG_WARN(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][WARN] : ", __VA_ARGS__)
+#define LOG_ERROR(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][ERROR] : ", __VA_ARGS__)
+#define LOG_FATAL(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][FATAL] : ", __VA_ARGS__)
+
+namespace UE
 {
-	std::cout << "TEST" << std::endl;
-}
-
-namespace Logger
-{
-	__declspec(dllexport) std::list<std::string> LogList;
-	std::ofstream FileOut;
-
-	template<typename Arg>
-	void _construct_string_from_args(std::ostringstream& out, Arg arg)
+	namespace Logger
 	{
-		out << arg;
-	}
+		std::list<std::string> LogList;
+		std::ofstream FileOut;
 
-	template<typename Arg, typename... Args>
-	void _construct_string_from_args(std::ostringstream& out, Arg arg, Args... args)
-	{
-		out << arg;
-		_construct_string_from_args(out, args...);
-	}
-
-	template<typename... Args>
-	void Log(Args... args)
-	{
-		std::ostringstream out;
-		_construct_string_from_args(out, args...);
-		LogList.push_back(out.str());
-	}
-
-	__declspec(dllexport) void ShowLog(const char* filePath)
-	{
-		while (!LogList.empty())
+		template<typename Arg>
+		UE_API void _construct_string_from_args(std::ostringstream& out, Arg arg)
 		{
-			std::string outputString = LogList.front();
-			std::cout << outputString << std::endl;
-			
-			FileOut.open(filePath, std::ios::app);
-			FileOut << outputString << std::endl;
-			FileOut.close();
-			
-			LogList.pop_front();
+			out << arg;
+		}
+
+		template<typename Arg, typename... Args>
+		UE_API void _construct_string_from_args(std::ostringstream& out, Arg arg, Args... args)
+		{
+			out << arg;
+			_construct_string_from_args(out, args...);
+		}
+
+		template<typename... Args>
+		UE_API void Log(Args... args)
+		{
+			std::ostringstream out;
+			_construct_string_from_args(out, args...);
+			LogList.push_back(out.str());
+		}
+
+		UE_API void ShowLog(const char* filePath)
+		{
+			while (!LogList.empty())
+			{
+				std::string outputString = LogList.front();
+				std::cout << outputString << std::endl;
+
+				FileOut.open(filePath, std::ios::app);
+				FileOut << outputString << std::endl;
+				FileOut.close();
+
+				LogList.pop_front();
+			}
 		}
 	}
 }

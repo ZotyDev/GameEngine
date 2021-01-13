@@ -2,6 +2,9 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
+      <FullPath>D:\Projects\GameEngine\bin\Debug-x64\UnnamedEngine\UnnamedEngine.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
       <FullPath>D:\Projects\GameEngine\bin\Debug-x64\VoxelGame\VoxelGame.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>

@@ -1,27 +1,31 @@
 #pragma once
 
-#include "pch.h"
+#include "Core.h"
+#include "Pch.h"
 
-namespace TimeManager
+namespace UE
 {
-	time_t currentTime;
-	struct tm localTime;
-
-	void Update()
+	namespace TimeManager
 	{
-		time_t tempCurrentTime;
-		struct tm tempLocalTime;
-		time(&tempCurrentTime);
-		localtime_s(&tempLocalTime, &tempCurrentTime);
-		localTime = tempLocalTime;
-	}
+		time_t currentTime;
+		struct tm localTime;
 
-	unsigned int GetSecond() { return localTime.tm_sec; }
-	unsigned int GetMinute() { return localTime.tm_min; }
-	unsigned int GetHour() { return localTime.tm_hour; }
-	unsigned int GetMonthDay() { return localTime.tm_mday; }
-	unsigned int GetMonth() { return localTime.tm_mon; }
-	unsigned int GetYear() { return localTime.tm_year + 1900; };
-	unsigned int GetWeekDay() { return localTime.tm_wday; }
-	unsigned int GetYearDay() { return localTime.tm_yday; }
+		UE_API void Update()
+		{
+			time_t tempCurrentTime;
+			struct tm tempLocalTime;
+			time(&tempCurrentTime);
+			localtime_s(&tempLocalTime, &tempCurrentTime);
+			localTime = tempLocalTime;
+		}
+
+		UE_API unsigned int GetSecond() { return localTime.tm_sec; }
+		UE_API unsigned int GetMinute() { return localTime.tm_min; }
+		UE_API unsigned int GetHour() { return localTime.tm_hour; }
+		UE_API unsigned int GetMonthDay() { return localTime.tm_mday; }
+		UE_API unsigned int GetMonth() { return localTime.tm_mon; }
+		UE_API unsigned int GetYear() { return localTime.tm_year + 1900; };
+		UE_API unsigned int GetWeekDay() { return localTime.tm_wday; }
+		UE_API unsigned int GetYearDay() { return localTime.tm_yday; }
+	}
 }

@@ -1,88 +1,92 @@
 #pragma once
 
-#include "core.h"
+#include "Core.h"
+#include "Pch.h"
 
-class ThreadPool
+namespace UE
 {
-public:
-	using Task = std::function<void()>;
-	explicit ThreadPool(std::size_t numThreads)
+	class UE_API ThreadPool
 	{
-		start(numThreads);
-	}
-
-	~ThreadPool()
-	{
-		stop();
-	}
-	 
-	template<class T>
-	auto enqueue(T task)->std::future<decltype(task())>
-	{
-		auto wrapper = std::make_shared<std::packaged_task<decltype(task()) ()>>(std::move(task));
-
+	public:
+		using Task = std::function<void()>;
+		explicit ThreadPool(std::size_t numThreads)
 		{
-			std::unique_lock<std::mutex> lock{ mEventMutex };
-			mTasks.emplace([=] {
-				(*wrapper)();
-			});
+			start(numThreads);
 		}
 
-		mEventVar.notify_one();
-		return wrapper->get_future();
-	}
-
-private:
-	std::vector<std::thread> mThreads;
-
-	std::condition_variable mEventVar;
-
-	std::mutex mEventMutex;
-	bool mStopping = false;
-
-	std::queue<Task> mTasks;
-
-	void start(std::size_t numThreads)
-	{
-		for (size_t i = 0; i < numThreads; i++)
+		~ThreadPool()
 		{
-			mThreads.emplace_back([=] {
-				while (true)
-				{
-					Task task;
+			stop();
+		}
 
+		template<class T>
+		auto enqueue(T task)->std::future<decltype(task())>
+		{
+			auto wrapper = std::make_shared<std::packaged_task<decltype(task()) ()>>(std::move(task));
+
+			{
+				std::unique_lock<std::mutex> lock{ mEventMutex };
+				mTasks.emplace([=] {
+					(*wrapper)();
+					});
+			}
+
+			mEventVar.notify_one();
+			return wrapper->get_future();
+		}
+
+	private:
+		std::vector<std::thread> mThreads;
+
+		std::condition_variable mEventVar;
+
+		std::mutex mEventMutex;
+		bool mStopping = false;
+
+		std::queue<Task> mTasks;
+
+		void start(std::size_t numThreads)
+		{
+			for (size_t i = 0; i < numThreads; i++)
+			{
+				mThreads.emplace_back([=] {
+					while (true)
 					{
-						std::unique_lock<std::mutex> lock{ mEventMutex };
+						Task task;
 
-						mEventVar.wait(lock, [=] {return mStopping || !mTasks.empty(); });
-
-						if (mStopping && mTasks.empty())
 						{
-							break;
+							std::unique_lock<std::mutex> lock{ mEventMutex };
+
+							mEventVar.wait(lock, [=] {return mStopping || !mTasks.empty(); });
+
+							if (mStopping && mTasks.empty())
+							{
+								break;
+							}
+
+							task = std::move(mTasks.front());
+							mTasks.pop();
 						}
 
-						task = std::move(mTasks.front());
-						mTasks.pop();
+						task();
 					}
-
-					task();
-				}
-			});
+					});
+			}
 		}
-	}
 
-	void stop() noexcept
-	{
+		void stop() noexcept
 		{
-			std::unique_lock<std::mutex> lock{ mEventMutex };
-			mStopping = true;
-		}
+			{
+				std::unique_lock<std::mutex> lock{ mEventMutex };
+				mStopping = true;
+			}
 
-		mEventVar.notify_all();
+			mEventVar.notify_all();
 
-		for (auto &thread : mThreads)
-		{
-			thread.join();
+			for (auto& thread : mThreads)
+			{
+				thread.join();
+			}
 		}
-	}
-};
+	};
+}
