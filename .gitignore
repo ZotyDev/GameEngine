@@ -13,6 +13,11 @@ bin-int/
 # Log
 latest.log
 
+# Other
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
 # User-specific files
 *.rsuser
 *.suo
