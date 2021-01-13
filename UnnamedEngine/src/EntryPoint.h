@@ -9,6 +9,7 @@ int main(int argc, char** argv)
 	auto app = UE::CreateApplication();
 	app->Run();
 	delete app;
+	return 0;
 }
 
 #endif
