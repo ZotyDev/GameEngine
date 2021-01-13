@@ -1,5 +1,6 @@
 workspace "GameEngine"
 	architecture "x64"
+	startproject "VoxelGame"
 
 	configurations
 	{
@@ -40,7 +41,7 @@ project "UnnamedEngine"
 
 		postbuildcommands
 		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/%{cfg.buildcgf}/VoxelGame")
+			"{COPY} %{cfg.buildtarget.relpath} ../bin/%{cfg.buildcgf}/VoxelGame"
 		}
 
 	filter "configurations:Debug"
