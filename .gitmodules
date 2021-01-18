@@ -1,9 +1,6 @@
 [submodule "UnnamedEngine/vendor/GLFW"]
 	path = UnnamedEngine/vendor/GLFW
 	url = https://github.com/ZotyDev/glfw
-[submodule "UnnamedEngine/vendor/glfw"]
-	path = UnnamedEngine/vendor/glfw
-	url = https://github.com/glfw/glfw
-[submodule "UnnamedEngine/vendor/glm"]
-	path = UnnamedEngine/vendor/glm
-	url = https://github.com/g-truc/glm
+[submodule "GameEngine/vendor/GLFW"]
+	path = GameEngine/vendor/GLFW
+	url = https://github.com/ZotyDev/glfw
