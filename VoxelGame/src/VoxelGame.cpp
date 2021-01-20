@@ -1,5 +1,7 @@
 #include <UnnamedEngine.h>
 
+#include <iostream>
+
 class VoxelGame : public UE::Application
 {
 public:

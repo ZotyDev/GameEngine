@@ -9,6 +9,11 @@ workspace "GameEngine"
 		"Distribuition"
 	}
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "UnnamedEngine/vendor/GLFW/include"
+
+include "GameEngine/vendor/GLFW"
+
 project "UnnamedEngine"
 	location "UnnamedEngine"
 	kind "SharedLib"
@@ -25,7 +30,14 @@ project "UnnamedEngine"
 
 	includedirs
 	{
-		"UnnamedEngine/src"
+		"UnnamedEngine/src",
+		"%{IncludeDir.GLFW}"
+	}
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"

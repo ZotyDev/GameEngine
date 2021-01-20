@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Core.h"
 #include "Pch.h"
 
