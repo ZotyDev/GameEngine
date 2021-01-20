@@ -11,8 +11,13 @@ workspace "GameEngine"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "UnnamedEngine/vendor/GLFW/include"
+IncludeDir["GLM"] = "UnnamedEngine/vendor/GLM"
+IncludeDir["Vulkan"] = "C:/VulkanSDK/1.2.162.0/Include"
 
-include "GameEngine/vendor/GLFW"
+LibraryDir = {}
+LibraryDir["Vulkan"] = "C:/VulkanSDK/1.2.162.0/Lib"
+
+include "UnnamedEngine/vendor/GLFW"
 
 project "UnnamedEngine"
 	location "UnnamedEngine"
@@ -31,13 +36,21 @@ project "UnnamedEngine"
 	includedirs
 	{
 		"UnnamedEngine/src",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.GLM}",
+		"%{IncludeDir.Vulkan}"
+	}
+
+	libdirs
+	{
+		"%{LibraryDir.Vulkan}"
 	}
 
 	links
 	{
 		"GLFW",
-		"opengl32.lib"
+		"opengl32.lib",
+		"vulkan-1.lib"
 	}
 
 	filter "system:windows"
