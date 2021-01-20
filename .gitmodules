@@ -4,3 +4,6 @@
 [submodule "UnnamedEngine/vendor/GLM"]
 	path = UnnamedEngine/vendor/GLM
 	url = https://github.com/g-truc/glm
+[submodule "UnnamedEngine/vendor/STB"]
+	path = UnnamedEngine/vendor/STB
+	url = https://github.com/nothings/stb
