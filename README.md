@@ -4,4 +4,10 @@
 This Engine is the base of all ZotyDev games.
 
 ## Current Features:
-- Async Logger
+- (WIP) Async Logger
+- Event System
+
+## To do:
+- Vulkan Renderer
+- OpenGL Renderer
+- DirectX Renderer
