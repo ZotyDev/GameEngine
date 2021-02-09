@@ -1,58 +1,140 @@
-#include "Core.h"
-#include "Pch.h"
+#pragma once
 
-#ifdef UE_DEBUG
-	#define LOG_INFO(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][INFO] : ", __VA_ARGS__)
-	#define LOG_WARN(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][WARN] : ", __VA_ARGS__)
-	#define LOG_ERROR(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][ERROR] : ", __VA_ARGS__)
-	#define LOG_FATAL(...)		Logger::Log("[", TimeManager::GetHour(), ":", TimeManager::GetMinute(), ":", TimeManager::GetSecond(), "]","[Engine][FATAL] : ", __VA_ARGS__)
-#else
-	#define LOG_INFO(...)
-	#define LOG_WARN(...)
-	#define LOG_ERROR(...)
-	#define LOG_FATAL(...)
-#endif
+#include "core.h"
 
 namespace UE
 {
 	namespace Logger
 	{
-		std::list<std::string> LogList;
-		std::ofstream FileOut;
+		extern std::ofstream _ue_log_file_out;
+		extern std::list<std::string> _ue_log_list;
+		extern std::mutex _m;
 
-		template<typename Arg>
-		UE_API void _construct_string_from_args(std::ostringstream& out, Arg arg)
+		inline void _ue_log_construct(std::ostringstream& out, bool arg)
+		{
+			out << (arg ? "true" : "false");
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, short int arg)
 		{
 			out << arg;
-		}
-
-		template<typename Arg, typename... Args>
-		UE_API void _construct_string_from_args(std::ostringstream& out, Arg arg, Args... args)
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, unsigned short int arg)
 		{
 			out << arg;
-			_construct_string_from_args(out, args...);
-		}
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, int arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, unsigned int arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, long int arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, unsigned long int arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, long long int arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, unsigned long long int arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, signed char arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, unsigned char arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, char arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, wchar_t arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, float arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, double arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, long double arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, const char* arg)
+		{
+			out << arg;
+		};
+		
+		inline void _ue_log_construct(std::ostringstream& out, std::string arg)
+		{
+			out << arg;
+		};
+
+		template<typename T, typename... Args>
+		inline void _ue_log_construct(std::ostringstream& out, T arg, Args... args)
+		{
+			out << arg;
+			_ue_log_construct(out, args...);
+		};
 
 		template<typename... Args>
-		UE_API void Log(Args... args)
+		inline void _ue_log_construct(std::ostringstream& out, bool arg, Args... args)
+		{
+			out << arg ? "true" : "false";
+			_ue_log_construct(out, args...);
+		};
+
+		template<typename... Args>
+		inline void ue_log(Args... args)
 		{
 			std::ostringstream out;
-			_construct_string_from_args(out, args...);
-			LogList.push_back(out.str());
-		}
+			_ue_log_construct(out, args...);
+			std::lock_guard<std::mutex> lock(_m);
+			_ue_log_list.push_back(out.str());
+		};
 
-		UE_API void ShowLog(const char* filePath)
+		UE_API inline void ShowLog(const char* filePath)
 		{
-			while (!LogList.empty())
+			while (!_ue_log_list.empty())
 			{
-				std::string outputString = LogList.front();
+				std::string outputString = _ue_log_list.front();
 				std::cout << outputString << std::endl;
 
-				FileOut.open(filePath, std::ios::app);
-				FileOut << outputString << std::endl;
-				FileOut.close();
+				_ue_log_file_out.open(filePath, std::ios::app);
+				_ue_log_file_out << outputString << std::endl;
+				_ue_log_file_out.close();
 
-				LogList.pop_front();
+				_ue_log_list.pop_front();
 			}
 		}
 	}
