@@ -7,3 +7,6 @@
 [submodule "UnnamedEngine/vendor/STB"]
 	path = UnnamedEngine/vendor/STB
 	url = https://github.com/nothings/stb
+[submodule "UnnamedEngine/vendor/OPENALSOFT"]
+	path = UnnamedEngine/vendor/OPENALSOFT
+	url = https://github.com/kcat/openal-soft
