@@ -1,7 +1,7 @@
 #pragma once
 
-#include "event.h"
-#include "input/keyCodes.h"
+#include "Event.h"
+#include "Input/KeyCodes.h"
 
 namespace UE
 {

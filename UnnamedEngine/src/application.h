@@ -5,10 +5,12 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
-#include "core.h"
+#include "Core.h"
 
-#include "logger/logger.h"
-#include "time/localTime.h"
+#include "Platform/Windows/WindowsWindow.h"
+
+#include "Logger/Logger.h"
+#include "Time/LocalTime.h"
 
 namespace UE
 {
@@ -20,6 +22,9 @@ namespace UE
 		virtual ~Application();
 
 		void Run();
+
+		void Update();
+		void Render();
 
 	private:
 

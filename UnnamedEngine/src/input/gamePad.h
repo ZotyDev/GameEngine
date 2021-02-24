@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core.h"
-#include "gamepadCodes.h"
-#include "events/gamepadEvent.h"
+#include "Core.h"
+#include "GamepadCodes.h"
+#include "Events/GamepadEvent.h"
 
 namespace UE
 {

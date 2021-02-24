@@ -2,6 +2,8 @@
 
 #define BIT(x)				1 << x
 
+#define UE_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+
 #ifdef UE_PLATFORM_WINDOWS
 	#ifdef UE_BUILD_DLL
 		#define UE_API __declspec(dllexport)
@@ -9,10 +11,11 @@
 		#define UE_API __declspec(dllimport)
 	#endif
 	
-	#define GLFW_INCLUDE_VULKAN
-	#include <GLFW/glfw3.h>
-
 	#include <Windows.h>
+
+	#define GLFW_INCLUDE_VULKAN
+	#include <glad/glad.h>
+	#include <GLFW/glfw3.h>
 
 #else
 	#error UnnamedEngine only support Windows!
@@ -30,4 +33,13 @@
 	#define UE_LOG_FATAL(...)
 #endif
 
-#include "pch.h"
+#include "Pch.h"
+
+namespace UE
+{
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+}

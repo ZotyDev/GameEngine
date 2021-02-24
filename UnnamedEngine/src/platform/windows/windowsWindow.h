@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core.h"
-#include "window/window.h"
+#include "Core.h"
+#include "Window/Window.h"
 
-#include "logger/logger.h"
-#include "time/localTime.h"
+#include "Logger/Logger.h"
+#include "Time/LocalTime.h"
 
 /*
 	WindowResizeCallBack need to be converted to a 'event friendly' alternative
@@ -28,6 +28,11 @@ namespace UE
 		unsigned int GetWidth() const override { return m_WindowData.m_Width; };
 		unsigned int GetHeight() const override { return m_WindowData.m_Height; };
 		const char* GetTitle() const override { return m_WindowData.m_Title; };
+
+		int InitGLFW();
+		int InitVulkan();
+
+		int InitWindow(const char* title, unsigned int width, unsigned int height);
 
 	private:
 		GLFWwindow* m_Window = nullptr;

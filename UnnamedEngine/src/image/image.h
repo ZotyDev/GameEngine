@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core.h"
-#include "misc/utilities.h"
+#include "Core.h"
+#include "Misc/Utilities.h"
 #include <stb_image.h>
 
 namespace UE

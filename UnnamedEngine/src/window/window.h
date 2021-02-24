@@ -1,12 +1,12 @@
 #pragma once
 
-#include "core.h"
+#include "Core.h"
 
-#include "image/image.h"
-#include "events/gamepadEvent.h"
-#include "events/keyEvent.h"
-#include "events/mouseEvent.h"
-#include "events/windowEvent.h"
+#include "Image/Image.h"
+#include "Events/GamepadEvent.h"
+#include "Events/KeyEvent.h"
+#include "Events/MouseEvent.h"
+#include "Events/WindowEvent.h"
 
 namespace UE
 {

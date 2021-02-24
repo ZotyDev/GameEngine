@@ -1,5 +1,4 @@
-#include "windowsWindow.h"
-
+#include "WindowsWindow.h"
 
 namespace UE
 {
@@ -23,13 +22,65 @@ namespace UE
 		m_WindowData.m_Width = width;
 		m_WindowData.m_Height = height;
 
-		// Initialize GLFW
+		InitGLFW();
+		InitWindow(title, width, height);
+		
+		m_Initialized = true;
+		return 0;
+	};
+
+	int WindowsWindow::ChangeIcon(const char* iconPath)
+	{
+		// Load image and check if the image can be loaded
+		Image tempImage;
+		if (tempImage.Initialize(iconPath, 4))
+		{
+			UE_LOG_ERROR("Failed to change window icon, image: ", iconPath, " could no be loaded!");
+			return -1;
+		}
+
+		// NEW operator, possible memory leak!
+		GLFWimage* icon = new GLFWimage();
+		icon->pixels = tempImage.GetData();
+		icon->width = tempImage.GetW();
+		icon->height = tempImage.GetH();
+		glfwSetWindowIcon(m_Window, 1, icon);
+
+		// Free icon from memory!
+		delete icon;
+
+		return 0;
+	}
+
+	int WindowsWindow::ChangeIcon(Image sourceImage)
+	{
+		// NEW operator, possible memory leak!
+		GLFWimage* icon = new GLFWimage();
+		icon->pixels = sourceImage.GetData();
+		icon->width = sourceImage.GetW();
+		icon->height = sourceImage.GetH();
+		glfwSetWindowIcon(m_Window, 1, icon);
+
+		return 0;
+	};
+
+	int WindowsWindow::InitGLFW()
+	{
 		glfwInit();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		// Initialize GLFWwindow
+		return 0;
+	};
+
+	int WindowsWindow::InitVulkan()
+	{
+		return 0;
+	};
+
+	int WindowsWindow::InitWindow(const char* title, unsigned int width, unsigned int height)
+	{
 		m_Window = glfwCreateWindow(m_WindowData.m_Width, m_WindowData.m_Height, m_WindowData.m_Title, NULL, NULL);
 		if (m_Window == NULL)
 		{
@@ -40,10 +91,17 @@ namespace UE
 
 		glfwMakeContextCurrent(m_Window);
 
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			UE_LOG_FATAL("Failed to initialize GLAD!");
+			glfwTerminate();
+			return -1;
+		}
+
 		// SetWindowUserPointer being used to define a pointer to m_WindowData
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
 
-		glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
+		/*glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 			{
 				// GetWindowUserPointer being used to retrieve a pointer to m_WindowData inside the WindowsWindow class
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
@@ -53,7 +111,7 @@ namespace UE
 
 				WindowResizeEvent event(width, height);
 				data.m_EventCallbackFn(event);
-			});
+			});*/
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 			{
@@ -142,42 +200,6 @@ namespace UE
 
 		// Set Viewport
 		glViewport(0, 0, m_WindowData.m_Width, m_WindowData.m_Height);
-
-		m_Initialized = true;
-		return 0;
-	};
-
-	int WindowsWindow::ChangeIcon(const char* iconPath)
-	{
-		// Load image and check if the image can be loaded
-		Image tempImage;
-		if (tempImage.Initialize(iconPath, 4))
-		{
-			UE_LOG_ERROR("Failed to change window icon, image: ", iconPath, " could no be loaded!");
-			return -1;
-		}
-
-		// NEW operator, possible memory leak!
-		GLFWimage* icon = new GLFWimage();
-		icon->pixels = tempImage.GetData();
-		icon->width = tempImage.GetW();
-		icon->height = tempImage.GetH();
-		glfwSetWindowIcon(m_Window, 1, icon);
-
-		// Free icon from memory!
-		delete icon;
-
-		return 0;
-	}
-
-	int WindowsWindow::ChangeIcon(Image sourceImage)
-	{
-		// NEW operator, possible memory leak!
-		GLFWimage* icon = new GLFWimage();
-		icon->pixels = sourceImage.GetData();
-		icon->width = sourceImage.GetW();
-		icon->height = sourceImage.GetH();
-		glfwSetWindowIcon(m_Window, 1, icon);
 
 		return 0;
 	};
