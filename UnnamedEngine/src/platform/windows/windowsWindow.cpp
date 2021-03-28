@@ -111,7 +111,7 @@ namespace UE
 
 				WindowResizeEvent event(width, height);
 				data.m_EventCallbackFn(event);
-			});*/
+			});
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 			{
@@ -196,7 +196,7 @@ namespace UE
 
 				MouseMovedEvent event((float)xPos, (float)yPos);
 				data.m_EventCallbackFn(event);
-			});
+			});*/
 
 		// Set Viewport
 		glViewport(0, 0, m_WindowData.m_Width, m_WindowData.m_Height);

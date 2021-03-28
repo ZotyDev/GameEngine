@@ -2,6 +2,8 @@
 
 #include "Core.h"
 
+#include "Time/LocalTime.h"
+
 namespace UE
 {
 	namespace Logger

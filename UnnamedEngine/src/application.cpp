@@ -1,6 +1,7 @@
 #include "Application.h"
 
 #include "Renderer/VertexArray.h"
+#include "Renderer/Shader.h"
 
 namespace UE
 {
@@ -18,6 +19,8 @@ namespace UE
 	std::shared_ptr<IndexBuffer> iBuffer;
 	std::shared_ptr<VertexArray> vArray;
 
+	Ref<ShaderLibrary> m_ShaderLibrary = CreateRef<ShaderLibrary>();
+
 	void Application::Run()
 	{
 		LocalTime::Update();
@@ -25,7 +28,6 @@ namespace UE
 		window = new WindowsWindow();
 		window->Initialize("UnnamedEngine", 1280, 720);
 
-		Logger::ShowLog("tatest.log");
 		vArray.reset(VertexArray::Create());
 
 		float vertices[3 * 7] =
@@ -36,7 +38,6 @@ namespace UE
 		};
 
 		vBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-
 		
 		BufferLayout layout =
 		{
@@ -52,6 +53,8 @@ namespace UE
 
 		vArray->AddIndexBuffer(iBuffer);
 
+		m_ShaderLibrary->Load("data/shaders/default");
+
 		while (!glfwWindowShouldClose((GLFWwindow*)window->GetNativeWindow()))
 		{
 			Update();
@@ -64,6 +67,7 @@ namespace UE
 
 	void Application::Update()
 	{
+		Logger::ShowLog("tatest.log");
 	};
 
 	void Application::Render()
@@ -71,6 +75,7 @@ namespace UE
 		glClearColor(0.1f, 0.1, 0.1f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
+		m_ShaderLibrary->Get("default")->Bind();
 		vArray->Bind();
 		glDrawElements(GL_TRIANGLES, iBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 
