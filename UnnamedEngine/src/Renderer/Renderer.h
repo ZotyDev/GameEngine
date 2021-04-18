@@ -2,20 +2,21 @@
 
 #include "Core.h"
 
+#include "RenderCommand.h"
+
 namespace UE
 {
-	enum class RendererAPI
-	{
-		None = 0,
-		OpenGL = 1,
-		Vulkan = 2
-	};
-
 	class Renderer
 	{
 	public:
-		inline static RendererAPI GetAPI() { return mRendererAPI; };
-	private:
-		static RendererAPI mRendererAPI;
+		static void Init();
+		static void Shutdown();
+
+		static void OnWindowResize(uint32_t width, uint32_t height);
+
+		static void BeginRender();
+		static void EndRender();
+
+		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); };
 	};
 }

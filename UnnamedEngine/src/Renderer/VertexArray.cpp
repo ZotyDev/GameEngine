@@ -1,7 +1,8 @@
 #include "VertexArray.h"
 
-#include "Renderer.h"
+#include "logger/logger.h"
 
+#include "Renderer.h"
 #include "Platform/Opengl/OpenglVertexArray.h"
 
 namespace UE
@@ -10,7 +11,10 @@ namespace UE
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::OpenGL: return new OpenGLVertexArray();
+			case RendererAPI::API::OpenGL: return new OpenGLVertexArray();
 		}
+
+		UE_LOG_FATAL("Unknown renderer!");
+		return nullptr;
 	}
 }

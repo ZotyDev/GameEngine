@@ -11,23 +11,23 @@ namespace UE
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::OpenGL: 
+			case RendererAPI::API::OpenGL: 
 				Ref<OpenGLShader> tempShader = CreateRef<OpenGLShader>();
 				if (tempShader->LoadFromSource(filepath))
 				{
-					UE_LOG_FATAL("Failed to create Shader!");
+					UE_LOG_ERROR("Failed to create Shader!");
 					return nullptr;
 				}
 				if (tempShader->Compile())
 				{
-					UE_LOG_FATAL("Failed to create Shader!");
+					UE_LOG_ERROR("Failed to create Shader!");
 					return nullptr;
 				}
 
 				return tempShader;
 		}
 
-		UE_LOG_FATAL("Unkown RendererAPI");
+		UE_LOG_ERROR("Unknown RendererAPI");
 		return nullptr;
 	}
 
@@ -35,23 +35,23 @@ namespace UE
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::OpenGL: 
+			case RendererAPI::API::OpenGL:
 				Ref<OpenGLShader> tempShader = CreateRef<OpenGLShader>();
 				if (tempShader->LoadFromSource(name, vertexSrc, fragmentSrc))
 				{
-					UE_LOG_FATAL("Failed to create Shader!");
+					UE_LOG_ERROR("Failed to create Shader!");
 					return nullptr;
 				}
 				if (tempShader->Compile())
 				{
-					UE_LOG_FATAL("Failed to create Shader!");
+					UE_LOG_ERROR("Failed to create Shader!");
 					return nullptr;
 				}
 
 				return tempShader;
 		}
 
-		UE_LOG_FATAL("Unkown RendererAPI");
+		UE_LOG_ERROR("Unknown RendererAPI");
 		return nullptr;
 	}
 

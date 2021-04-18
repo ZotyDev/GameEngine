@@ -68,7 +68,7 @@ namespace UE
 	{
 		glfwInit();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		return 0;
@@ -101,7 +101,7 @@ namespace UE
 		// SetWindowUserPointer being used to define a pointer to m_WindowData
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
 
-		/*glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
+		glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 			{
 				// GetWindowUserPointer being used to retrieve a pointer to m_WindowData inside the WindowsWindow class
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
@@ -196,7 +196,7 @@ namespace UE
 
 				MouseMovedEvent event((float)xPos, (float)yPos);
 				data.m_EventCallbackFn(event);
-			});*/
+			});
 
 		// Set Viewport
 		glViewport(0, 0, m_WindowData.m_Width, m_WindowData.m_Height);

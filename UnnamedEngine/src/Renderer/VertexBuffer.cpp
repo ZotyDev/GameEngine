@@ -1,9 +1,8 @@
 #include "VertexBuffer.h"
 
-#include "Core.h"
+#include "logger/logger.h"
 
 #include "Renderer.h"
-
 #include "Platform/Opengl/OpenglVertexBuffer.h"
 
 namespace UE
@@ -12,7 +11,10 @@ namespace UE
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::OpenGL: return new OpenGLVertexBuffer(vertices, size);
+			case RendererAPI::API::OpenGL: return new OpenGLVertexBuffer(vertices, size);
 		}
+
+		UE_LOG_FATAL("Unknown renderer!");
+		return nullptr;
 	};
 }

@@ -13,11 +13,11 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "UnnamedEngine/vendor/GLFW/include"
 IncludeDir["GLAD"] = "UnnamedEngine/vendor/GLAD/include"
 IncludeDir["GLM"] = "UnnamedEngine/vendor/GLM"
-IncludeDir["Vulkan"] = "C:/VulkanSDK/1.2.162.0/Include"
+IncludeDir["Vulkan"] = "C:/VulkanSDK/1.2.170.0/Include"
 IncludeDir["STB"] = "UnnamedEngine/vendor/STB"
 
 LibraryDir = {}
-LibraryDir["Vulkan"] = "C:/VulkanSDK/1.2.162.0/Lib"
+LibraryDir["Vulkan"] = "C:/VulkanSDK/1.2.170.0/Lib"
 
 include "UnnamedEngine/vendor/GLFW"
 include "UnnamedEngine/vendor/GLAD"

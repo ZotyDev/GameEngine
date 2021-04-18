@@ -1,7 +1,8 @@
 #include "IndexBuffer.h"
 
-#include "Renderer.h"
+#include "logger/logger.h"
 
+#include "Renderer.h"
 #include "Platform/Opengl/OpenglIndexBuffer.h"
 
 namespace UE
@@ -10,7 +11,10 @@ namespace UE
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::OpenGL: return new OpenGLIndexBuffer(indices, count);
+			case RendererAPI::API::OpenGL: return new OpenGLIndexBuffer(indices, count);
 		}
+
+		UE_LOG_FATAL("Unknown renderer!");
+		return nullptr;
 	};
 }
