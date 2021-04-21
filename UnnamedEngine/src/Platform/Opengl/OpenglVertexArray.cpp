@@ -25,8 +25,7 @@ namespace UE
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
-		glGenVertexArrays(1, &m_ID);
-
+		glCreateVertexArrays(1, &m_ID);
 	}
 
 	void OpenGLVertexArray::Bind() const

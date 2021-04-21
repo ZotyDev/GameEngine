@@ -1,5 +1,7 @@
 #include "WindowsWindow.h"
 
+#include "Renderer/Renderer.h"
+
 namespace UE
 {
 	WindowsWindow::WindowsWindow() {};
@@ -199,7 +201,7 @@ namespace UE
 			});
 
 		// Set Viewport
-		glViewport(0, 0, m_WindowData.m_Width, m_WindowData.m_Height);
+		Renderer::OnWindowResize(m_WindowData.m_Width, m_WindowData.m_Height);
 
 		return 0;
 	};

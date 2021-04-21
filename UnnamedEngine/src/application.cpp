@@ -26,9 +26,13 @@ namespace UE
 	
 	Ref<Texture2D> m_Texture2D;
 
-	Ref<Camera3D> m_Camera;
+	Camera3D m_Camera;
 
 	Ref<Framebuffer> m_Framebuffer;
+
+	Ref<VertexBuffer> screenVBuffer;
+	Ref<IndexBuffer> screenIBuffer;
+	Ref<VertexArray> screenVArray;
 
 	void Application::Run()
 	{
@@ -36,13 +40,12 @@ namespace UE
 
 		window = new WindowsWindow();
 		window->Initialize("UnnamedEngine", 1280, 720);
+		Renderer::Init();
 		window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
 		m_Texture2D = Texture2D::Create("data/textures/grass.png");
 
-		m_Camera = CreateRef<Camera3D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
-
-		Renderer::Init();
+		m_Camera = Camera3D(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
 
 		FramebufferSpecification specs;
 		specs.Width = 1280;
@@ -51,34 +54,53 @@ namespace UE
 		m_Framebuffer = Framebuffer::Create(specs);
 
 		vArray.reset(VertexArray::Create());
+		screenVArray.reset(VertexArray::Create());
 
+		// Plane
 		float vertices[4 * 9] =
 		{
-			 0.5f,  0.5f, 0.0f,   0.8f, 0.2f, 0.8f, 1.0f,   1.0f, 1.0f,  
-			 0.5f, -0.5f, 0.0f,   0.2f, 0.3f, 0.8f, 1.0f,   1.0f, 0.0f,
+			-0.5f,  0.5f, 0.0f,   0.5f, 0.7f, 0.4f, 1.0f,   0.0f, 1.0f,
 			-0.5f, -0.5f, 0.0f,   0.8f, 0.8f, 0.2f, 1.0f,   0.0f, 0.0f,
-			-0.5f,  0.5f, 0.0f,   0.5f, 0.7f, 0.4f, 1.0f,   0.0f, 1.0f
+			 0.5f, -0.5f, 0.0f,   0.2f, 0.3f, 0.8f, 1.0f,   1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f,   0.8f, 0.2f, 0.8f, 1.0f,   1.0f, 1.0f
 		};
-
 		vBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-		
 		BufferLayout layout =
 		{
 			{ShaderDataType::Float3, "a_Position"},
 			{ShaderDataType::Float4, "a_Color"},
 			{ShaderDataType::Float2, "a_Texture"}
 		};
-
 		vBuffer->SetLayout(layout);
 		vArray->AddVertexBuffer(vBuffer);
-
 		uint32_t indices[] = { 0, 1, 3, 1, 2, 3};
 		iBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-
 		vArray->AddIndexBuffer(iBuffer);
+
+		// Screen
+		float screen[4 * 4] =
+		{
+			-1.0f,  1.0f,   0.0f, 1.0f,
+			-1.0f, -1.0f,   0.0f, 0.0f,
+			 1.0f, -1.0f,   1.0f, 0.0f,
+			 1.0f,  1.0f,   1.0f, 1.0f
+		};
+		screenVBuffer.reset(VertexBuffer::Create(screen, sizeof(screen)));
+		BufferLayout screenLayout =
+		{
+			{ShaderDataType::Float2, "a_Position"},
+			{ShaderDataType::Float2, "a_Texture"}
+		};
+		screenVBuffer->SetLayout(screenLayout);
+		screenVArray->AddVertexBuffer(screenVBuffer);
+		screenIBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		screenVArray->AddIndexBuffer(screenIBuffer);
 
 		m_ShaderLibrary->Load("data/shaders/default");
 		m_ShaderLibrary->Get("default")->SetInt("texture1", 0);
+
+		m_ShaderLibrary->Load("data/shaders/screen");
+		m_ShaderLibrary->Get("screen")->SetInt("texture1", 0);
 
 		while (m_Running)
 		{
@@ -102,28 +124,27 @@ namespace UE
 
 		//m_Camera->SetPitch(m_Camera->GetPitch() + 0.01f);
 		//UE_LOG_INFO("Pitch ", m_Camera->GetPitch());
-		m_Camera->Update();
+		m_Camera.Update();
 	};
 
 	void Application::Render()
 	{
-		//m_Framebuffer->Bind();
+		Renderer::BeginRender(m_Camera);
+		m_Framebuffer->Bind();
 		glClearColor(0.1f, 0.1, 0.1f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		m_Texture2D->Bind();
-		m_ShaderLibrary->Get("default")->Bind();
-		vArray->Bind();
+		Renderer::Submit(m_ShaderLibrary->Get("default"), vArray);
 
-		m_ShaderLibrary->Get("default")->SetMat4("ViewProjection", m_Camera->GetViewProjection());
-
-		glDrawElements(GL_TRIANGLES, iBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+		m_Framebuffer->Unbind();
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		
+		glBindTexture(GL_TEXTURE_2D, m_Framebuffer->GetColorAttachmentRendererID());
+		Renderer::Submit(m_ShaderLibrary->Get("screen"), screenVArray);
 
 		glfwSwapBuffers((GLFWwindow*)window->GetNativeWindow());
-		//m_Framebuffer->Unbind();
-
-		//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		//glClear(GL_COLOR_BUFFER_BIT);
 	};
 
 	void Application::OnEvent(Event& event)
@@ -161,7 +182,7 @@ namespace UE
 
 		Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
 
-		m_Camera->SetViewportSize(event.GetWidth(), event.GetHeight());
+		m_Camera.SetViewportSize(event.GetWidth(), event.GetHeight());
 
 		return false;
 	}

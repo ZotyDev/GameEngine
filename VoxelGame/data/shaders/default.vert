@@ -7,11 +7,11 @@ layout (location = 2) in vec2 a_Texture;
 out vec4 out_Color;
 out vec2 out_Texture;
 
-uniform mat4 ViewProjection;
+uniform mat4 u_ViewProjection;
 
 void main()
 {
-	gl_Position = ViewProjection * vec4(a_Position, 1.0);
+	gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 	out_Color = a_Color;
 	out_Texture = a_Texture;
 }
