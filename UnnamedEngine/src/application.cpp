@@ -3,7 +3,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Texture.h"
-#include "Renderer/Camera.h"
+#include "Renderer/Camera3D.h"
 #include "Renderer/Framebuffer.h"
 
 namespace UE
@@ -26,7 +26,7 @@ namespace UE
 	
 	Ref<Texture2D> m_Texture2D;
 
-	Ref<Camera> m_Camera;
+	Ref<Camera3D> m_Camera;
 
 	Ref<Framebuffer> m_Framebuffer;
 
@@ -40,7 +40,7 @@ namespace UE
 
 		m_Texture2D = Texture2D::Create("data/textures/grass.png");
 
-		m_Camera = CreateRef<Camera>(1280, 720, -1.0f, 1000.0f);
+		m_Camera = CreateRef<Camera3D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
 
 		FramebufferSpecification specs;
 		specs.Width = 1280;
@@ -97,11 +97,15 @@ namespace UE
 		glfwPollEvents();
 
 		Logger::ShowLog("tatest.log");
+
+		m_Camera->SetPitch(m_Camera->GetPitch() + 0.01f);
+		UE_LOG_INFO("Pitch ", m_Camera->GetPitch());
+		m_Camera->Update();
 	};
 
 	void Application::Render()
 	{
-		m_Framebuffer->Bind();
+		//m_Framebuffer->Bind();
 		glClearColor(0.1f, 0.1, 0.1f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
@@ -109,15 +113,15 @@ namespace UE
 		m_ShaderLibrary->Get("default")->Bind();
 		vArray->Bind();
 
-		m_ShaderLibrary->Get("default")->SetMat4("ViewProjection", m_Camera->GetViewProjectionMatrix());
+		m_ShaderLibrary->Get("default")->SetMat4("ViewProjection", m_Camera->GetViewProjection());
 
 		glDrawElements(GL_TRIANGLES, iBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 		glfwSwapBuffers((GLFWwindow*)window->GetNativeWindow());
-		m_Framebuffer->Unbind();
+		//m_Framebuffer->Unbind();
 
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		//glClear(GL_COLOR_BUFFER_BIT);
 	};
 
 	void Application::OnEvent(Event& event)
