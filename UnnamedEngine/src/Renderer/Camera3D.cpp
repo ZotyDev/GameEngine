@@ -5,8 +5,8 @@
 
 namespace UE
 {
-	Camera3D::Camera3D(float width, float height, glm::vec3 position, float fov)
-		: m_ViewportWidth(width), m_ViewportHeight(height), m_Position(position), m_FOV(fov)
+	Camera3D::Camera3D(float width, float height, glm::vec3 position, float nearClip, float farClip, float fov)
+		: m_ViewportWidth(width), m_ViewportHeight(height), m_Position(position), m_FOV(fov), m_NearClip(nearClip), m_FarClip(farClip)
 	{
 		UpdateProjection();
 		UpdateView();
