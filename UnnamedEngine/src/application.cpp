@@ -42,6 +42,8 @@ namespace UE
 
 		m_Camera = CreateRef<Camera3D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
 
+		Renderer::Init();
+
 		FramebufferSpecification specs;
 		specs.Width = 1280;
 		specs.Height = 720;
@@ -98,8 +100,8 @@ namespace UE
 
 		Logger::ShowLog("tatest.log");
 
-		m_Camera->SetPitch(m_Camera->GetPitch() + 0.01f);
-		UE_LOG_INFO("Pitch ", m_Camera->GetPitch());
+		//m_Camera->SetPitch(m_Camera->GetPitch() + 0.01f);
+		//UE_LOG_INFO("Pitch ", m_Camera->GetPitch());
 		m_Camera->Update();
 	};
 
@@ -142,23 +144,24 @@ namespace UE
 
 	bool Application::OnWindowClose(WindowCloseEvent& event)
 	{
+		m_Minimized = false;
 		m_Running = false;
 		return false;
 	}
 
 	bool Application::OnWindowResize(WindowResizeEvent& event)
 	{
+		m_Minimized = false;
+
 		if (event.GetWidth() == 0 || event.GetHeight() == 0)
 		{
 			m_Minimized = true;
 			return false;
 		}
 
-		m_Minimized = false;
 		Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
-		{
-			return false;
-		}
+
+		m_Camera->SetViewportSize(event.GetWidth(), event.GetHeight());
 
 		return false;
 	}

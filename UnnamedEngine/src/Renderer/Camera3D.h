@@ -39,6 +39,8 @@ namespace UE
 		void SetPitch(float pitch) { m_Pitch = pitch; }
 		float GetYaw() const { return m_Yaw; }
 		void SetYaw(float yaw) { m_Yaw = yaw; }
+		float GetRoll() { return m_Roll; }
+		void SetRoll(float roll) { m_Roll = roll; }
 
 	private:
 		void UpdateProjection();
@@ -56,6 +58,7 @@ namespace UE
 
 		float m_Pitch = 0.0f;
 		float m_Yaw = 0.0f;
+		float m_Roll = 0.0f;
 
 		float m_ViewportWidth = 1280;
 		float m_ViewportHeight = 720;
