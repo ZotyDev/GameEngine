@@ -7,3 +7,6 @@
 [submodule "UnnamedEngine/vendor/STB"]
 	path = UnnamedEngine/vendor/STB
 	url = https://github.com/nothings/stb
+[submodule "UnnamedEngine/vendor/LUA"]
+	path = UnnamedEngine/vendor/LUA
+	url = https://github.com/ZotyDev/lua
