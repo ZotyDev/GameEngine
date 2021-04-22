@@ -15,12 +15,14 @@ IncludeDir["GLAD"] = "UnnamedEngine/vendor/GLAD/include"
 IncludeDir["GLM"] = "UnnamedEngine/vendor/GLM"
 IncludeDir["Vulkan"] = "C:/VulkanSDK/1.2.170.0/Include"
 IncludeDir["STB"] = "UnnamedEngine/vendor/STB"
+IncludeDir["LUA"] = "UnnamedEngine/vendor/LUA"
 
 LibraryDir = {}
 LibraryDir["Vulkan"] = "C:/VulkanSDK/1.2.170.0/Lib"
 
 include "UnnamedEngine/vendor/GLFW"
 include "UnnamedEngine/vendor/GLAD"
+include "UnnamedEngine/vendor/LUA"
 
 project "UnnamedEngine"
 	location "UnnamedEngine"
@@ -43,7 +45,8 @@ project "UnnamedEngine"
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.GLM}",
 		"%{IncludeDir.Vulkan}",
-		"%{IncludeDir.STB}"
+		"%{IncludeDir.STB}",
+		"%{IncludeDir.LUA}"
 	}
 
 	libdirs
@@ -55,6 +58,7 @@ project "UnnamedEngine"
 	{
 		"GLFW",
 		"GLAD",
+		"LUA",
 		"opengl32.lib",
 		"vulkan-1.lib"
 	}
@@ -112,7 +116,8 @@ project "VoxelGame"
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.GLM}",
 		"%{IncludeDir.Vulkan}",
-		"%{IncludeDir.STB}"
+		"%{IncludeDir.STB}",
+		"%{IncludeDir.LUA}"
 	}
 
 	links
