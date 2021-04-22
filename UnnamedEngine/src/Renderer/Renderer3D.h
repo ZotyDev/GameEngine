@@ -2,6 +2,8 @@
 
 #include "core.h"
 
+#include "Renderer/Camera3D.h"
+
 namespace UE
 {
 	/*class Renderer3D
@@ -10,17 +12,12 @@ namespace UE
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(CAMERA);
+		static void BeginScene(const Camera3D& camera);
 		static void EndScene();
 		static void Flush();
 
 		// Primitives
-		static void DrawPlane(PLANE_DATA);
-		static void DrawCircle(CIRCLE_DATA);
-		static void DrawCube(CUBE_DATA);
-		static void DrawSphere(SPHERE_DATA);
-		static void DrawCylinder(CYLINDER_DATA);
-		static void DrawPyramid(PYRAMID_DATA);
+		static void DrawQuad(PLANE_DATA);
 
 		// Stats
 		struct Statistics

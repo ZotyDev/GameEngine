@@ -5,6 +5,7 @@
 #include "Renderer/Texture.h"
 #include "Renderer/Camera3D.h"
 #include "Renderer/Framebuffer.h"
+#include "Renderer/Primitives.h"
 
 namespace UE
 {
@@ -18,10 +19,6 @@ namespace UE
 
 	Window* window;
 
-	Ref<VertexBuffer> vBuffer;
-	Ref<IndexBuffer> iBuffer;
-	Ref<VertexArray> vArray;
-
 	Ref<ShaderLibrary> m_ShaderLibrary = CreateRef<ShaderLibrary>();
 	
 	Ref<Texture2D> m_Texture2D;
@@ -30,9 +27,8 @@ namespace UE
 
 	Ref<Framebuffer> m_Framebuffer;
 
-	Ref<VertexBuffer> screenVBuffer;
-	Ref<IndexBuffer> screenIBuffer;
-	Ref<VertexArray> screenVArray;
+	Ref<Primitives::Quad> m_Screen;
+	Ref<Primitives::Quad> m_Quad;
 
 	void Application::Run()
 	{
@@ -51,56 +47,13 @@ namespace UE
 		specs.Width = 1280;
 		specs.Height = 720;
 		specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Color));
-		m_Framebuffer = Framebuffer::Create(specs);
+		m_Framebuffer = Framebuffer::Create(specs);	
 
-		vArray.reset(VertexArray::Create());
-		screenVArray.reset(VertexArray::Create());
-
-		// Plane
-		float vertices[4 * 9] =
-		{
-			-0.5f,  0.5f, 0.0f,   0.5f, 0.7f, 0.4f, 1.0f,   0.0f, 1.0f,
-			-0.5f, -0.5f, 0.0f,   0.8f, 0.8f, 0.2f, 1.0f,   0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f,   0.2f, 0.3f, 0.8f, 1.0f,   1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f,   0.8f, 0.2f, 0.8f, 1.0f,   1.0f, 1.0f
-		};
-		vBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-		BufferLayout layout =
-		{
-			{ShaderDataType::Float3, "a_Position"},
-			{ShaderDataType::Float4, "a_Color"},
-			{ShaderDataType::Float2, "a_Texture"}
-		};
-		vBuffer->SetLayout(layout);
-		vArray->AddVertexBuffer(vBuffer);
-		uint32_t indices[] = { 0, 1, 3, 1, 2, 3};
-		iBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		vArray->AddIndexBuffer(iBuffer);
-
-		// Screen
-		float screen[4 * 4] =
-		{
-			-1.0f,  1.0f,   0.0f, 1.0f,
-			-1.0f, -1.0f,   0.0f, 0.0f,
-			 1.0f, -1.0f,   1.0f, 0.0f,
-			 1.0f,  1.0f,   1.0f, 1.0f
-		};
-		screenVBuffer.reset(VertexBuffer::Create(screen, sizeof(screen)));
-		BufferLayout screenLayout =
-		{
-			{ShaderDataType::Float2, "a_Position"},
-			{ShaderDataType::Float2, "a_Texture"}
-		};
-		screenVBuffer->SetLayout(screenLayout);
-		screenVArray->AddVertexBuffer(screenVBuffer);
-		screenIBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		screenVArray->AddIndexBuffer(screenIBuffer);
+		m_Screen = CreateRef<Primitives::Quad>(glm::vec2(-1.0f, 1.0f), glm::vec2(1.0f, -1.0f));
+		m_Quad = CreateRef<Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));
 
 		m_ShaderLibrary->Load("data/shaders/default");
-		m_ShaderLibrary->Get("default")->SetInt("texture1", 0);
-
 		m_ShaderLibrary->Load("data/shaders/screen");
-		m_ShaderLibrary->Get("screen")->SetInt("texture1", 0);
 
 		while (m_Running)
 		{
@@ -122,27 +75,23 @@ namespace UE
 
 		Logger::ShowLog("tatest.log");
 
-		//m_Camera->SetPitch(m_Camera->GetPitch() + 0.01f);
-		//UE_LOG_INFO("Pitch ", m_Camera->GetPitch());
 		m_Camera.Update();
 	};
 
 	void Application::Render()
 	{
-		Renderer::BeginRender(m_Camera);
 		m_Framebuffer->Bind();
-		glClearColor(0.1f, 0.1, 0.1f, 1.f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		Renderer::BeginRender(m_Camera);
 		
 		m_Texture2D->Bind();
-		Renderer::Submit(m_ShaderLibrary->Get("default"), vArray);
+		Renderer::Submit(m_ShaderLibrary->Get("default"), m_Quad->VAO);
 
 		m_Framebuffer->Unbind();
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		glBindTexture(GL_TEXTURE_2D, m_Framebuffer->GetColorAttachmentRendererID());
-		Renderer::Submit(m_ShaderLibrary->Get("screen"), screenVArray);
+		Renderer::Submit(m_ShaderLibrary->Get("screen"), m_Screen->VAO);
 
 		glfwSwapBuffers((GLFWwindow*)window->GetNativeWindow());
 	};
@@ -183,6 +132,8 @@ namespace UE
 		Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
 
 		m_Camera.SetViewportSize(event.GetWidth(), event.GetHeight());
+
+		m_Framebuffer->Resize(event.GetWidth(), event.GetHeight());
 
 		return false;
 	}

@@ -1,11 +1,10 @@
 #version 460
 
-in vec4 out_Color;
 in vec2 out_Texture;
 
-uniform sampler2D ourTexture;
+uniform sampler2D u_Texture1;
 
 void main()
 {
-	gl_FragColor = texture(ourTexture, out_Texture);
+	gl_FragColor = texture(u_Texture1, out_Texture);
 }

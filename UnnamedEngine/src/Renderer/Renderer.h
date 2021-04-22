@@ -17,6 +17,9 @@ namespace UE
 
 		static void OnWindowResize(uint32_t width, uint32_t height);
 
+		static void SetClearColor(glm::vec4 color);
+		static void Clear();
+
 		static void BeginRender(Camera3D& camera);
 		static void EndRender();
 
