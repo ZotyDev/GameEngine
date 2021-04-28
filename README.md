@@ -6,13 +6,13 @@ Its main goal is performance, allowing me to create crazy and complex stuff with
 (learning is the second main goal)
 
 ## Current Features:
-- (WIP) Async Logger 
+- Async Logger 
 - Event System
-- OpenGL Barebones Renderer
+- OpenGL
 
 ## To do:
 - Vulkan Renderer
-- OpenGL Renderer
 - DirectX Renderer
 - Audio Support (OpenAL-Soft)
 - Network System
+- Lua Wrapper
