@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Core.h"
-
 #include "RenderCommand.h"
 
 #include "Renderer/Camera3D.h"

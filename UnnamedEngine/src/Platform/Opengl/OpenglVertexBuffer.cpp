@@ -1,4 +1,7 @@
+#include "uepch.h"
 #include "OpenglVertexBuffer.h"
+
+#include <glad/glad.h>
 
 namespace UE
 {

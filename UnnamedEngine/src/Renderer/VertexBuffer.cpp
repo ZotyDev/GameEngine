@@ -1,6 +1,5 @@
+#include "uepch.h"
 #include "VertexBuffer.h"
-
-#include "logger/logger.h"
 
 #include "Renderer.h"
 #include "Platform/Opengl/OpenglVertexBuffer.h"
@@ -11,10 +10,14 @@ namespace UE
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::OpenGL: return new OpenGLVertexBuffer(vertices, size);
+		case RendererAPI::API::None:
+			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+			return nullptr;
+		case RendererAPI::API::OpenGL: 
+			return new OpenGLVertexBuffer(vertices, size);
 		}
 
-		UE_LOG_FATAL("Unknown renderer!");
+		UE_CORE_ASSERT(FALSE, "Unknown RendererAPI!");
 		return nullptr;
 	};
 }

@@ -1,115 +1,73 @@
+#include "uepch.h"
 #include "WindowsWindow.h"
+
+#include "Events/WindowEvent.h"
+#include "Events/MouseEvent.h"
+#include "Events/KeyEvent.h"
 
 #include "Renderer/Renderer.h"
 
+#include "Platform/Opengl/OpenGLContext.h"
+
 namespace UE
 {
-	WindowsWindow::WindowsWindow() {};
+	static uint8_t s_GLFWWindowCount = 0;
+
+	static void GLFWErrorCallback(int error, const char* description)
+	{
+		UE_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
+	}
 
 	WindowsWindow::~WindowsWindow()
 	{
-		glfwTerminate();
+		glfwDestroyWindow(m_Window);
+		--s_GLFWWindowCount;
+
+		if (s_GLFWWindowCount == 0)
+		{
+			glfwTerminate();
+		}
 	};
 
-	int WindowsWindow::Initialize(const char* title, unsigned int width, unsigned int height)
+	int WindowsWindow::Init(const WindowProps& props)
 	{
-		if (m_Initialized)
-		{
-			UE_LOG_ERROR("Game Window is already initialized!");
-			return -1;
-		}
-
 		// Copy properties
-		m_WindowData.m_Title = title;
-		m_WindowData.m_Width = width;
-		m_WindowData.m_Height = height;
+		m_WindowData.Title = props.Title;
+		m_WindowData.Width = props.Width;
+		m_WindowData.Height = props.Height;
 
-		InitGLFW();
-		InitWindow(title, width, height);
-		
-		m_Initialized = true;
-		return 0;
-	};
-
-	int WindowsWindow::ChangeIcon(const char* iconPath)
-	{
-		// Load image and check if the image can be loaded
-		Image tempImage;
-		if (tempImage.Initialize(iconPath, 4))
+		if (s_GLFWWindowCount == 0)
 		{
-			UE_LOG_ERROR("Failed to change window icon, image: ", iconPath, " could no be loaded!");
-			return -1;
+			int success = glfwInit();
+			UE_CORE_ASSERT(success, "Failed to initialize GLFW!");
+			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
-		// NEW operator, possible memory leak!
-		GLFWimage* icon = new GLFWimage();
-		icon->pixels = tempImage.GetData();
-		icon->width = tempImage.GetW();
-		icon->height = tempImage.GetH();
-		glfwSetWindowIcon(m_Window, 1, icon);
-
-		// Free icon from memory!
-		delete icon;
-
-		return 0;
-	}
-
-	int WindowsWindow::ChangeIcon(Image sourceImage)
-	{
-		// NEW operator, possible memory leak!
-		GLFWimage* icon = new GLFWimage();
-		icon->pixels = sourceImage.GetData();
-		icon->width = sourceImage.GetW();
-		icon->height = sourceImage.GetH();
-		glfwSetWindowIcon(m_Window, 1, icon);
-
-		return 0;
-	};
-
-	int WindowsWindow::InitGLFW()
-	{
-		glfwInit();
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-		return 0;
-	};
-
-	int WindowsWindow::InitVulkan()
-	{
-		return 0;
-	};
-
-	int WindowsWindow::InitWindow(const char* title, unsigned int width, unsigned int height)
-	{
-		m_Window = glfwCreateWindow(m_WindowData.m_Width, m_WindowData.m_Height, m_WindowData.m_Title, NULL, NULL);
-		if (m_Window == NULL)
 		{
-			UE_LOG_FATAL("Failed to create GLFW Window!");
-			glfwTerminate();
-			return -1;
+			#if defined(UE_DEBUG)
+			if (Renderer::GetAPI() == RendererAPI::API::OpenGL)
+				{
+					glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+				}
+			#endif
+			m_Window = glfwCreateWindow((int)m_WindowData.Width, (int)m_WindowData.Height, m_WindowData.Title.c_str(), nullptr, nullptr);
+			++s_GLFWWindowCount;
 		}
 
-		glfwMakeContextCurrent(m_Window);
-
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-		{
-			UE_LOG_FATAL("Failed to initialize GLAD!");
-			glfwTerminate();
-			return -1;
-		}
+		m_Context = GraphicsContext::Create(m_Window);
+		m_Context->Init();
 
 		// SetWindowUserPointer being used to define a pointer to m_WindowData
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
+		SetVSync(true);
 
 		glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 			{
 				// GetWindowUserPointer being used to retrieve a pointer to m_WindowData inside the WindowsWindow class
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				data.m_Width = width;
-				data.m_Height = height;
+				data.Width = width;
+				data.Height = height;
 
 				WindowResizeEvent event(width, height);
 				data.m_EventCallbackFn(event);
@@ -201,8 +159,33 @@ namespace UE
 			});
 
 		// Set Viewport
-		Renderer::OnWindowResize(m_WindowData.m_Width, m_WindowData.m_Height);
+		RenderCommand::SetViewPort(0, 0, m_WindowData.Width, m_WindowData.Height);
 
 		return 0;
 	};
+
+	void WindowsWindow::OnUpdate()
+	{
+		glfwPollEvents();
+		m_Context->SwapBuffers();
+	}
+
+	void WindowsWindow::SetVSync(bool enabled)
+	{
+		if (enabled)
+		{
+			glfwSwapInterval(1);
+		}
+		else
+		{
+			glfwSwapInterval(0);
+		}
+
+		m_WindowData.VSync = enabled;
+	}
+
+	bool WindowsWindow::IsVSync() const
+	{
+		return m_WindowData.VSync;
+	}
 }

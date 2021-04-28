@@ -1,6 +1,5 @@
+#include "uepch.h"
 #include "Shader.h"
-
-#include "Logger/Logger.h"
 
 #include "Renderer/Renderer.h"
 #include "Platform/Opengl/OpenGLShader.h"
@@ -12,22 +11,22 @@ namespace UE
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::OpenGL: 
-				Ref<OpenGLShader> tempShader = CreateRef<OpenGLShader>();
-				if (tempShader->LoadFromSource(filepath))
+				Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
+				if (t_Shader->LoadFromSource(filepath))
 				{
-					UE_LOG_ERROR("Failed to create Shader!");
+					UE_CORE_ERROR("Failed to create Shader!");
 					return nullptr;
 				}
-				if (tempShader->Compile())
+				if (t_Shader->Compile())
 				{
-					UE_LOG_ERROR("Failed to create Shader!");
+					UE_CORE_ERROR("Failed to create Shader!");
 					return nullptr;
 				}
 
-				return tempShader;
+				return t_Shader;
 		}
 
-		UE_LOG_ERROR("Unknown RendererAPI");
+		UE_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
 
@@ -36,22 +35,22 @@ namespace UE
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::OpenGL:
-				Ref<OpenGLShader> tempShader = CreateRef<OpenGLShader>();
-				if (tempShader->LoadFromSource(name, vertexSrc, fragmentSrc))
+				Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
+				if (t_Shader->LoadFromSource(name, vertexSrc, fragmentSrc))
 				{
-					UE_LOG_ERROR("Failed to create Shader!");
+					UE_CORE_ERROR("Failed to create Shader!");
 					return nullptr;
 				}
-				if (tempShader->Compile())
+				if (t_Shader->Compile())
 				{
-					UE_LOG_ERROR("Failed to create Shader!");
+					UE_CORE_ERROR("Failed to create Shader!");
 					return nullptr;
 				}
 
-				return tempShader;
+				return t_Shader;
 		}
 
-		UE_LOG_ERROR("Unknown RendererAPI");
+		UE_CORE_ERROR("Unknown RendererAPI");
 		return nullptr;
 	}
 
@@ -59,7 +58,7 @@ namespace UE
 	{
 		if (Exists(name))
 		{
-			UE_LOG_ERROR("Shader already exists!");
+			UE_CORE_ERROR("Shader already exists!");
 			return;
 		}
 		m_Shaders[name] = shader;
@@ -89,7 +88,7 @@ namespace UE
 	{
 		if (!Exists(name))
 		{
-			UE_LOG_ERROR("Shader not found!");
+			UE_CORE_ERROR("Shader not found!");
 			return nullptr;
 		}
 		return m_Shaders[name];

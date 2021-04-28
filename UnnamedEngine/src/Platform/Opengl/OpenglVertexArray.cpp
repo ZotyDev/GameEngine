@@ -1,4 +1,7 @@
+#include "uepch.h"
 #include "OpenglVertexArray.h"
+
+#include <glad/glad.h>
 
 namespace UE
 {
@@ -19,7 +22,7 @@ namespace UE
 		case UE::ShaderDataType::Bool:		return GL_BOOL;
 		}
 
-		UE_LOG_ERROR("Unknown ShaderDataType!");
+		UE_CORE_ERROR("Unknown ShaderDataType!");
 		return 0;
 	}
 

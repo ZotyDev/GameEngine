@@ -1,6 +1,7 @@
+#include "uepch.h"
 #include "OpenGLFramebuffer.h"
 
-#include "Logger/Logger.h"
+#include <glad/glad.h>
 
 namespace UE
 {
@@ -80,7 +81,7 @@ namespace UE
 				case UE::FramebufferTextureFormat::RGBA8: return GL_RGBA8;
 			}
 
-			UE_LOG_ERROR("Unknown Framebuffer format!");
+			UE_CORE_ERROR("Unknown Framebuffer format!");
 			return 0;
 		}
 	}
@@ -174,7 +175,7 @@ namespace UE
 
 		if (!(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE))
 		{
-			UE_LOG_ERROR("Framebuffer is incomplete!");
+			UE_CORE_ERROR("Framebuffer is incomplete!");
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -190,6 +191,11 @@ namespace UE
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void OpenGLFramebuffer::BindColorAttachment(uint32_t index)
+	{
+		glBindTexture(GL_TEXTURE_2D, GetColorAttachmentRendererID(index));
+	}
+
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
 	{
 		m_Specification.Width = width;
@@ -202,7 +208,7 @@ namespace UE
 	{
 		if (attachmentIndex > m_ColorAttachments.size())
 		{
-			UE_LOG_ERROR("Index out of range!");
+			UE_CORE_ERROR("Index out of range!");
 			return;
 		}
 
@@ -214,7 +220,7 @@ namespace UE
 	{
 		if (index > m_ColorAttachments.size())
 		{
-			UE_LOG_ERROR("Index out of range!");
+			UE_CORE_ERROR("Index out of range!");
 			return 0;
 		}
 

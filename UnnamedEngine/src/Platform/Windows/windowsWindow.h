@@ -1,48 +1,41 @@
 #pragma once
 
-#include "Core.h"
-#include "Window/Window.h"
+#include "Core/Window.h"
+#include "Renderer/GraphicsContext.h"
 
-#include "Logger/Logger.h"
-#include "Time/LocalTime.h"
-
-/*
-	WindowResizeCallBack need to be converted to a 'event friendly' alternative
-*/
+#include <GLFW/glfw3.h>
 
 namespace UE
 {
 	class WindowsWindow : public Window
 	{
 	public:
-		WindowsWindow();
 		~WindowsWindow();
 
-		int Initialize(const char* title, unsigned int width, unsigned int height);
-		void* GetNativeWindow() { return m_Window; };
+		virtual int Init(const WindowProps& props);
 
-		int ChangeIcon(const char* iconPath);
-		int ChangeIcon(Image sourceImage);
-		void SetEventCallback(const EventCallbackFn& callback) override { m_WindowData.m_EventCallbackFn = callback; };
+		virtual void OnUpdate() override;
 
-		unsigned int GetWidth() const override { return m_WindowData.m_Width; };
-		unsigned int GetHeight() const override { return m_WindowData.m_Height; };
-		const char* GetTitle() const override { return m_WindowData.m_Title; };
+		virtual uint32_t GetWidth() const override { return m_WindowData.Width; };
+		virtual uint32_t GetHeight() const override { return m_WindowData.Height; };
+		virtual std::string GetTitle() const override { return m_WindowData.Title; };
 
-		int InitGLFW();
-		int InitVulkan();
+		virtual void SetEventCallback(const EventCallbackFn& callback) override { m_WindowData.m_EventCallbackFn = callback; };
+		virtual void SetVSync(bool enabled) override;
+		virtual bool IsVSync() const override;
 
-		int InitWindow(const char* title, unsigned int width, unsigned int height);
-
+		virtual void* GetNativeWindow() { return m_Window; };
 	private:
 		GLFWwindow* m_Window = nullptr;
+		Scope<GraphicsContext> m_Context;
 
 		// WindowData class that stores universal attributes
 		struct WindowData
 		{
-			unsigned int m_Width = 0;
-			unsigned int m_Height = 0;
-			const char* m_Title = 0;
+			uint32_t Width;
+			uint32_t Height;
+			std::string Title;
+			bool VSync;
 
 			EventCallbackFn m_EventCallbackFn;
 		};

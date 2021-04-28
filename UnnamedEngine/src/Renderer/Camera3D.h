@@ -1,6 +1,7 @@
 #pragma once
 
-#include "core.h"
+#include "Core/Base.h"
+#include "glm/glm.hpp"
 
 namespace UE
 {
@@ -19,7 +20,6 @@ namespace UE
 		{
 			m_ViewportWidth = width;
 			m_ViewportHeight = height;
-			UpdateProjection();
 		}
 
 		void Update()

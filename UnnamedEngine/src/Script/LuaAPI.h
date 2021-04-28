@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "Core/Base.h"
 
 extern "C"
 {
@@ -20,6 +20,8 @@ namespace UE
 		// Lua C function always return int, the value is the number of arguments returned by the functionn
 		static void RegisterFunction(const std::string& fnName, lua_CFunction fn);
 		static void RegisterFunction(const std::string& fnName, lua_CFunction fn, void* userPtr);
+
+		static int ExecuteFile(const std::string& filePath);
 
 	private:
 		static bool CheckFunction(int msg);

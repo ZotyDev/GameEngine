@@ -1,4 +1,7 @@
+#include "uepch.h"
 #include "Renderer.h"
+
+#include "Renderer3D.h"
 
 namespace UE
 {
@@ -11,12 +14,13 @@ namespace UE
 
 	void Renderer::Shutdown()
 	{
-
+		Renderer3D::Shutdown();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
 	{
 		RenderCommand::SetViewPort(0, 0, width, height);
+		Renderer3D::OnWindowResize(width, height);
 	}
 
 	void Renderer::SetClearColor(glm::vec4 color)
@@ -33,7 +37,6 @@ namespace UE
 	{
 		SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Clear();
-
 		s_SceneData->ViewProjectionMatrix = camera.GetViewProjection();
 	}
 

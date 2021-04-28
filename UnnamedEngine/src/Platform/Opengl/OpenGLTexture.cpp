@@ -1,6 +1,10 @@
+#include "uepch.h"
 #include "OpenGLTexture.h"
 
-#include "logger/logger.h"
+#include <glad/glad.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 namespace UE
 {
@@ -13,7 +17,7 @@ namespace UE
 		unsigned char* data = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
 		if (!data)
 		{
-			UE_LOG_ERROR("Failed to load texture: ", stbi_failure_reason());
+			UE_CORE_ERROR("Failed to load texture: ", stbi_failure_reason());
 			return -1;
 		}
 		m_Width = width;
@@ -32,7 +36,7 @@ namespace UE
 			dataFormat = GL_RGB;
 			break;
 		default:
-			UE_LOG_ERROR("Unknown format!");
+			UE_CORE_ERROR("Unknown format!");
 			return -1;
 		}
 

@@ -1,3 +1,4 @@
+#include "uepch.h"
 #include "Framebuffer.h"
 
 #include "Renderer/Renderer.h"
@@ -10,10 +11,14 @@ namespace UE
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::OpenGL: return CreateRef<OpenGLFramebuffer>(specs);
+		case RendererAPI::API::None: 
+			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+			return nullptr;
+		case RendererAPI::API::OpenGL: 
+			return CreateRef<OpenGLFramebuffer>(specs);
 		}
 
-		UE_LOG_FATAL("Unknown renderer!");
+		UE_CORE_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
 }

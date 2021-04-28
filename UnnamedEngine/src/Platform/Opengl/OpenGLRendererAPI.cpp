@@ -1,6 +1,7 @@
+#include "uepch.h"
 #include "OpenGLRendererAPI.h"
 
-#include "Logger/Logger.h"
+#include <glad/glad.h>
 
 namespace UE
 {
@@ -18,20 +19,20 @@ namespace UE
 		switch (severity)
 		{
 		case GL_DEBUG_SEVERITY_HIGH:
-			UE_LOG_FATAL(message);
+			UE_CORE_ERROR(message);
 			return;
 		case GL_DEBUG_SEVERITY_MEDIUM:
-			UE_LOG_ERROR(message);
+			UE_CORE_ERROR(message);
 			return;
 		case GL_DEBUG_SEVERITY_LOW:
-			UE_LOG_WARN(message);
+			UE_CORE_ERROR(message);
 			return;
 		case GL_DEBUG_SEVERITY_NOTIFICATION:
-			UE_LOG_INFO(message);
+			UE_CORE_ERROR(message);
 			return;
 		}
 
-		UE_LOG_ERROR("Unknown severity level!");
+		UE_CORE_ERROR("Unknown severity level!");
 	}
 
 

@@ -1,6 +1,5 @@
+#include "uepch.h"
 #include "LuaAPI.h"
-
-#include "Logger/Logger.h"
 
 namespace UE
 {
@@ -29,12 +28,22 @@ namespace UE
 		lua_setglobal(m_LuaState, fnName.c_str());
 	}
 
+	int LuaAPI::ExecuteFile(const std::string& filePath)
+	{
+		if (!CheckFunction(luaL_dofile(m_LuaState, filePath.c_str())))
+		{
+			UE_CORE_ERROR("Failed to execute ", filePath);
+			return -1;
+		}
+		return 0;
+	}
+
 	bool LuaAPI::CheckFunction(int msg)
 	{
 		if (msg != LUA_OK)
 		{
 			std::string errorMsg = lua_tostring(m_LuaState, -1);
-			UE_LOG_ERROR(errorMsg);
+			UE_CORE_ERROR(errorMsg);
 			return false;
 		}
 		

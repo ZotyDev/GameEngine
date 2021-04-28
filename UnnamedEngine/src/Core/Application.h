@@ -2,40 +2,49 @@
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/vec4.hpp>
-#include <glm/mat4x4.hpp>
 
-#include "Core.h"
+#include "Core/Base.h"
 
-#include "Platform/Windows/WindowsWindow.h"
+#include "Core/Window.h"
+
 #include "Events/Event.h"
 #include "Events/GamepadEvent.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
 #include "Events/WindowEvent.h"
 
-#include "Logger/Logger.h"
+#include "Timestep.h"
+#include "LayerStack.h"
+
+int main(int argc, char** argv);
 
 namespace UE
 {
-	class UE_API Application
+	class Application
 	{
 	public:
-		Application();
-
+		Application(const std::string& name = "UnnamedProject");
 		virtual ~Application();
 
-		void Run();
+		void OnEvent(Event& event);
 
-		void Update();
-		void Render();
+		void PushLayer(Layer* layer);
 
+		Window& GetWindow() { return *m_Window; }
+
+		void Close();
+
+		static Application& Get() { return *s_Instance; }
 	private:
+		void Run();
+	private:
+		Ref<Window> m_Window;
 		bool m_Running = true;
 		bool m_Minimized = false;
+		float m_LastFrameTime = 0.0f;
+		LayerStack m_LayerStack;
 
 	private:
-		void OnEvent(Event& event);
 
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);
@@ -48,6 +57,10 @@ namespace UE
 		bool OnMouseScrolled(MouseScrolledEvent& event);
 		bool OnGamepadButtonPressed(GamepadButtonPressedEvent& event);
 		bool OnGamepadButtonReleased(GamepadButtonReleasedEvent& event);
+
+	private:
+		static Application* s_Instance;
+		friend int ::main(int argc, char** argv);
 	};
 
 	Application* CreateApplication();

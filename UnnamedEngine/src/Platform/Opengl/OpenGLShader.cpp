@@ -1,6 +1,8 @@
+#include "uepch.h"
 #include "OpenGLShader.h"
 
-#include "Logger/Logger.h"
+#include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace UE
 {
@@ -20,14 +22,14 @@ namespace UE
 		vShaderFile.open(filepath + ".vert");
 		if (!vShaderFile)
 		{
-			UE_LOG_ERROR("Failed to open ", filepath + ".vert");
+			UE_CORE_ERROR("Failed to open ", filepath + ".vert");
 			return -1;
 		}
 
 		fShaderFile.open(filepath + ".frag");
 		if (!fShaderFile)
 		{
-			UE_LOG_ERROR("Failed to open ", filepath + ".frag");
+			UE_CORE_ERROR("Failed to open ", filepath + ".frag");
 			return -1;
 		}
 
@@ -59,14 +61,14 @@ namespace UE
 		vShaderFile.open(vertexSrc);
 		if (!vShaderFile)
 		{
-			UE_LOG_ERROR("Failed to open ", vertexSrc);
+			UE_CORE_ERROR("Failed to open ", vertexSrc);
 			return -1;
 		}
 
 		fShaderFile.open(fragmentSrc);
 		if (!fShaderFile)
 		{
-			UE_LOG_ERROR("Failed to open ", fragmentSrc);
+			UE_CORE_ERROR("Failed to open ", fragmentSrc);
 			return -1;
 		}
 
@@ -106,7 +108,7 @@ namespace UE
 		if (!success)
 		{
 			glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-			UE_LOG_ERROR("Failed to compile Vertex Shader:\n");
+			UE_CORE_ERROR("Failed to compile Vertex Shader:\n");
 			return -1;
 		}
 
@@ -121,7 +123,7 @@ namespace UE
 		if (!success)
 		{
 			glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-			UE_LOG_ERROR("Failed to compile Fragment Shader:\n");
+			UE_CORE_ERROR("Failed to compile Fragment Shader:\n");
 			std::cout << infoLog << "\n";
 			return -1;
 		}
@@ -137,7 +139,7 @@ namespace UE
 		if (!success)
 		{
 			glGetProgramInfoLog(m_ID, 512, NULL, infoLog);
-			UE_LOG_ERROR("Failed to link Shader Program:\n");
+			UE_CORE_ERROR("Failed to link Shader Program:\n");
 			std::cout << infoLog << "\n";
 			return -1;
 		}

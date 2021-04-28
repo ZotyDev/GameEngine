@@ -1,99 +1,68 @@
-#include "Application.h"
+#include "uepch.h"
+#include "Core/Application.h"
 
 #include "Renderer/Renderer.h"
-#include "Renderer/Shader.h"
-#include "Renderer/Texture.h"
-#include "Renderer/Camera3D.h"
-#include "Renderer/Framebuffer.h"
-#include "Renderer/Primitives.h"
-
 #include "Script/LuaAPI.h"
+
+#include <GLFW/glfw3.h>
+
+#include <lua.h>
+
+#include "Network/NetworkCommand.h"
 
 namespace UE
 {
-	Application::Application()
+	Application* Application::s_Instance = nullptr;
+
+	Application::Application(const std::string& name)
 	{
+		Scope<std::string> test = CreateScope<std::string>();
+
+		UE_CORE_ASSERT(!s_Instance, "Application already exists!");
+		s_Instance = this;
+		m_Window = Window::Create(WindowProps(name));
+		m_Window->SetEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
+
+		Renderer::Init();
+		NetworkCommand::Init();
+		LuaAPI::Init();
 	}
 
 	Application::~Application()
 	{
+		Renderer::Shutdown();
+		LuaAPI::Shutdown();
 	}
 
-	Window* window;
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
+	}
 
-	Ref<ShaderLibrary> m_ShaderLibrary = CreateRef<ShaderLibrary>();
-	
-	Ref<Texture2D> m_Texture2D;
-
-	Camera3D m_Camera;
-
-	Ref<Framebuffer> m_Framebuffer;
-
-	Ref<Primitives::Quad> m_Screen;
-	Ref<Primitives::Quad> m_Quad;
+	void Application::Close()
+	{
+		m_Running = false;
+	}
 
 	void Application::Run()
 	{
-		window = new WindowsWindow();
-		window->Initialize("UnnamedEngine", 1280, 720);
-		Renderer::Init();
-		window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-
-		m_Texture2D = Texture2D::Create("data/textures/grass.png");
-
-		m_Camera = Camera3D(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
-
-		FramebufferSpecification specs;
-		specs.Width = 1280;
-		specs.Height = 720;
-		specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Color));
-		m_Framebuffer = Framebuffer::Create(specs);	
-
-		m_Screen = CreateRef<Primitives::Quad>(glm::vec2(-1.0f, 1.0f), glm::vec2(1.0f, -1.0f));
-		m_Quad = CreateRef<Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));
-
-		m_ShaderLibrary->Load("data/shaders/default");
-		m_ShaderLibrary->Load("data/shaders/screen");
-
 		while (m_Running)
 		{
-			Update();
-			
+			float time = (float)glfwGetTime();
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+
 			if (!m_Minimized)
 			{
-				Render();
+				for (Layer* layer : m_LayerStack)
+				{
+					layer->OnUpdate(timestep);
+				}
 			}
+
+			m_Window->OnUpdate();
 		}
-
-		glfwDestroyWindow((GLFWwindow*)window->GetNativeWindow());
-		glfwTerminate();
-	};
-
-	void Application::Update()
-	{
-		glfwPollEvents();
-
-		Logger::ShowLog("tatest.log");
-
-		m_Camera.Update();
-	};
-
-	void Application::Render()
-	{
-		m_Framebuffer->Bind();
-		Renderer::BeginRender(m_Camera);
-		
-		m_Texture2D->Bind();
-		Renderer::Submit(m_ShaderLibrary->Get("default"), m_Quad->VAO);
-
-		m_Framebuffer->Unbind();
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		
-		glBindTexture(GL_TEXTURE_2D, m_Framebuffer->GetColorAttachmentRendererID());
-		Renderer::Submit(m_ShaderLibrary->Get("screen"), m_Screen->VAO);
-
-		glfwSwapBuffers((GLFWwindow*)window->GetNativeWindow());
 	};
 
 	void Application::OnEvent(Event& event)
@@ -101,6 +70,16 @@ namespace UE
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
 		dispatcher.Dispatch<WindowResizeEvent>(std::bind(&Application::OnWindowResize, this, std::placeholders::_1));
+
+		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
+		{
+			if (event.m_Handled)
+			{
+				break;
+			}
+			(*it)->OnEvent(event);
+		}
+
 		dispatcher.Dispatch<KeyPressedEvent>(std::bind(&Application::OnKeyPressed, this, std::placeholders::_1));
 		dispatcher.Dispatch<KeyReleasedEvent>(std::bind(&Application::OnKeyReleased, this, std::placeholders::_1));
 		dispatcher.Dispatch<KeyTypedEvent>(std::bind(&Application::OnKeyTyped, this, std::placeholders::_1));
@@ -116,7 +95,7 @@ namespace UE
 	{
 		m_Minimized = false;
 		m_Running = false;
-		return false;
+		return true;
 	}
 
 	bool Application::OnWindowResize(WindowResizeEvent& event)
@@ -129,11 +108,7 @@ namespace UE
 			return false;
 		}
 
-		Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
-
-		m_Camera.SetViewportSize(event.GetWidth(), event.GetHeight());
-
-		m_Framebuffer->Resize(event.GetWidth(), event.GetHeight());
+		RenderCommand::SetViewPort(0, 0, event.GetWidth(), event.GetHeight());
 
 		return false;
 	}

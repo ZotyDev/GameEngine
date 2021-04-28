@@ -1,3 +1,4 @@
+#include "uepch.h"
 #include "Camera3D.h"
 
 #define GLM_ENABLE_EXPERIMENTAL

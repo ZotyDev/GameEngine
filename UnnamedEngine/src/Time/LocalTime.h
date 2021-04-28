@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "Core/Base.h"
 
 namespace UE
 {
@@ -8,7 +8,7 @@ namespace UE
 	{
 		extern struct tm _localTime;
 
-		UE_API inline void Update()
+		inline void Update()
 		{
 			time_t tempCurrentTime;
 			struct tm tempLocalTime;
@@ -17,13 +17,13 @@ namespace UE
 			_localTime = tempLocalTime;
 		};
 
-		UE_API inline unsigned int GetSecond() { return _localTime.tm_sec; };
-		UE_API inline unsigned int GetMinute() { return _localTime.tm_min; };
-		UE_API inline unsigned int GetHour() { return _localTime.tm_hour; };
-		UE_API inline unsigned int GetMonth() { return _localTime.tm_mon; };
-		UE_API inline unsigned int GetYear() { return _localTime.tm_year + 1900; };
-		UE_API inline unsigned int GetWeekDay() { return _localTime.tm_wday; };
-		UE_API inline unsigned int GetMonthDay() { return _localTime.tm_mday; };
-		UE_API inline unsigned int GetYearDay() { return _localTime.tm_yday; };
+		inline unsigned int GetSecond() { return _localTime.tm_sec; };
+		inline unsigned int GetMinute() { return _localTime.tm_min; };
+		inline unsigned int GetHour() { return _localTime.tm_hour; };
+		inline unsigned int GetMonth() { return _localTime.tm_mon; };
+		inline unsigned int GetYear() { return _localTime.tm_year + 1900; };
+		inline unsigned int GetWeekDay() { return _localTime.tm_wday; };
+		inline unsigned int GetMonthDay() { return _localTime.tm_mday; };
+		inline unsigned int GetYearDay() { return _localTime.tm_yday; };
 	}
 }

@@ -1,6 +1,5 @@
+#include "uepch.h"
 #include "VertexArray.h"
-
-#include "logger/logger.h"
 
 #include "Renderer.h"
 #include "Platform/Opengl/OpenglVertexArray.h"
@@ -11,10 +10,14 @@ namespace UE
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::OpenGL: return new OpenGLVertexArray();
+		case RendererAPI::API::None:
+			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+			return nullptr;
+		case RendererAPI::API::OpenGL: 
+			return new OpenGLVertexArray();
 		}
 
-		UE_LOG_FATAL("Unknown renderer!");
+		UE_CORE_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
 }

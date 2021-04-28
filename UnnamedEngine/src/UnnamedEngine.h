@@ -1,10 +1,36 @@
 #pragma once
 
-#include "Core.h"
-#include "Logger/Logger.h"
-#include "Time/LocalTime.h"
-#include "Application.h"
+#include "Core/Base.h"
+#include "Core/Application.h"
+#include "Core/Layer.h"
+#include "Core/Log.h"
 
-/* ENTRY POINT */
-#include "EntryPoint.h"
-/*=============*/
+#include "Core/Assert.h"
+
+#include "Core/Timestep.h"
+
+#include "Events/Event.h"
+#include "Events/GamepadEvent.h"
+#include "Events/KeyEvent.h"
+#include "Events/MouseEvent.h"
+#include "Events/WindowEvent.h"*/
+
+/* Script */
+#include "Script/LuaAPI.h"
+
+/* Renderer */
+#include "Renderer/Renderer.h"
+#include "Renderer/RenderCommand.h"
+#include "Renderer/Renderer3D.h"
+
+#include "Renderer/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/Shader.h"
+#include "Renderer/Framebuffer.h"
+#include "Renderer/Texture.h"
+
+#include "Renderer/Camera3D.h"
+#include "Renderer/CameraController.h"
+
+#include "Renderer/Primitives.h""

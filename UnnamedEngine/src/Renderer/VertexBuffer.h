@@ -1,10 +1,5 @@
 #pragma once
 
-#include "Core.h"
-
-#include "Logger/Logger.h"
-#include "Time/LocalTime.h"
-
 namespace UE
 {
 	enum class ShaderDataType
@@ -33,7 +28,7 @@ namespace UE
 			case ShaderDataType::Bool:		return 1;
 		}
 
-		UE_LOG_ERROR("Uknown ShaderDataType!");
+		UE_CORE_ERROR( "Uknown ShaderDataType!");
 		return 0;
 	};
 
@@ -68,7 +63,7 @@ namespace UE
 			case ShaderDataType::Bool:		return 1;
 			}
 
-			UE_LOG_ERROR("Uknown ShaderDataType!");
+			UE_CORE_ERROR("Uknown ShaderDataType!");
 
 			return 0;
 		};

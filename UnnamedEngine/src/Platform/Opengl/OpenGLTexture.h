@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Renderer/Texture.h"
-
-#include <stb_image.h>
+#include "glad/glad.h"
 
 namespace UE
 {

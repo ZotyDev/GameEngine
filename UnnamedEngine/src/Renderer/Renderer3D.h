@@ -1,32 +1,37 @@
 #pragma once
 
-#include "core.h"
+#include "Core/Base.h"
 
 #include "Renderer/Camera3D.h"
+#include "Renderer/Shader.h"
+#include "Renderer/Framebuffer.h"
+#include "Renderer/Primitives.h"
 
 namespace UE
 {
-	/*class Renderer3D
+	class Renderer3D
 	{
 	public:
-		static void Init();
+		static void Init(Ref<Shader> ScreenShader, Ref<Framebuffer> ScreenFramebuffer);
 		static void Shutdown();
 
-		static void BeginScene(const Camera3D& camera);
-		static void EndScene();
+		static void OnWindowResize(uint32_t width, uint32_t height);
+
+		static void BeginRender(const Camera3D& camera);
+		static void EndRender();
 		static void Flush();
 
-		// Primitives
-		static void DrawQuad(PLANE_DATA);
+		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray);
 
-		// Stats
-		struct Statistics
+	private:
+		struct Renderer3DData
 		{
-			uint32_t DrawCalls = 0;
-			uint32_t VertexCount = 0;
+			glm::mat4 ViewProjectionMatrix;
+			Ref<Framebuffer> ScreenFramebuffer;
+			Ref<Shader> ScreenShader;
+			Ref<Primitives::Quad> ScreenMesh;
 		};
 
-		static void ResetStats();
-		static Statistics GetStats();
-	};*/
+		static Scope<Renderer3DData> s_Data;
+	};
 }

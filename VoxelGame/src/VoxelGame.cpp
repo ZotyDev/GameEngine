@@ -1,13 +1,14 @@
 #include <UnnamedEngine.h>
+#include <Core/EntryPoint.h>
 
-#include <iostream>
+#include "VoxelGameApp.h"
 
 class VoxelGame : public UE::Application
 {
 public:
 	VoxelGame()
 	{
-
+		PushLayer(new VoxelGameApp());
 	}
 
 	~VoxelGame()
