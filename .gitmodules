@@ -10,3 +10,6 @@
 [submodule "UnnamedEngine/vendor/LUA"]
 	path = UnnamedEngine/vendor/LUA
 	url = https://github.com/ZotyDev/lua
+[submodule "UnnamedEngine/vendor/spdlog"]
+	path = UnnamedEngine/vendor/spdlog
+	url = https://github.com/ZotyDev/spdlog
