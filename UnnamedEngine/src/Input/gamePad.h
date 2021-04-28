@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Core.h"
+#include "Core/Base.h"
 #include "GamepadCodes.h"
 #include "Events/GamepadEvent.h"
+
+#include <GLFW/glfw3.h>
 
 namespace UE
 {

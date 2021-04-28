@@ -68,8 +68,9 @@ namespace UE
 	void Application::OnEvent(Event& event)
 	{
 		EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
-		dispatcher.Dispatch<WindowResizeEvent>(std::bind(&Application::OnWindowResize, this, std::placeholders::_1));
+		dispatcher.Dispatch<WindowCloseEvent>(UE_BIND_EVENT_FN(OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
+		dispatcher.Dispatch<KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
@@ -79,16 +80,6 @@ namespace UE
 			}
 			(*it)->OnEvent(event);
 		}
-
-		dispatcher.Dispatch<KeyPressedEvent>(std::bind(&Application::OnKeyPressed, this, std::placeholders::_1));
-		dispatcher.Dispatch<KeyReleasedEvent>(std::bind(&Application::OnKeyReleased, this, std::placeholders::_1));
-		dispatcher.Dispatch<KeyTypedEvent>(std::bind(&Application::OnKeyTyped, this, std::placeholders::_1));
-		dispatcher.Dispatch<MouseButtonPressedEvent>(std::bind(&Application::OnMousePressed, this, std::placeholders::_1));
-		dispatcher.Dispatch<MouseButtonReleasedEvent>(std::bind(&Application::OnMouseReleased, this, std::placeholders::_1));
-		dispatcher.Dispatch<MouseMovedEvent>(std::bind(&Application::OnMouseMoved, this, std::placeholders::_1));
-		dispatcher.Dispatch<MouseScrolledEvent>(std::bind(&Application::OnMouseScrolled, this, std::placeholders::_1));
-		dispatcher.Dispatch<GamepadButtonPressedEvent>(std::bind(&Application::OnGamepadButtonPressed, this, std::placeholders::_1));
-		dispatcher.Dispatch<GamepadButtonReleasedEvent>(std::bind(&Application::OnGamepadButtonReleased, this, std::placeholders::_1));
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& event)
@@ -113,48 +104,25 @@ namespace UE
 		return false;
 	}
 
+	bool IsCursorHidden = false;
+
 	bool Application::OnKeyPressed(KeyPressedEvent& event)
 	{
-		return false;
-	}
-
-	bool Application::OnKeyReleased(KeyReleasedEvent& event)
-	{
-		return false;
-	}
-
-	bool Application::OnKeyTyped(KeyTypedEvent& event)
-	{
-		return false;
-	}
-
-	bool Application::OnMousePressed(MouseButtonPressedEvent& event)
-	{
-		return false;
-	}
-
-	bool Application::OnMouseReleased(MouseButtonReleasedEvent& event)
-	{
-		return false;
-	}
-
-	bool Application::OnMouseMoved(MouseMovedEvent& event)
-	{
-		return false;
-	}
-
-	bool Application::OnMouseScrolled(MouseScrolledEvent& event)
-	{
-		return false;
-	}
-
-	bool Application::OnGamepadButtonPressed(GamepadButtonPressedEvent& event)
-	{
-		return false;
-	}
-
-	bool Application::OnGamepadButtonReleased(GamepadButtonReleasedEvent& event)
-	{
+		switch (event.GetKeyCode())
+		{
+		case KeyCode::LeftAlt:
+			if (IsCursorHidden)
+			{
+				glfwSetInputMode((GLFWwindow*)m_Window->GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				IsCursorHidden = !IsCursorHidden;
+			}
+			else
+			{
+				glfwSetInputMode((GLFWwindow*)m_Window->GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				IsCursorHidden = !IsCursorHidden;
+			}
+			break;
+		}
 		return false;
 	}
 }

@@ -45,19 +45,9 @@ namespace UE
 		LayerStack m_LayerStack;
 
 	private:
-
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);
 		bool OnKeyPressed(KeyPressedEvent& event);
-		bool OnKeyReleased(KeyReleasedEvent& event);
-		bool OnKeyTyped(KeyTypedEvent& event);
-		bool OnMousePressed(MouseButtonPressedEvent& event);
-		bool OnMouseReleased(MouseButtonReleasedEvent& event);
-		bool OnMouseMoved(MouseMovedEvent& event);
-		bool OnMouseScrolled(MouseScrolledEvent& event);
-		bool OnGamepadButtonPressed(GamepadButtonPressedEvent& event);
-		bool OnGamepadButtonReleased(GamepadButtonReleasedEvent& event);
-
 	private:
 		static Application* s_Instance;
 		friend int ::main(int argc, char** argv);
