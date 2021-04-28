@@ -8,7 +8,7 @@ Its main goal is performance, allowing me to create crazy and complex stuff with
 ## Current Features:
 - Async Logger 
 - Event System
-- OpenGL
+- OpenGL Renderer
 
 ## To do:
 - Vulkan Renderer
