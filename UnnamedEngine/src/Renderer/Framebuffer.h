@@ -55,6 +55,8 @@ namespace UE
 
 		virtual void BindColorAttachment(uint32_t index = 0) = 0;
 
+		virtual void BindDepthAttachment(uint32_t slot = 0) = 0;
+
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 
 		virtual void ClearAttachment(uint32_t attachmentIndex, int value) = 0;

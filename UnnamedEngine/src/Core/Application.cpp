@@ -99,7 +99,7 @@ namespace UE
 			return false;
 		}
 
-		RenderCommand::SetViewPort(0, 0, event.GetWidth(), event.GetHeight());
+		RenderCommand::SetViewport(0, 0, event.GetWidth(), event.GetHeight());
 
 		return false;
 	}
@@ -121,6 +121,9 @@ namespace UE
 				glfwSetInputMode((GLFWwindow*)m_Window->GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				IsCursorHidden = !IsCursorHidden;
 			}
+			break;
+		case KeyCode::Escape:
+			m_Running = false;
 			break;
 		}
 		return false;

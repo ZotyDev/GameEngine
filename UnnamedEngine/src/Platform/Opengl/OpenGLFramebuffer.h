@@ -17,6 +17,8 @@ namespace UE
 
 		virtual void BindColorAttachment(uint32_t index = 0) override;
 
+		virtual void BindDepthAttachment(uint32_t slot = 0) override;
+
 		virtual void Resize(uint32_t width, uint32_t height) override;
 
 		virtual void ClearAttachment(uint32_t attachmentIndex, int value) override;

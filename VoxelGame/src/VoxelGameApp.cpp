@@ -1,8 +1,12 @@
 #include "VoxelGameApp.h"
 
+#include "World/ChunkManager.h"
+
 VoxelGameApp::VoxelGameApp()
 {
 }
+
+ChunkManager m_ChunkManager;
 
 void VoxelGameApp::OnAttach()
 {
@@ -15,6 +19,7 @@ void VoxelGameApp::OnAttach()
 	specs.Width = 1280;
 	specs.Height = 720;
 	specs.Attachments.Attachments.push_back(UE::FramebufferTextureSpecification(UE::FramebufferTextureFormat::Color));
+	specs.Attachments.Attachments.push_back(UE::FramebufferTextureSpecification(UE::FramebufferTextureFormat::Depth));
 	m_Framebuffer = UE::Framebuffer::Create(specs);
 
 	m_Screen = UE::CreateRef<UE::Primitives::Quad>(glm::vec2(-1.0f, 1.0f), glm::vec2(1.0f, -1.0f));
@@ -37,6 +42,9 @@ void VoxelGameApp::OnAttach()
 	UE::LuaAPI::ExecuteFile("data/mods/shaders.lua");
 
 	UE::Renderer3D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer);
+
+	// TEMPORARY CHUNK
+	m_ChunkManager.AddChunk({ 0, 0, 0 });
 }
 
 void VoxelGameApp::OnDetach()
@@ -52,14 +60,19 @@ void VoxelGameApp::OnUpdate(UE::Timestep timestep)
 
 void VoxelGameApp::Render()
 {
-	UE::Renderer3D::BeginRender(m_CameraController->GetCamera()); 	// Start Render
+	UE::Renderer3D::BeginRender(m_CameraController->GetCamera());
 	/*============================================================================*/
 
-	m_Texture2D->Bind();
-	UE::Renderer3D::Submit(m_ShaderLibrary->Get("default"), m_Quad->VAO);
+	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 0.0f, 0.0f, 0.0f });
+	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 1.0f, 0.0f, 0.0f });
+	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 0.0f, 1.0f, 0.0f });
+	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 0.0f, 0.0f, 1.0f });
+	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { -1.0f, 0.0f, 0.0f });
+	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 0.0f, -1.0f, 0.0f });
+	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 0.0f, 0.0f, -1.0f });
 
 	/*============================================================================*/
-	UE::Renderer3D::EndRender(); // Stop Render
+	UE::Renderer3D::EndRender();
 }
 
 void VoxelGameApp::OnEvent(UE::Event& event)

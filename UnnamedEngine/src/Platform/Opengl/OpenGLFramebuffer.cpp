@@ -196,6 +196,12 @@ namespace UE
 		glBindTexture(GL_TEXTURE_2D, GetColorAttachmentRendererID(index));
 	}
 
+	void OpenGLFramebuffer::BindDepthAttachment(uint32_t slot)
+	{
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
+	}
+
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
 	{
 		m_Specification.Width = width;

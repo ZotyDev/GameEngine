@@ -53,11 +53,23 @@ namespace UE
 
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
+
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 	}
 
-	void OpenGLRendererAPI::SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+	void OpenGLRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 	{
 		glViewport(x, y, width, height);
+	}
+
+	void OpenGLRendererAPI::GetViewport(uint32_t& width, uint32_t& height)
+	{
+		GLint t_viewport[4];
+		glGetIntegerv(GL_VIEWPORT, t_viewport);
+		width = t_viewport[2];
+		height = t_viewport[3];
+		
 	}
 
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
@@ -68,6 +80,21 @@ namespace UE
 	void OpenGLRendererAPI::Clear()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	void OpenGLRendererAPI::ClearDepth()
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+
+	void OpenGLRendererAPI::CullFront()
+	{
+		glCullFace(GL_FRONT);
+	}
+
+	void OpenGLRendererAPI::CullBack()
+	{
+		glCullFace(GL_BACK);
 	}
 
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount)

@@ -183,7 +183,7 @@ namespace UE
 			});
 
 		// Set Viewport
-		RenderCommand::SetViewPort(0, 0, m_WindowData.Width, m_WindowData.Height);
+		RenderCommand::SetViewport(0, 0, m_WindowData.Width, m_WindowData.Height);
 
 		return 0;
 	};
