@@ -81,6 +81,30 @@ namespace UE
 				data.m_EventCallbackFn(event);
 			});
 
+		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focused)
+			{
+				// GetWindowUserPointer being used to retrieve a pointer to m_WindowData inside the WindowsWindow class
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);				
+				if (focused)
+				{
+					WindowFocusEvent event;
+					data.m_EventCallbackFn(event);
+				}
+				else
+				{
+					WindowLostFocusEvent event;
+					data.m_EventCallbackFn(event);
+				}
+			});
+
+		glfwSetWindowPosCallback(m_Window, [](GLFWwindow* window, int xpos, int ypos)
+			{
+				// GetWindowUserPointer being used to retrieve a pointer to m_WindowData inside the WindowsWindow class
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+				WindowMovedEvent event(xpos, ypos);
+				data.m_EventCallbackFn(event);
+			});
+
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
 				// GetWindowUserPointer being used to retrieve a pointer to m_WindowData inside the WindowsWindow class
@@ -159,7 +183,7 @@ namespace UE
 			});
 
 		// Set Viewport
-		RenderCommand::SetViewPort(0, 0, m_WindowData.Width, m_WindowData.Height);
+		RenderCommand::SetViewport(0, 0, m_WindowData.Width, m_WindowData.Height);
 
 		return 0;
 	};
