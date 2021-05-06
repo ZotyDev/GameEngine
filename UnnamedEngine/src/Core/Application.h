@@ -10,8 +10,8 @@
 #include "Events/Event.h"
 #include "Events/GamepadEvent.h"
 #include "Events/KeyEvent.h"
-#include "Events/MouseEvent.h"
 #include "Events/WindowEvent.h"
+#include "Events/NetworkEvent.h"
 
 #include "Timestep.h"
 #include "LayerStack.h"
@@ -48,6 +48,9 @@ namespace UE
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);
 		bool OnKeyPressed(KeyPressedEvent& event);
+		bool OnClientConnected(ClientConnectedEvent& event);
+		bool OnClientDisconnected(ClientDisconectedEvent& event);
+		bool OnClientMessage(ClientMessageEvent& event);
 	private:
 		static Application* s_Instance;
 		friend int ::main(int argc, char** argv);

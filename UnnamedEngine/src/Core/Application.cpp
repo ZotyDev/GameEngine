@@ -9,10 +9,14 @@
 #include <lua.h>
 
 #include "Network/NetworkCommand.h"
+#include "Network/Socket.h"
+#include "Network/Packet.h"
 
 namespace UE
 {
 	Application* Application::s_Instance = nullptr;
+
+	Ref<Socket> t_Socket1;
 
 	Application::Application(const std::string& name)
 	{
@@ -25,6 +29,13 @@ namespace UE
 
 		Renderer::Init();
 		NetworkCommand::Init();
+		NetworkCommand::InitServer("27015");
+		NetworkCommand::SetServerEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
+
+		t_Socket1 = Socket::Create();
+		t_Socket1->Init();
+		t_Socket1->Connect("127.0.0.1", "27015");
+
 		LuaAPI::Init();
 	}
 
@@ -45,6 +56,7 @@ namespace UE
 		m_Running = false;
 	}
 
+	double last = 0;
 	void Application::Run()
 	{
 		while (m_Running)
@@ -59,6 +71,8 @@ namespace UE
 				{
 					layer->OnUpdate(timestep);
 				}
+
+				NetworkCommand::OnServerUpdate();
 			}
 
 			m_Window->OnUpdate();
@@ -71,6 +85,9 @@ namespace UE
 		dispatcher.Dispatch<WindowCloseEvent>(UE_BIND_EVENT_FN(OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
 		dispatcher.Dispatch<KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
+		dispatcher.Dispatch<ClientConnectedEvent>(UE_BIND_EVENT_FN(OnClientConnected));
+		dispatcher.Dispatch<ClientDisconectedEvent>(UE_BIND_EVENT_FN(OnClientDisconnected));
+		dispatcher.Dispatch<ClientMessageEvent>(UE_BIND_EVENT_FN(OnClientMessage));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
@@ -125,7 +142,30 @@ namespace UE
 		case KeyCode::Escape:
 			m_Running = false;
 			break;
+		case KeyCode::Enter:
+			Packet StringPacket(Packet::PacketType::CharArray);
+			StringPacket << std::string("Hey hey hey, I'm a message!");
+			t_Socket1->Send(StringPacket);
+			break;
 		}
+		return false;
+	}
+
+	bool Application::OnClientConnected(ClientConnectedEvent& event)
+	{
+		UE_CORE_INFO("{0} connected!", event.GetAddress());
+		return false;
+	}
+
+	bool Application::OnClientDisconnected(ClientDisconectedEvent& event)
+	{
+		UE_CORE_INFO("{0} disconnected!", event.GetAddress());
+		return false;
+	}
+
+	bool Application::OnClientMessage(ClientMessageEvent& event)
+	{
+		UE_CORE_INFO("MESSAGE");
 		return false;
 	}
 }

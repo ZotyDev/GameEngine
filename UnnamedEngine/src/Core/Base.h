@@ -7,6 +7,10 @@
 #ifdef UE_DEBUG
 	#if defined(UE_PLATFORM_WINDOWS)
 		#define UE_DEBUG_BREAK() __debugbreak()
+
+		#define UE_BYTESWAP_16(x) _byteswap_ushort(x)
+		#define UE_BYTESWAP_32(x) _byteswap_ulong(x)
+		#define UE_BYTESWAP_64(x) _byteswap_uint64(x)
 	#elif defined(UE_PLATFORM_LINUX)
 		#include <signal.h>
 		#define UE_DEBUG_BREAK() raise(SIGTRAP)
@@ -46,3 +50,4 @@ namespace UE
 
 #include "Core/Log.h"
 #include "Core/Assert.h"
+#include "Core/PlatformUtilities.h"
