@@ -13,3 +13,6 @@
 [submodule "UnnamedEngine/vendor/spdlog"]
 	path = UnnamedEngine/vendor/spdlog
 	url = https://github.com/ZotyDev/spdlog
+[submodule "UnnamedEngine/vendor/ENET"]
+	path = UnnamedEngine/vendor/ENET
+	url = https://github.com/ZotyDev/enet
