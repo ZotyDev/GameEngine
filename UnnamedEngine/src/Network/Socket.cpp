@@ -1,11 +1,13 @@
 #include "uepch.h"
 #include "Network/Socket.h"
 
+#include "Network/NetworkAPI.h"
+
 #include "Platform/Winsock/WinsockSocket.h"
 
 namespace UE
 {
-	Ref<Socket> Socket::Create()
+	Scope<Socket> Socket::Create()
 	{
 		switch (NetworkAPI::GetAPI())
 		{
@@ -13,7 +15,7 @@ namespace UE
 			UE_CORE_ASSERT(false, "NetworkAPI::None is currently not supported!");
 			return nullptr;
 		case UE::NetworkAPI::API::Winsock:
-			return CreateRef<WinsockSocket>();
+			return CreateScope<WinsockSocket>();
 		}
 
 		UE_CORE_ERROR("Unknown NetworkAPI!");

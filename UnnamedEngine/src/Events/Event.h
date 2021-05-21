@@ -11,6 +11,8 @@ namespace UE
 		KeyPressed, KeyReleased, KeyTyped,
 		GamepadButtonPressed, GamepadButtonReleased, GamepadAxisUpdated,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
+		ClientConnected, ClientDisconnected, ClientMessage,
+		ServerMessage
 	};
 
 	enum EventCategory

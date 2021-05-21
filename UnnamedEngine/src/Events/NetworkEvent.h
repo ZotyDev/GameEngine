@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Events/Event.h"
+#include "Network/Packet.h"
 
 namespace UE
 {
@@ -45,14 +46,14 @@ namespace UE
 	class ClientMessageEvent : public NetworkEvent
 	{
 	public:
-		ClientMessageEvent(std::string ip, unsigned short port, const char* data)
-			: NetworkEvent(ip, port), m_Data(data)
+		ClientMessageEvent(std::string ip, unsigned short port, Ref<Packet> packet)
+			: NetworkEvent(ip, port), m_Packet(packet)
 		{}
 
-		const char* GetData() { return m_Data; }
+		Ref<Packet> GetPacket() { return m_Packet; }
 
 		EVENT_CLASS_TYPE(ClientMessage)
 	private:
-		const char* m_Data;
+		Ref<Packet> m_Packet;
 	};
 }

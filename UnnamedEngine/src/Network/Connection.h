@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Network/Socket.h"
+#include "Network/IPEndpoint.h"
 #include "Network/Packet.h"
 
 namespace UE
@@ -8,14 +8,48 @@ namespace UE
 	class Connection
 	{
 	public:
-		Connection(Ref<Socket> socket);
-		void Close();
+		enum ConnectionState
+		{
+			Disconnected = 0,
+			SendingConnectionRequest,
+			SendingChallenge,
+			PendingChallenge,
+			SendingChallengeResponse,
+			PendingChallengeResponse,
+			Connected
+		};
+	public:
+		Connection();
+		~Connection();
 
-		Ref<Socket> m_Socket;
+		int ClientConnect();
+		int ClientDisconnect();
 
-		Packet::PacketTask m_Task = Packet::PacketTask::ProcessPacketSize;
-		int m_ExtractionOffset = 0;
-		uint16_t m_PacketSize = 0;
-		char m_Buffer[UE_MAX_PACKET_SIZE];
+		int ServerConnect();
+		int ServerDisconnect();
+
+		bool IsConnected() const { return m_Connected; }
+
+		void SetConnectionState(ConnectionState connectionState) { m_CurrentConnectionState = connectionState; }
+		ConnectionState GetConnectionState() { return m_CurrentConnectionState; }
+
+		Ref<Packet> GetIncomingPacket();
+		void AddIncomingPacket(Ref<Packet> incomingPacket) { m_IncomingPacketQueue.push(incomingPacket); }
+		uint32_t GetIncomingPacketQueueSize() { return m_IncomingPacketQueue.size(); }
+
+		Ref<Packet> GetOutgoingPacket();
+		void AddOutgoingPacket(Ref<Packet> outgoingPacket) { m_OutgoingPacketQueue.push(outgoingPacket); }
+		uint32_t GetOutgoingPacketQueueSize() { return m_OutgoingPacketQueue.size(); }
+
+		Ref<IPEndpoint> GetIPEndpoint() { return m_IPEndpoint; }
+	private:
+		ConnectionState m_CurrentConnectionState = ConnectionState::Disconnected;
+	private:
+		std::queue<Ref<Packet>> m_IncomingPacketQueue;
+		std::queue<Ref<Packet>> m_OutgoingPacketQueue;
+		uint64_t m_ClientSalt = 0;
+		uint64_t m_ServerSalt = 0;
+		Ref<IPEndpoint> m_IPEndpoint;
+		bool m_Connected = false;
 	};
 }

@@ -7,10 +7,10 @@
 #ifdef UE_DEBUG
 	#if defined(UE_PLATFORM_WINDOWS)
 		#define UE_DEBUG_BREAK() __debugbreak()
-
-		#define UE_BYTESWAP_16(x) _byteswap_ushort(x)
-		#define UE_BYTESWAP_32(x) _byteswap_ulong(x)
-		#define UE_BYTESWAP_64(x) _byteswap_uint64(x)
+		
+		#define UE_BYTESWAP_16(x)		_byteswap_ushort(x)
+		#define UE_BYTESWAP_32(x)		_byteswap_ulong(x)
+		#define UE_BYTESWAP_64(x)		_byteswap_uint64(x)
 	#elif defined(UE_PLATFORM_LINUX)
 		#include <signal.h>
 		#define UE_DEBUG_BREAK() raise(SIGTRAP)
@@ -28,6 +28,9 @@
 #define BIT(x) (1 << x)
 
 #define UE_BIND_EVENT_FN(fn) [this](auto&&... args)->decltype(auto) {return this->fn(std::forward<decltype(args)>(args)...);}
+
+#define UE_VALUE_ERROR -1
+#define UE_VALUE_SUCCESS 0
 
 namespace UE
 {

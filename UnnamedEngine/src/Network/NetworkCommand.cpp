@@ -3,6 +3,9 @@
 
 namespace UE
 {
+	bool NetworkCommand::IsServer = false;
+	bool NetworkCommand::IsConnected = false;
 	Scope<NetworkAPI> NetworkCommand::s_NetworkAPI = NetworkAPI::Create();
-	Scope<NetworkServer> NetworkCommand::s_NetworkServer = NetworkServer::Create();
+	Scope<Server> NetworkCommand::s_Server = CreateScope<Server>();
+	Scope<Client> NetworkCommand::s_Client = CreateScope<Client>();
 }
