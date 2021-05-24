@@ -3,11 +3,18 @@
 
 namespace UE
 {
-	Message::Message(MessageSource messageSource, MessageType messageType)
+	uint64_t Message::MessageCounter = 0;
+
+	Message::Message(MessageSource messageSource, MessageType messageType, bool reliable)
 	{
 		Clear();
 		SetMessageSource(messageSource);
 		SetMessageType(messageType);
+		
+		m_Reliable = reliable;
+
+		MessageCounter++;
+		m_ID = MessageCounter;
 	}
 
 	void Message::SetMessageSource(const MessageSource& messageSource)

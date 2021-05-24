@@ -1,6 +1,8 @@
 #include "uepch.h"
 #include "Network/Connection.h"
 
+#include "Math/Random/Salt.h"
+
 namespace UE
 {
 	Connection::Connection()
@@ -19,10 +21,7 @@ namespace UE
 		case Connection::ConnectionState::Disconnected:
 		{
 			// Send connection request
-			std::random_device RandomDevice;
-			std::mt19937_64 Generator(RandomDevice());
-			std::uniform_int_distribution<uint64_t> Distribuition(std::llround(std::pow(2, 62)), std::llround(std::pow(2, 63)));
-			m_ClientSalt = Distribuition(Generator);
+			m_ClientSalt = SaltUint64();
 
 			Packet ConnectionRequestPacket(Packet::PacketType::ConnectionRequest);
 			ConnectionRequestPacket << m_ClientSalt;
@@ -102,10 +101,7 @@ namespace UE
 		case Connection::ConnectionState::SendingChallenge:
 		{
 			// Send challenge packet
-			std::random_device RandomDevice;
-			std::mt19937_64 Generator(RandomDevice());
-			std::uniform_int_distribution<uint64_t> Distribuition(std::llround(std::pow(2, 62)), std::llround(std::pow(2, 63)));
-			m_ServerSalt = Distribuition(Generator);
+			m_ServerSalt = SaltUint64();
 
 			Packet ChallengePacket(Packet::PacketType::ConnectionChallenge);
 			ChallengePacket << m_ClientSalt;

@@ -12,6 +12,8 @@
 #include "Network/Packet.h"
 #include "Network/Socket.h"
 
+#include "Math/Random/Salt.h"
+
 namespace UE
 {
 	Application* Application::s_Instance = nullptr;
@@ -51,6 +53,8 @@ namespace UE
 
 		//test1Message >> result;
 		test1Message >> resultN;
+
+		UE_CORE_INFO("{0} - {1} - {2} - {3} - {4}", SaltUint64(), SaltUint64(), SaltUint64(), SaltUint64(), SaltUint64());
 
 		UE_CORE_INFO("String: {0} - Number {0}", resultN);
 

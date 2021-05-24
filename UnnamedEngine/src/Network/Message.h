@@ -15,7 +15,7 @@ namespace UE
 	class Message
 	{
 	public:
-		Message(MessageSource messageSource, MessageType messageType);
+		Message(MessageSource messageSource, MessageType messageType, bool reliable = true);
 
 		void SetMessageSource(const MessageSource& messageSource);
 		MessageSource GetMessageSource();
@@ -67,5 +67,8 @@ namespace UE
 		std::vector<char> m_Buffer;
 		uint32_t m_ExtractionOffset = 0;
 		bool m_Reliable = false;
+		uint64_t m_ID = 0;
+	private:
+		static uint64_t MessageCounter;
 	};
 }
