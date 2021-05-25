@@ -21,6 +21,8 @@ namespace UE
 
 		void OnUpdate();
 
+		int SendMessage(Ref<Message> message);
+
 		void SetEventCallback(const EventCallbackFn& callback)
 		{
 			m_EventCallbackFn = callback;
@@ -36,7 +38,7 @@ namespace UE
 		Ref<Socket> m_ListeningSocket;
 		Ref<Connection> m_ListeningConnection;
 		
-		Scope<ConnectionManager> m_ConnectionManager;
+		ConnectionManager m_ConnectionManager;
 
 		uint32_t m_ConnectionCount = 0;
 		uint32_t m_MaxConnections = 16; 

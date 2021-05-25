@@ -1,10 +1,14 @@
 #include "uepch.h"
 #include "Network/Client.h"
 
+#include "Math/Random/Salt.h"
+
 namespace UE
 {
 	Client::Client()
 	{
+		m_Socket = Socket::Create();
+		m_Connection = CreateRef<Connection>();
 	}
 
 	Client::~Client()
@@ -13,12 +17,20 @@ namespace UE
 
 	void Client::Init()
 	{
-		m_Socket = Socket::Create();
-		m_Connection = CreateRef<Connection>();
 		int result = m_Socket->Init();
 		if (result == UE_VALUE_ERROR)
 		{
 			UE_CORE_ERROR("Client Init() failed: could not initialize socket");
+			return;
+		}
+
+		IPEndpoint MyAddress;
+		MyAddress.SetIp("0.0.0.0");
+		MyAddress.SetPort("27016");
+		result = m_Socket->Bind(MyAddress);
+		if (result == UE_VALUE_ERROR)
+		{
+			UE_CORE_ERROR("Client Init() failed: coult not bind socket");
 			return;
 		}
 
@@ -37,27 +49,85 @@ namespace UE
 
 	void Client::OnUpdate()
 	{
+		// Connection code
 		if (m_AttemptingConnection)
 		{
-			m_Connection->ClientConnect();
+			if (m_Connection->ClientConnect() == UE_VALUE_SUCCESS)
+			{
+				m_AttemptingConnection = false;
+			}
+		}
+		else // UpdateCode
+		{
+
 		}
 
-		if (m_Connection->GetOutgoingPacketQueueSize() > 0)
+
+		// Construct reliable packet
+		if (m_Connection->GetMessageManager()->GetReliableOutgoingMessageCount() > 0)
 		{
-			Packet SentPacket = *m_Connection->GetOutgoingPacket();
-			IPEndpoint Destination = *m_Connection->GetIPEndpoint();
-			m_Socket->SendTo(Destination, SentPacket);
+			Packet ReliableOutgoingPacket(Packet::PacketType::MessagePacket);
+			ReliableOutgoingPacket.SetPacketReliability(true);
+			ReliableOutgoingPacket << *m_Connection->GetMessageManager()->GetReliableOutgoingMessage();
+
+			m_Connection->GetPacketManager()->Send(CreateRef<Packet>(ReliableOutgoingPacket));
 		}
-		//UE_CORE_INFO("Don't go bananas yet");
+
+		// Construct unreliable packet
+		if (m_Connection->GetMessageManager()->GetUnreliableOutgoingMessageCount() > 0)
+		{
+			Packet UnreliableOutgoingPacket(Packet::PacketType::MessagePacket);
+			UnreliableOutgoingPacket.SetPacketReliability(false);
+			UnreliableOutgoingPacket << *m_Connection->GetMessageManager()->GetUnreliableOutgoingMessage();
+
+			m_Connection->GetPacketManager()->Send(CreateRef<Packet>(UnreliableOutgoingPacket));
+		}
+
+		// Send reliable packets
+		if (m_Connection->GetPacketManager()->RemainingReliableOutgoingPackets() > 0)
+		{
+			m_Socket->SendTo(m_Connection->GetIPEndpoint(), *m_Connection->GetPacketManager()->GetReliableOutgoingPacket());
+		}
+
+		// Send unreliable packets
+		if (m_Connection->GetPacketManager()->RemainingUnreliableOutgoingPackets() > 0)
+		{
+			m_Socket->SendTo(m_Connection->GetIPEndpoint(), *m_Connection->GetPacketManager()->GetUnreliableOutgoingPacket());
+		}
+		
+		// Receive packets
+		IPEndpoint ServerAddress;
+		Packet ReceivedPacket;
+
+		m_Socket->Poll();
+
+		if (m_Socket->IsReceivingPackets())
+		{
+			int result = m_Socket->RecvFrom(ServerAddress, ReceivedPacket);
+			if (result == UE_VALUE_ERROR)
+			{
+				UE_CORE_ERROR("Client OnUpdate() failed: Socket RecvFrom() failed");
+				return;
+			}
+			else if (result == -2)
+			{
+				return;
+			}
+
+			m_Connection->GetPacketManager()->Receive(CreateRef<Packet>(ReceivedPacket));
+		}
 	}
 
 	int Client::Connect(IPEndpoint destination)
 	{
-		m_Connection->GetIPEndpoint()->SetIp(destination.GetIp());
-		m_Connection->GetIPEndpoint()->SetPort(destination.GetPort());
-
+		m_Connection->SetIPEndpoint(destination);
 		m_AttemptingConnection = true;
 
 		return 0;
+	}
+
+	int Client::SendMessage(Ref<Message> message)
+	{
+		return m_Connection->SendMessage(message);
 	}
 }

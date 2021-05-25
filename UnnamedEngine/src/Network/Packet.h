@@ -14,16 +14,6 @@ namespace UE
 			First,
 
 			Invalid,
-			UIntArray,
-			UShortArray,
-			ULongArray,
-			ULongLongArray,
-			CharArray,
-			UCharArray,
-			BoolArray,
-			FloatArray,
-			DoubleArray,
-			RawByteArray,
 
 			MessagePacket,
 

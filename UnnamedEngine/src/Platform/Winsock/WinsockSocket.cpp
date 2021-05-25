@@ -205,6 +205,40 @@ namespace UE
 		return 0;
 	}
 
+	int WinsockSocket::Poll()
+	{
+		m_IsReceivingPackets = false;
+		m_IsReceivingErrors = false;
+
+		WSAPOLLFD ListeningSocketFD[1];
+		ListeningSocketFD[0].fd = *(SOCKET*)GetNativeSocket();
+		ListeningSocketFD[0].events = POLLRDNORM;
+		ListeningSocketFD[0].revents = 0;
+
+		int result = WSAPoll(ListeningSocketFD, 1, 0);
+		if (result == SOCKET_ERROR)
+		{
+			UE_CORE_ERROR("Winsock WSAPoll() failed: {0}", WSAGetLastError());
+			return -1;
+		}
+		else if (result == 0)
+		{
+			return 0;
+		}
+
+		if (ListeningSocketFD[0].revents & POLLERR)
+		{
+			m_IsReceivingErrors = true;
+		}
+
+		if (ListeningSocketFD[0].revents & POLLRDNORM)
+		{
+			m_IsReceivingPackets = true;
+		}
+
+		return result;
+	}
+
 	void* WinsockSocket::GetNativeSocket() const
 	{
 		return (void*)&m_Socket;

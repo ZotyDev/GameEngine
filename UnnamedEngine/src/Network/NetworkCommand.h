@@ -30,6 +30,11 @@ namespace UE
 			IsServer = true;
 		}
 
+		static int SendServerMessage(Ref<Message> message)
+		{
+			return s_Server->SendMessage(message);
+		}
+
 		static void ShutdownServer()
 		{
 			s_Server->Shutdown();
@@ -39,23 +44,27 @@ namespace UE
 		static void InitClient()
 		{
 			s_Client->Init();
+			IsClient = true;
+		}
+
+		static int SendClientMessage(Ref<Message> message)
+		{
+			return s_Client->SendMessage(message);
 		}
 
 		static void ShutdownClient()
 		{
-			IsConnected = false;
 			s_Client->Shutdown();
+			IsClient = false;
 		}
 
 		static void Connect(IPEndpoint destination)
 		{
 			s_Client->Connect(destination);
-			IsConnected = true;
 		}
 
 		static void Disconnect()
 		{
-			IsConnected = false;
 		}
 
 		static void OnServerUpdate(Timestep timestep)
@@ -72,9 +81,14 @@ namespace UE
 		{
 			s_Server->SetEventCallback(callback);
 		}
+
+		static void SetClientEventCallback(const EventCallbackFn& callback)
+		{
+			s_Client->SetEventCallback(callback);
+		}
 	public:
 		static bool IsServer;
-		static bool IsConnected;
+		static bool IsClient;
 	private:
 		static Scope<NetworkAPI> s_NetworkAPI;
 		static Scope<Server> s_Server;

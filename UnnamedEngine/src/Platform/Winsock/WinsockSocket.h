@@ -28,10 +28,13 @@ namespace UE
 		virtual int SendTo(IPEndpoint destination, Packet& packet) override;
 		virtual int RecvFrom(IPEndpoint& sender, Packet& packet) override;
 
+		virtual int Poll() override;
+
 		virtual void* GetNativeSocket() const override;
 
 	private:
 		SOCKET m_Socket;
 		bool m_IsBlocking = true;
+		bool m_IsLingering = true;
 	};
 }

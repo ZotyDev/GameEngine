@@ -17,10 +17,11 @@ namespace UE
 
 		void Init();
 		void Shutdown();
-
 		void OnUpdate();
 
 		int Connect(IPEndpoint destination);
+
+		int SendMessage(Ref<Message> message);
 
 		bool IsConnected() { return m_Connected; }
 

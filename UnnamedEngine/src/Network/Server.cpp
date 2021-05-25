@@ -5,7 +5,7 @@ namespace UE
 {
 	Server::Server()
 	{
-		m_ConnectionManager = ConnectionManager::Create();
+
 	}
 
 	Server::~Server()
@@ -23,9 +23,12 @@ namespace UE
 			return;
 		}
 
-		m_ListeningConnection->GetIPEndpoint()->SetIp("127.0.0.1");
-		m_ListeningConnection->GetIPEndpoint()->SetPort(port);
-		result = m_ListeningSocket->Bind(*m_ListeningConnection->GetIPEndpoint().get());
+		IPEndpoint ServerAddress;
+		ServerAddress.SetIp("0.0.0.0");
+		ServerAddress.SetPort(port);
+
+		m_ListeningConnection->SetIPEndpoint(ServerAddress);
+		result = m_ListeningSocket->Bind(m_ListeningConnection->GetIPEndpoint());
 		if (result == UE_VALUE_ERROR)
 		{
 			UE_CORE_ERROR("UnanmedEngine Server Init() failed: could not bind socket");
@@ -39,13 +42,13 @@ namespace UE
 			return;
 		}
 
-		m_ConnectionManager->Init(m_ListeningSocket);
+		m_ConnectionManager.Init(m_ListeningSocket);
 	}
 
 	void Server::Shutdown()
 	{
 		// Disconnect all clients
-		for (auto& it : m_ConnectionManager->GetConnections())
+		for (auto& it : m_ConnectionManager.GetConnections())
 		{
 			it.second->ServerDisconnect();
 		}
@@ -57,51 +60,96 @@ namespace UE
 	void Server::OnUpdate()
 	{
 		// Poll for updates
-		m_ConnectionManager->Poll();
+		m_ConnectionManager.Poll();
 
 		// Check for connections
 		{
-			std::list<Ref<Connection>>::iterator iter = m_ConnectionManager->GetConnectionsStarting().begin();
-			std::list<Ref<Connection>>::iterator end = m_ConnectionManager->GetConnectionsStarting().end();
+			std::list<Ref<Connection>>::iterator iter = m_ConnectionManager.GetConnectionsStarting().begin();
+			std::list<Ref<Connection>>::iterator end = m_ConnectionManager.GetConnectionsStarting().end();
 			while (iter != end)
 			{
 				Ref<Connection> CurrentConnection = *iter;
-				UE_CORE_INFO("Connection request received from {0}", CurrentConnection->GetIPEndpoint()->GetAddress());
-
-				/*Packet ReceivedPacket = *CurrentConnection->GetIncomingPacket();
-
-				uint64_t ClientSalt = 0;
-				ReceivedPacket >> ClientSalt;
-				UE_CORE_INFO("Client salt is: {0}", ClientSalt);*/
-
-				iter = m_ConnectionManager->GetConnectionsStarting().erase(iter);
+				//UE_CORE_INFO("Connection request received from {0}", CurrentConnection->GetIPEndpoint().GetAddress());
+				
+				{
+					int result = CurrentConnection->ServerConnect();
+					if (result == UE_VALUE_SUCCESS)
+					{
+						iter = m_ConnectionManager.GetConnectionsStarting().erase(iter);
+					}
+					else
+					{
+						iter++;
+					}
+				}
 			}
 		}
 
 		// Check for received packets
 		{
-			std::list<Ref<Connection>>::iterator iter = m_ConnectionManager->GetConnectionsReceivingPackets().begin();
-			std::list<Ref<Connection>>::iterator end = m_ConnectionManager->GetConnectionsReceivingPackets().end();
+			std::list<Ref<Connection>>::iterator iter = m_ConnectionManager.GetConnectionsReceivingPackets().begin();
+			std::list<Ref<Connection>>::iterator end = m_ConnectionManager.GetConnectionsReceivingPackets().end();
 			while (iter != end)
 			{
 				Ref<Connection> CurrentConnection = *iter;
-				UE_CORE_INFO("Packet received from {0}", CurrentConnection->GetIPEndpoint()->GetAddress());
+				UE_CORE_INFO("Packet received from {0}", CurrentConnection->GetIPEndpoint().GetAddress());
 
-				iter = m_ConnectionManager->GetConnectionsReceivingPackets().erase(iter);
+				{
+
+				}
+
+				iter = m_ConnectionManager.GetConnectionsReceivingPackets().erase(iter);
 			}
 		}
 
 		// Check for received errors
 		{
-			std::list<Ref<Connection>>::iterator iter = m_ConnectionManager->GetConnectionsReceivingErrors().begin();
-			std::list<Ref<Connection>>::iterator end = m_ConnectionManager->GetConnectionsReceivingErrors().end();
+			std::list<Ref<Connection>>::iterator iter = m_ConnectionManager.GetConnectionsReceivingErrors().begin();
+			std::list<Ref<Connection>>::iterator end = m_ConnectionManager.GetConnectionsReceivingErrors().end();
 			while (iter != end)
 			{
 				Ref<Connection> CurrentConnection = *iter;
-				UE_CORE_ERROR("Error at connection {0}", CurrentConnection->GetIPEndpoint()->GetAddress());
+				UE_CORE_ERROR("Error at connection {0}", CurrentConnection->GetIPEndpoint().GetAddress());
 
-				iter = m_ConnectionManager->GetConnectionsReceivingErrors().erase(iter);
+				{
+
+				}
+
+				iter = m_ConnectionManager.GetConnectionsReceivingErrors().erase(iter);
 			}
 		}
+
+		// Send packets
+		{
+			std::unordered_map<IPEndpoint, Ref<Connection>>::iterator iter = m_ConnectionManager.GetConnections().begin();
+			std::unordered_map<IPEndpoint, Ref<Connection>>::iterator end = m_ConnectionManager.GetConnections().end();
+			while (iter != end)
+			{
+				Ref<Connection> CurrentConnection = iter->second;
+
+				{
+					// Send reliable packets
+					if (CurrentConnection->GetPacketManager()->RemainingReliableOutgoingPackets() > 0)
+					{
+						IPEndpoint Destination = CurrentConnection->GetIPEndpoint();
+						Destination.SetPort("27016");
+						m_ListeningSocket->SendTo(Destination, *CurrentConnection->GetPacketManager()->GetReliableOutgoingPacket());
+					}
+
+					// Send unreliable packets
+					if (CurrentConnection->GetPacketManager()->RemainingUnreliableOutgoingPackets() > 0)
+					{
+						m_ListeningSocket->SendTo(CurrentConnection->GetIPEndpoint(), *CurrentConnection->GetPacketManager()->GetUnreliableOutgoingPacket());
+					}
+				}
+
+				iter++;
+			}
+		}
+	}
+
+	int Server::SendMessage(Ref<Message> message)
+	{
+		return m_ListeningConnection->SendMessage(message);
 	}
 }

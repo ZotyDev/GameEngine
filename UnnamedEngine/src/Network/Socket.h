@@ -28,8 +28,16 @@ namespace UE
 		virtual int SendTo(IPEndpoint destination, Packet& packet) = 0;
 		virtual int RecvFrom(IPEndpoint& sender, Packet& packet) = 0;
 
+		virtual int Poll() = 0;
+
 		virtual void* GetNativeSocket() const = 0;
 
+		const bool IsReceivingPackets() { return m_IsReceivingPackets; }
+		const bool IsReceivingErrors() { return m_IsReceivingErrors; }
+
 		static Scope<Socket> Create();
+	protected:
+		bool m_IsReceivingPackets = false;
+		bool m_IsReceivingErrors = false;
 	};
 }

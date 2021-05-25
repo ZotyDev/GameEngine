@@ -2,6 +2,10 @@
 
 #include "Network/IPEndpoint.h"
 #include "Network/Packet.h"
+#include "Network/MessageManager.h"
+#include "Network/PacketManager.h"
+
+// todo: maybe separate Connection into ClientConnection and ServerConnection
 
 namespace UE
 {
@@ -28,28 +32,33 @@ namespace UE
 		int ServerConnect();
 		int ServerDisconnect();
 
-		bool IsConnected() const { return m_Connected; }
+		bool IsConnected() const { return (m_CurrentConnectionState == Connection::ConnectionState::Connected); }
+
+		Ref<MessageManager> GetMessageManager() { return m_MessageManager; }
+		Ref<PacketManager> GetPacketManager() { return m_PacketManager; }
+
+		int SendMessage(Ref<Message> message);
+		int SendPacket(Ref<Packet> packet);
+
+		// OnUpdate that should be called from client perspective
+		int OnClientUpdate();
+		// OnUpdate that should be called from server perspective
+		int OnServerUpdate();
 
 		void SetConnectionState(ConnectionState connectionState) { m_CurrentConnectionState = connectionState; }
 		ConnectionState GetConnectionState() { return m_CurrentConnectionState; }
 
-		Ref<Packet> GetIncomingPacket();
-		void AddIncomingPacket(Ref<Packet> incomingPacket) { m_IncomingPacketQueue.push(incomingPacket); }
-		uint32_t GetIncomingPacketQueueSize() { return m_IncomingPacketQueue.size(); }
-
-		Ref<Packet> GetOutgoingPacket();
-		void AddOutgoingPacket(Ref<Packet> outgoingPacket) { m_OutgoingPacketQueue.push(outgoingPacket); }
-		uint32_t GetOutgoingPacketQueueSize() { return m_OutgoingPacketQueue.size(); }
-
-		Ref<IPEndpoint> GetIPEndpoint() { return m_IPEndpoint; }
+		void SetIPEndpoint(IPEndpoint ipEndpoint) { m_IPEndpoint = ipEndpoint; }
+		IPEndpoint GetIPEndpoint() { return m_IPEndpoint; }
+	private:
+		Ref<MessageManager> m_MessageManager;
+		Ref<PacketManager> m_PacketManager;
 	private:
 		ConnectionState m_CurrentConnectionState = ConnectionState::Disconnected;
 	private:
-		std::queue<Ref<Packet>> m_IncomingPacketQueue;
-		std::queue<Ref<Packet>> m_OutgoingPacketQueue;
+		IPEndpoint m_IPEndpoint;
 		uint64_t m_ClientSalt = 0;
 		uint64_t m_ServerSalt = 0;
-		Ref<IPEndpoint> m_IPEndpoint;
-		bool m_Connected = false;
+		bool m_IsClient = false;
 	};
 }

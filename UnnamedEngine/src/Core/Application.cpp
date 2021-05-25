@@ -11,6 +11,7 @@
 #include "Network/NetworkCommand.h"
 #include "Network/Packet.h"
 #include "Network/Socket.h"
+#include "Network/Connection.h"
 
 #include "Math/Random/Salt.h"
 
@@ -28,35 +29,17 @@ namespace UE
 		m_Window->SetEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();
-		/*NetworkCommand::Init();
+
+		NetworkCommand::Init();
+
 		NetworkCommand::InitServer("27015");
 		NetworkCommand::SetServerEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
 
-		IPEndpoint ServerAddress("127.0.0.1", "27015");
 		NetworkCommand::InitClient();
-		NetworkCommand::Connect(ServerAddress);*/
+		NetworkCommand::SetClientEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
 
-		Message testMessage(0, MessageType::Invalid);
-		std::string string = "hehehe i'm a text inside a message";
-		uint32_t number = 1273623;
-
-		testMessage << number;
-
-		//std::string result = "";
-		uint32_t resultN = 0;
-
-		Packet myPacket(Packet::PacketType::MessagePacket);
-		myPacket << testMessage;
-
-		Message test1Message(0, MessageType::Invalid);
-		myPacket >> test1Message;
-
-		//test1Message >> result;
-		test1Message >> resultN;
-
-		UE_CORE_INFO("{0} - {1} - {2} - {3} - {4}", SaltUint64(), SaltUint64(), SaltUint64(), SaltUint64(), SaltUint64());
-
-		UE_CORE_INFO("String: {0} - Number {0}", resultN);
+		IPEndpoint ServerAddress("127.0.0.1", "27015");
+		NetworkCommand::Connect(ServerAddress);
 
 		LuaAPI::Init();
 	}
@@ -64,6 +47,10 @@ namespace UE
 	Application::~Application()
 	{
 		Renderer::Shutdown();
+
+		NetworkCommand::ShutdownClient();
+		NetworkCommand::ShutdownServer();
+
 		LuaAPI::Shutdown();
 	}
 
@@ -89,19 +76,22 @@ namespace UE
 
 			if (!m_Minimized)
 			{
+				// Update layers
 				for (Layer* layer : m_LayerStack)
 				{
 					layer->OnUpdate(timestep);
 				}
 
+				// Update the client
+				if (NetworkCommand::IsClient)
+				{
+					NetworkCommand::OnClientUpdate(timestep);
+				}
+
+				// Update the server
 				if (NetworkCommand::IsServer)
 				{
 					NetworkCommand::OnServerUpdate(timestep);
-				}
-
-				if (NetworkCommand::IsConnected)
-				{
-					NetworkCommand::OnClientUpdate(timestep);
 				}
 			}
 
@@ -171,6 +161,13 @@ namespace UE
 			break;
 		case KeyCode::Escape:
 			m_Running = false;
+			break;
+		case KeyCode::Enter:
+			Message randomNumber(0, MessageType::Invalid);
+			randomNumber << SaltUint64();
+
+			NetworkCommand::SendClientMessage(CreateRef<Message>(randomNumber));
+
 			break;
 		}
 		return false;
