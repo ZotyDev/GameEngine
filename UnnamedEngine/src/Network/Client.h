@@ -2,7 +2,7 @@
 
 #include "Network/NetworkAPI.h"
 #include "Network/Socket.h"
-#include "Network/Connection.h"
+#include "Network/ClientConnection.h"
 #include "Events/Event.h"
 
 namespace UE
@@ -34,7 +34,7 @@ namespace UE
 		EventCallbackFn m_EventCallbackFn;
 	private:
 		Ref<Socket> m_Socket;
-		Ref<Connection> m_Connection;
+		Ref<ClientConnection> m_Connection;
 		bool m_AttemptingConnection = false;
 		bool m_Connected = false;
 	};

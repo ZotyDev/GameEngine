@@ -3,7 +3,7 @@
 #include "Core/Base.h"
 #include "Network/NetworkAPI.h"
 #include "Network/Socket.h"
-#include "Network/Connection.h"
+#include "Network/ServerConnection.h"
 
 namespace UE
 {
@@ -16,15 +16,15 @@ namespace UE
 		int Init(Ref<Socket> listeningSocket);
 		int Poll();
 		Ref<Socket> GetListeningConnection() const { return m_ListeningSocket; }
-		std::unordered_map<IPEndpoint, Ref<Connection>>& GetConnections() { return m_Connections; }
-		std::list<Ref<Connection>>& GetConnectionsReceivingPackets() { return m_ConnectionsReceivingPackets; }
-		std::list<Ref<Connection>>& GetConnectionsReceivingErrors() { return m_ConnectionsReceivingErrors; }
-		std::list<Ref<Connection>>& GetConnectionsStarting() { return m_ConnectionsStarting; }
+		std::unordered_map<IPEndpoint, Ref<ServerConnection>>& GetConnections() { return m_Connections; }
+		std::list<Ref<ServerConnection>>& GetConnectionsReceivingPackets() { return m_ConnectionsReceivingPackets; }
+		std::list<Ref<ServerConnection>>& GetConnectionsReceivingErrors() { return m_ConnectionsReceivingErrors; }
+		std::list<Ref<ServerConnection>>& GetConnectionsStarting() { return m_ConnectionsStarting; }
 	private:
 		Ref<Socket> m_ListeningSocket;
-		std::unordered_map<IPEndpoint, Ref<Connection>> m_Connections;
-		std::list<Ref<Connection>> m_ConnectionsReceivingPackets;
-		std::list<Ref<Connection>> m_ConnectionsReceivingErrors;
-		std::list<Ref<Connection>> m_ConnectionsStarting;
+		std::unordered_map<IPEndpoint, Ref<ServerConnection>> m_Connections;
+		std::list<Ref<ServerConnection>> m_ConnectionsReceivingPackets;
+		std::list<Ref<ServerConnection>> m_ConnectionsReceivingErrors;
+		std::list<Ref<ServerConnection>> m_ConnectionsStarting;
 	};
 }

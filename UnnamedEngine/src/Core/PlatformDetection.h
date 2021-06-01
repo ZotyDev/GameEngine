@@ -4,6 +4,10 @@
 	#ifdef _WIN64
 		/* Windows x64 */
 		#define UE_PLATFORM_WINDOWS
+
+		#define UE_BYTESWAP_16(x)		_byteswap_ushort(x)
+		#define UE_BYTESWAP_32(x)		_byteswap_ulong(x)
+		#define UE_BYTESWAP_64(x)		_byteswap_uint64(x)
 	#else 
 		/* Windows x86 */
 		#error "x86 Builds are not supported!"

@@ -3,17 +3,18 @@
 
 #include "Math/Random/Salt.h"
 
+#include "Events/NetworkEvent.h"
+
 namespace UE
 {
 	Client::Client()
 	{
 		m_Socket = Socket::Create();
-		m_Connection = CreateRef<Connection>();
+		m_Connection = CreateRef<ClientConnection>();
 	}
 
 	Client::~Client()
-	{
-	}
+	{}
 
 	void Client::Init()
 	{
@@ -52,36 +53,26 @@ namespace UE
 		// Connection code
 		if (m_AttemptingConnection)
 		{
-			if (m_Connection->ClientConnect() == UE_VALUE_SUCCESS)
+			if (m_Connection->Connect() == UE_VALUE_SUCCESS)
 			{
+				ClientConnectedEvent event(m_Connection->GetIPEndpoint());
+				m_EventCallbackFn(event);
 				m_AttemptingConnection = false;
 			}
 		}
 		else // UpdateCode
 		{
+			// Send event containing received packet
+			if (m_Connection->GetPacketManager()->RemainingReliableIncomingPackets() > 0)
+			{
+				Packet ReceivedPacket = *m_Connection->GetPacketManager()->GetReliableIncomingPacket();
 
+				ClientPacketEvent event(m_Connection->GetIPEndpoint(), ReceivedPacket);
+				m_EventCallbackFn(event);
+			}
 		}
 
-
-		// Construct reliable packet
-		if (m_Connection->GetMessageManager()->GetReliableOutgoingMessageCount() > 0)
-		{
-			Packet ReliableOutgoingPacket(Packet::PacketType::MessagePacket);
-			ReliableOutgoingPacket.SetPacketReliability(true);
-			ReliableOutgoingPacket << *m_Connection->GetMessageManager()->GetReliableOutgoingMessage();
-
-			m_Connection->GetPacketManager()->Send(CreateRef<Packet>(ReliableOutgoingPacket));
-		}
-
-		// Construct unreliable packet
-		if (m_Connection->GetMessageManager()->GetUnreliableOutgoingMessageCount() > 0)
-		{
-			Packet UnreliableOutgoingPacket(Packet::PacketType::MessagePacket);
-			UnreliableOutgoingPacket.SetPacketReliability(false);
-			UnreliableOutgoingPacket << *m_Connection->GetMessageManager()->GetUnreliableOutgoingMessage();
-
-			m_Connection->GetPacketManager()->Send(CreateRef<Packet>(UnreliableOutgoingPacket));
-		}
+		m_Connection->OnUpdate();
 
 		// Send reliable packets
 		if (m_Connection->GetPacketManager()->RemainingReliableOutgoingPackets() > 0)

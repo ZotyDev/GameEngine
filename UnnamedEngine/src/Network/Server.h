@@ -2,7 +2,8 @@
 
 #include "Network/NetworkAPI.h"
 #include "Network/Socket.h"
-#include "Network/Connection.h"
+#include "Network/ClientConnection.h"
+#include "Network/ServerConnection.h"
 #include "Network/ConnectionManager.h"
 #include "Events/Event.h"
 
@@ -36,7 +37,7 @@ namespace UE
 		EventCallbackFn m_EventCallbackFn;
 	private:
 		Ref<Socket> m_ListeningSocket;
-		Ref<Connection> m_ListeningConnection;
+		Ref<ClientConnection> m_ListeningConnection;
 		
 		ConnectionManager m_ConnectionManager;
 

@@ -51,6 +51,26 @@ namespace UE
 		m_Buffer.insert(m_Buffer.end(), (char*)data, (char*)data + size);
 	}
 
+	Packet& Packet::operator<<(uint16_t data)
+	{
+		data = UE_UINT16_HTON(data);
+		Append(&data, sizeof(uint16_t));
+		return *this;
+	}
+
+	Packet& Packet::operator>>(uint16_t& data)
+	{
+		if ((m_ExtractionOffset + sizeof(uint16_t)) > m_Buffer.size())
+		{
+			UE_CORE_ERROR("Extraction offset exceeded buffer size");
+		}
+
+		data = *reinterpret_cast<uint16_t*>(&m_Buffer[m_ExtractionOffset]);
+		data = UE_UINT16_NTOH(data);
+		m_ExtractionOffset += sizeof(uint16_t);
+		return *this;
+	}
+
 	Packet& Packet::operator<<(uint32_t data)
 	{
 		data = UE_UINT32_HTON(data);

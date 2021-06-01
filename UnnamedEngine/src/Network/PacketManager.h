@@ -30,5 +30,8 @@ namespace UE
 		// Incoming packets
 		std::queue<Ref<Packet>> m_ReliableIncomingPackets;
 		std::queue<Ref<Packet>> m_UnreliableIncomingPackets;
+	private:
+		uint16_t m_LastSequenceSent = 0;
+		uint16_t m_LastSequenceReceived = 0;
 	};
 }

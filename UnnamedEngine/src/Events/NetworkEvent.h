@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Events/Event.h"
+#include "Network/IPEndpoint.h"
 #include "Network/Packet.h"
 
 namespace UE
@@ -8,26 +9,23 @@ namespace UE
 	class NetworkEvent : public Event
 	{
 	public:
-		std::string GetIp() const { return m_IP; }
-		unsigned int GetPort() const { return m_Port; }
-		std::string GetAddress() const { return m_IP + ":" + std::to_string(m_Port); }
+		IPEndpoint GetIPEndpoint() const { return m_IPEndpoint; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryNetwork)
 	protected:
-		NetworkEvent(std::string ip, unsigned short port)
-			: m_IP(ip), m_Port(port)
+		NetworkEvent(IPEndpoint ipEndpoint)
+			: m_IPEndpoint(ipEndpoint)
 		{
 		}
 
-		std::string m_IP;
-		unsigned short m_Port;
+		IPEndpoint m_IPEndpoint;
 	};
 
 	class ClientConnectedEvent : public NetworkEvent
 	{
 	public:
-		ClientConnectedEvent(std::string ip, unsigned short port)
-			: NetworkEvent(ip, port)
+		ClientConnectedEvent(IPEndpoint ipEndpoint)
+			: NetworkEvent(ipEndpoint)
 		{}
 
 		EVENT_CLASS_TYPE(ClientConnected)
@@ -36,24 +34,58 @@ namespace UE
 	class ClientDisconectedEvent : public NetworkEvent
 	{
 	public:
-		ClientDisconectedEvent(std::string ip, unsigned short port)
-			: NetworkEvent(ip, port)
+		ClientDisconectedEvent(IPEndpoint ipEndpoint)
+			: NetworkEvent(ipEndpoint)
 		{}
 
 		EVENT_CLASS_TYPE(ClientDisconnected)
 	};
 
-	class ClientMessageEvent : public NetworkEvent
+	class ClientPacketEvent : public NetworkEvent
 	{
 	public:
-		ClientMessageEvent(std::string ip, unsigned short port, Ref<Packet> packet)
-			: NetworkEvent(ip, port), m_Packet(packet)
+		ClientPacketEvent(IPEndpoint ipEndpoint, Packet packet)
+			: NetworkEvent(ipEndpoint), m_Packet(packet)
 		{}
 
-		Ref<Packet> GetPacket() { return m_Packet; }
+		Packet GetPacket() { return m_Packet; }
 
-		EVENT_CLASS_TYPE(ClientMessage)
+		EVENT_CLASS_TYPE(ClientPacket)
 	private:
-		Ref<Packet> m_Packet;
+		Packet m_Packet;
+	};
+
+	class ServerConnectedEvent : public NetworkEvent
+	{
+	public:
+		ServerConnectedEvent(IPEndpoint ipEndpoint)
+			: NetworkEvent(ipEndpoint)
+		{}
+
+		EVENT_CLASS_TYPE(ServerConnected)
+	};
+
+	class ServerDisconnectedEvent : public NetworkEvent
+	{
+	public:
+		ServerDisconnectedEvent(IPEndpoint ipEndpoint)
+			: NetworkEvent(ipEndpoint)
+		{}
+
+		EVENT_CLASS_TYPE(ServerDisconnected)
+	};
+
+	class ServerPacketEvent : public NetworkEvent
+	{
+	public:
+		ServerPacketEvent(IPEndpoint ipEndpoint, Packet packet)
+			: NetworkEvent(ipEndpoint), m_Packet(packet)
+		{}
+
+		Packet GetPacket() { return m_Packet; }
+
+		EVENT_CLASS_TYPE(ServerPacket)
+	private:
+		Packet m_Packet;
 	};
 }

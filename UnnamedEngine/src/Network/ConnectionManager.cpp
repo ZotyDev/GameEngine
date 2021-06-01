@@ -50,7 +50,7 @@ namespace UE
 				if (ReceivedPacket.GetPacketType() == Packet::PacketType::ConnectionRequest)
 				{
 					// Start connection with client
-					Ref<Connection> NewConnection = CreateRef<Connection>();
+					Ref<ServerConnection> NewConnection = CreateRef<ServerConnection>();
 					NewConnection->SetIPEndpoint(SenderIPEndpoint);
 					NewConnection->GetPacketManager()->Receive(CreateRef<Packet>(ReceivedPacket));
 					m_Connections.insert({ SenderIPEndpoint, NewConnection });
@@ -61,7 +61,7 @@ namespace UE
 			}
 			else // Client is on cconnection list
 			{
-				Ref<Connection> CurrentConnection = m_Connections.at(SenderIPEndpoint);
+				Ref<ServerConnection> CurrentConnection = m_Connections.at(SenderIPEndpoint);
 
 				// Check if client is not connected
 				if (!CurrentConnection->IsConnected())

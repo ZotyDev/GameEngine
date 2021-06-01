@@ -49,7 +49,10 @@ namespace UE
 		bool OnKeyPressed(KeyPressedEvent& event);
 		bool OnClientConnected(ClientConnectedEvent& event);
 		bool OnClientDisconnected(ClientDisconectedEvent& event);
-		bool OnClientMessage(ClientMessageEvent& event);
+		bool OnClientPacket(ClientPacketEvent& event);
+		bool OnServerConnected(ServerConnectedEvent& event);
+		bool OnServerDisconnected(ServerDisconnectedEvent& event);
+		bool OnServerPacket(ServerPacketEvent& event);
 	private:
 		static Application* s_Instance;
 		friend int ::main(int argc, char** argv);

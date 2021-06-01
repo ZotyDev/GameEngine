@@ -34,6 +34,9 @@ namespace UE
 		void Clear();
 		void Append(const void* data, uint32_t size);
 
+		Packet& operator << (uint16_t data);
+		Packet& operator >> (uint16_t& data);
+
 		Packet& operator << (uint32_t data);
 		Packet& operator >> (uint32_t& data);
 

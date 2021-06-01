@@ -107,7 +107,10 @@ namespace UE
 		dispatcher.Dispatch<KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
 		dispatcher.Dispatch<ClientConnectedEvent>(UE_BIND_EVENT_FN(OnClientConnected));
 		dispatcher.Dispatch<ClientDisconectedEvent>(UE_BIND_EVENT_FN(OnClientDisconnected));
-		dispatcher.Dispatch<ClientMessageEvent>(UE_BIND_EVENT_FN(OnClientMessage));
+		dispatcher.Dispatch<ClientPacketEvent>(UE_BIND_EVENT_FN(OnClientPacket));
+		dispatcher.Dispatch<ServerConnectedEvent>(UE_BIND_EVENT_FN(OnServerConnected));
+		dispatcher.Dispatch<ServerDisconnectedEvent>(UE_BIND_EVENT_FN(OnServerDisconnected));
+		dispatcher.Dispatch<ServerPacketEvent>(UE_BIND_EVENT_FN(OnServerPacket));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
@@ -173,21 +176,41 @@ namespace UE
 		return false;
 	}
 
+	// Client events
 	bool Application::OnClientConnected(ClientConnectedEvent& event)
 	{
-		UE_CORE_INFO("{0} connected!", event.GetAddress());
+		UE_CORE_INFO("Connected to {0}", event.GetIPEndpoint().GetAddress());
 		return false;
 	}
 
 	bool Application::OnClientDisconnected(ClientDisconectedEvent& event)
 	{
-		UE_CORE_INFO("{0} disconnected!", event.GetAddress());
+		UE_CORE_INFO("Disconnected from {0}", event.GetIPEndpoint().GetAddress());
 		return false;
 	}
 
-	bool Application::OnClientMessage(ClientMessageEvent& event)
+	bool Application::OnClientPacket(ClientPacketEvent& event)
 	{
-		UE_CORE_INFO("Message received!");
+		UE_CORE_INFO("Packet received from server {0}", event.GetIPEndpoint().GetAddress());
+		return false;
+	}
+
+	// Server events
+	bool Application::OnServerConnected(ServerConnectedEvent& event)
+	{
+		UE_CORE_INFO("{0} connected", event.GetIPEndpoint().GetAddress());
+		return false;
+	}
+
+	bool Application::OnServerDisconnected(ServerDisconnectedEvent& event)
+	{
+		UE_CORE_INFO("{0} disconnected", event.GetIPEndpoint().GetAddress());
+		return false;
+	}
+
+	bool Application::OnServerPacket(ServerPacketEvent& event)
+	{
+		UE_CORE_INFO("Packet received from client {0}", event.GetIPEndpoint().GetAddress());
 		return false;
 	}
 }
