@@ -32,7 +32,7 @@ namespace UE
 		case Connection::ConnectionState::SendingChallenge:
 		{
 			// Send challenge packet
-			Packet ChallengePacket(Packet::PacketType::ConnectionChallenge);
+			Packet ChallengePacket(PacketType::ConnectionChallengePacket);
 			ChallengePacket.SetPacketReliability(true);
 			m_ServerSalt = SaltUint64();
 			ChallengePacket << m_ClientSalt;
@@ -92,7 +92,7 @@ namespace UE
 		if (m_MessageManager->GetReliableOutgoingMessageCount() > 0)
 		{
 			// Reliable server packet header
-			Packet ReliablePacket(Packet::PacketType::MessagePacket);
+			Packet ReliablePacket(PacketType::MessagePacket);
 
 			// Set packet reliability
 			ReliablePacket.SetPacketReliability(true);
@@ -115,7 +115,7 @@ namespace UE
 		if (m_MessageManager->GetUnreliableOutgoingMessageCount() > 0)
 		{
 			// Unreliable server packet header
-			Packet UnreliablePacket(Packet::PacketType::MessagePacket);
+			Packet UnreliablePacket(PacketType::MessagePacket);
 
 			// Set packet reliability
 			UnreliablePacket.SetPacketReliability(false);

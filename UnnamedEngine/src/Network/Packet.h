@@ -6,30 +6,44 @@
 
 namespace UE
 {
+	enum PacketProtocol : uint8_t
+	{
+		InvalidProtocol,
+		UEUDP
+	};
+
+	enum PacketType : uint16_t
+	{
+		FirstPacket,
+
+		InvalidPacket,
+
+		MessagePacket,
+
+		ConnectionRequestPacket,
+		ConnectionChallengePacket,
+		ConnectionChallengeResponsePacket,
+
+		ConnectionFirstPacket = ConnectionRequestPacket,
+		ConnectionLastPacket = ConnectionChallengeResponsePacket,
+
+		LastPacket
+	};
+
 	class Packet
 	{
 	public:
-		enum PacketType : uint16_t
-		{
-			First,
+		Packet(PacketType packetType = PacketType::InvalidPacket);
 
-			Invalid,
-
-			MessagePacket,
-
-			ConnectionRequest,
-			ConnectionChallenge,
-			ConnectionChallengeResponse,
-
-			Last
-		};
-	public:
-		Packet(PacketType packetType = PacketType::Invalid);
-
+		void SetPacketProtocol(const PacketProtocol& packetProtocol);
+		PacketProtocol GetPacketProtocol();
 		void SetPacketType(const PacketType& packetType);
 		PacketType GetPacketType();
 		void SetPacketReliability(bool isReliable);
 		bool IsReliable();
+
+		bool IsChecksum(uint32_t checksum);
+		bool IsGreaterEqualToChecksum(uint32_t checksum);
 
 		void Clear();
 		void Append(const void* data, uint32_t size);

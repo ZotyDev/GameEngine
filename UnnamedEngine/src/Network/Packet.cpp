@@ -6,38 +6,62 @@ namespace UE
 	Packet::Packet(PacketType packetType)
 	{
 		Clear();
+		SetPacketProtocol(UEUDP);
 		SetPacketType(packetType);
+		SetPacketReliability(true);
 	};
+
+	void Packet::SetPacketProtocol(const PacketProtocol& packetProtocol)
+	{
+		PacketProtocol* packetProtocolPtr = reinterpret_cast<PacketProtocol*>(&m_Buffer[0]);
+		*packetProtocolPtr = static_cast<PacketProtocol>(packetProtocol);
+	}
+
+	PacketProtocol Packet::GetPacketProtocol()
+	{
+		PacketProtocol* packetProtocolPtr = reinterpret_cast<PacketProtocol*>(&m_Buffer[0]);
+		return static_cast<PacketProtocol>(*packetProtocolPtr);
+	}
 
 	void Packet::SetPacketType(const PacketType& packetType)
 	{
-		PacketType* packetTypePtr = reinterpret_cast<PacketType*>(&m_Buffer[1]);
+		PacketType* packetTypePtr = reinterpret_cast<PacketType*>(&m_Buffer[2]);
 		*packetTypePtr = static_cast<PacketType>(UE_UINT16_HTON(packetType));
 	}
 
-	Packet::PacketType Packet::GetPacketType()
+	PacketType Packet::GetPacketType()
 	{
-		PacketType* packetTypePtr = reinterpret_cast<PacketType*>(&m_Buffer[1]);
+		PacketType* packetTypePtr = reinterpret_cast<PacketType*>(&m_Buffer[2]);
 		return static_cast<PacketType>(UE_UINT16_NTOH(*packetTypePtr));
 	}
 
 	void Packet::SetPacketReliability(bool isReliable)
 	{
-		bool* packetReliabilityPtr = reinterpret_cast<bool*>(&m_Buffer[0]);
+		bool* packetReliabilityPtr = reinterpret_cast<bool*>(&m_Buffer[1]);
 		*packetReliabilityPtr = static_cast<bool>(isReliable);
 	}
 
 	bool Packet::IsReliable()
 	{
-		bool* packetReliabilityPtr = reinterpret_cast<bool*>(&m_Buffer[0]);
+		bool* packetReliabilityPtr = reinterpret_cast<bool*>(&m_Buffer[1]);
 		return static_cast<bool>(*packetReliabilityPtr);
+	}
+
+	bool Packet::IsChecksum(uint32_t checksum)
+	{
+		return (checksum == m_Buffer.size());
+	}
+
+	bool Packet::IsGreaterEqualToChecksum(uint32_t checksum)
+	{
+		return (checksum <= m_Buffer.size());
 	}
 
 	void Packet::Clear()
 	{
-		m_Buffer.resize(sizeof(bool) + sizeof(PacketType));
-		SetPacketType(PacketType::Invalid);
-		m_ExtractionOffset = sizeof(bool) + sizeof(PacketType);
+		m_Buffer.resize(sizeof(bool) + sizeof(PacketType) + sizeof(PacketProtocol));
+		SetPacketType(PacketType::InvalidPacket);
+		m_ExtractionOffset = sizeof(bool) + sizeof(PacketType) + sizeof(PacketProtocol);
 	}
 
 	void Packet::Append(const void* data, uint32_t size)

@@ -19,7 +19,7 @@ namespace UE
 		case Connection::ConnectionState::Disconnected:
 		{
 			// Send connection request
-			Packet ConnectionRequest(Packet::PacketType::ConnectionRequest);
+			Packet ConnectionRequest(PacketType::ConnectionRequestPacket);
 			ConnectionRequest.SetPacketReliability(true);
 			m_ClientSalt = SaltUint64();
 			ConnectionRequest << m_ClientSalt;
@@ -59,7 +59,7 @@ namespace UE
 		case Connection::ConnectionState::SendingChallengeResponse:
 		{
 			// Sending challenge response
-			Packet ChallengeResponse(Packet::PacketType::ConnectionChallengeResponse);
+			Packet ChallengeResponse(PacketType::ConnectionChallengeResponsePacket);
 			ChallengeResponse.SetPacketReliability(true);
 			ChallengeResponse << (m_ClientSalt ^ m_ServerSalt);
 
@@ -93,7 +93,7 @@ namespace UE
 		if (m_MessageManager->GetReliableOutgoingMessageCount() > 0)
 		{
 			// Reliable packet header
-			Packet ReliablePacket(Packet::PacketType::MessagePacket);
+			Packet ReliablePacket(PacketType::MessagePacket);
 
 			// Set reliability
 			ReliablePacket.SetPacketReliability(true);
@@ -119,7 +119,7 @@ namespace UE
 		if (m_MessageManager->GetReliableOutgoingMessageCount() > 0)
 		{
 			// Unreliable packet header
-			Packet UnreliablePacket(Packet::PacketType::MessagePacket);
+			Packet UnreliablePacket(PacketType::MessagePacket);
 
 			// Set reliability
 			UnreliablePacket.SetPacketReliability(false);

@@ -63,8 +63,8 @@ namespace UE
 
 		// Check for connections
 		{
-			std::list<Ref<ServerConnection>>::iterator iter = m_ConnectionManager.GetConnectionsStarting().begin();
-			std::list<Ref<ServerConnection>>::iterator end = m_ConnectionManager.GetConnectionsStarting().end();
+			std::list<Ref<ServerConnection>>::iterator iter = m_ConnectionManager.GetConnectionsConnecting().begin();
+			std::list<Ref<ServerConnection>>::iterator end = m_ConnectionManager.GetConnectionsConnecting().end();
 			while (iter != end)
 			{
 				Ref<ServerConnection> CurrentConnection = *iter;
@@ -76,7 +76,7 @@ namespace UE
 					{
 						ServerConnectedEvent event(CurrentConnection->GetIPEndpoint());
 						m_EventCallbackFn(event);
-						iter = m_ConnectionManager.GetConnectionsStarting().erase(iter);
+						iter = m_ConnectionManager.GetConnectionsConnecting().erase(iter);
 					}
 					else
 					{
