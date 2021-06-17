@@ -18,10 +18,10 @@ namespace UE
 		{
 		case Connection::ConnectionState::Disconnected:
 		{
-			if (m_PacketManager->RemainingReliableIncomingPackets() > 0)
+			if (m_PacketManager->RemainingUnreliableIncomingPackets() > 0)
 			{
 				// Received connection request
-				Packet ReceivedPacket = *m_PacketManager->GetReliableIncomingPacket();
+				Packet ReceivedPacket = *m_PacketManager->GetUnreliableIncomingPacket();
 				ReceivedPacket >> m_ClientSalt;
 
 				m_CurrentConnectionState = Connection::ConnectionState::SendingChallenge;
@@ -33,7 +33,7 @@ namespace UE
 		{
 			// Send challenge packet
 			Packet ChallengePacket(PacketType::ConnectionChallengePacket);
-			ChallengePacket.SetPacketReliability(true);
+			ChallengePacket.SetPacketReliability(false);
 			m_ServerSalt = SaltUint64();
 			ChallengePacket << m_ClientSalt;
 			ChallengePacket << m_ServerSalt;
@@ -46,10 +46,10 @@ namespace UE
 		}
 		case Connection::ConnectionState::PendingChallengeResponse:
 		{
-			if (m_PacketManager->RemainingReliableIncomingPackets() > 0)
+			if (m_PacketManager->RemainingUnreliableIncomingPackets() > 0)
 			{
 				// Receive challenge response
-				Packet ReceivedPacket = *m_PacketManager->GetReliableIncomingPacket();
+				Packet ReceivedPacket = *m_PacketManager->GetUnreliableIncomingPacket();
 
 				uint64_t ReceivedClientServerSalt = 0;
 				ReceivedPacket >> ReceivedClientServerSalt;
@@ -97,6 +97,18 @@ namespace UE
 			// Set packet reliability
 			ReliablePacket.SetPacketReliability(true);
 
+			// Set sequence
+			ReliablePacket << m_LastSequenceSent;
+			m_LastSequenceSent++;
+			
+			// Set ACK
+			uint16_t LastSequenceReceived = m_PacketManager->GetLastSequenceReceived();
+			ReliablePacket << LastSequenceReceived;
+
+			// Set ACKBits
+			uint32_t ACKBits = 0;
+			ReliablePacket << ACKBits;
+
 			// Reliable server packet data
 			while (m_MessageManager->GetReliableOutgoingMessageCount() > 0)
 			{
@@ -134,6 +146,11 @@ namespace UE
 			m_PacketManager->Send(CreateRef<Packet>(UnreliablePacket));
 		}
 
+		return 0;
+	}
+
+	int ServerConnection::SendHeartbeat()
+	{
 		return 0;
 	}
 }

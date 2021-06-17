@@ -70,22 +70,16 @@ namespace UE
 				ClientPacketEvent event(m_Connection->GetIPEndpoint(), ReceivedPacket);
 				m_EventCallbackFn(event);
 			}
+
+			if (m_Connection->GetPacketManager()->RemainingUnreliableIncomingPackets() > 0)
+			{
+				Packet ReceivedPacket = *m_Connection->GetPacketManager()->GetUnreliableIncomingPacket();
+
+				ClientPacketEvent event(m_Connection->GetIPEndpoint(), ReceivedPacket);
+				m_EventCallbackFn(event);
+			}
 		}
 
-		m_Connection->OnUpdate();
-
-		// Send reliable packets
-		if (m_Connection->GetPacketManager()->RemainingReliableOutgoingPackets() > 0)
-		{
-			m_Socket->SendTo(m_Connection->GetIPEndpoint(), *m_Connection->GetPacketManager()->GetReliableOutgoingPacket());
-		}
-
-		// Send unreliable packets
-		if (m_Connection->GetPacketManager()->RemainingUnreliableOutgoingPackets() > 0)
-		{
-			m_Socket->SendTo(m_Connection->GetIPEndpoint(), *m_Connection->GetPacketManager()->GetUnreliableOutgoingPacket());
-		}
-		
 		// Receive packets
 		IPEndpoint ServerAddress;
 		Packet ReceivedPacket;
@@ -106,6 +100,23 @@ namespace UE
 			}
 
 			m_Connection->GetPacketManager()->Receive(CreateRef<Packet>(ReceivedPacket));
+		}
+
+		// Send heartbeat packet
+		m_Connection->SendHeartbeat();
+
+		m_Connection->OnUpdate();
+
+		// Send reliable packets
+		if (m_Connection->GetPacketManager()->RemainingReliableOutgoingPackets() > 0)
+		{
+			m_Socket->SendTo(m_Connection->GetIPEndpoint(), *m_Connection->GetPacketManager()->GetReliableOutgoingPacket());
+		}
+
+		// Send unreliable packets
+		if (m_Connection->GetPacketManager()->RemainingUnreliableOutgoingPackets() > 0)
+		{
+			m_Socket->SendTo(m_Connection->GetIPEndpoint(), *m_Connection->GetPacketManager()->GetUnreliableOutgoingPacket());
 		}
 	}
 

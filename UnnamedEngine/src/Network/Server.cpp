@@ -70,6 +70,7 @@ namespace UE
 				Ref<ServerConnection> CurrentConnection = *iter;
 				//UE_CORE_INFO("Connection request received from {0}", CurrentConnection->GetIPEndpoint().GetAddress());
 				
+				// Code goes here
 				{
 					int result = CurrentConnection->Connect();
 					if (result == UE_VALUE_SUCCESS)
@@ -95,10 +96,24 @@ namespace UE
 				Ref<Connection> CurrentConnection = *iter;
 				//UE_CORE_INFO("Packet received from {0}", CurrentConnection->GetIPEndpoint().GetAddress());
 
+				// Code goes here
 				{
 					// Get packet
 					Packet ReceivedPacket;
-					ReceivedPacket = *CurrentConnection->GetPacketManager()->GetReliableIncomingPacket();
+					if (CurrentConnection->GetPacketManager()->RemainingReliableIncomingPackets() > 0)
+					{
+						ReceivedPacket = *CurrentConnection->GetPacketManager()->GetReliableIncomingPacket();
+					}
+					else if (CurrentConnection->GetPacketManager()->RemainingUnreliableIncomingPackets() > 0)
+					{
+						ReceivedPacket = *CurrentConnection->GetPacketManager()->GetUnreliableIncomingPacket();
+					}
+					else
+					{
+						// Todo: this should not happen, but MAYBE can cause an error on the future
+						// The possible future error will have something related to a blank packet being received from
+						// the event bellow.
+					}
 
 					// Send event containing packet
 					ServerPacketEvent event(CurrentConnection->GetIPEndpoint(), ReceivedPacket);
@@ -127,6 +142,28 @@ namespace UE
 		}
 
 		// Todo: Create packets with messages (just call OnUpdate for each connection)
+		{
+			std::unordered_map<IPEndpoint, Ref<ServerConnection>>::iterator iter = m_ConnectionManager.GetConnections().begin();
+			std::unordered_map<IPEndpoint, Ref<ServerConnection>>::iterator end = m_ConnectionManager.GetConnections().end();
+			while (iter != end)
+			{
+				Ref<Connection> CurrentConnection = iter->second;
+				
+				{
+					if (CurrentConnection->IsConnected())
+					{
+						// Send heartbeat message
+						CurrentConnection->SendHeartbeat();
+
+						// Create packets with messages
+						CurrentConnection->OnUpdate();
+					}
+				}
+
+				iter++;
+			}
+		}
+
 
 		// Send packets
 		{
@@ -144,11 +181,13 @@ namespace UE
 						Destination.SetPort("27016");
 						m_ListeningSocket->SendTo(Destination, *CurrentConnection->GetPacketManager()->GetReliableOutgoingPacket());
 					}
-
+					
 					// Send unreliable packets
 					if (CurrentConnection->GetPacketManager()->RemainingUnreliableOutgoingPackets() > 0)
 					{
-						m_ListeningSocket->SendTo(CurrentConnection->GetIPEndpoint(), *CurrentConnection->GetPacketManager()->GetUnreliableOutgoingPacket());
+						IPEndpoint Destination = CurrentConnection->GetIPEndpoint();
+						Destination.SetPort("27016");
+						m_ListeningSocket->SendTo(Destination, *CurrentConnection->GetPacketManager()->GetUnreliableOutgoingPacket());
 					}
 				}
 

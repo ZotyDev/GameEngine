@@ -118,6 +118,10 @@ namespace UE
 				return 0;
 			}
 
+			// Extract ClientServerSalt
+			uint64_t ReceivedClientServerSalt = 0;
+			ReceivedPacket >> ReceivedClientServerSalt;
+
 			// Message Packet
 			if (ReceivedPacket.GetPacketType() == PacketType::MessagePacket)
 			{

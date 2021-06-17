@@ -22,16 +22,18 @@ namespace UE
 
 		Ref<Packet> GetReliableIncomingPacket();
 		Ref<Packet> GetUnreliableIncomingPacket();
+
+		uint16_t GetLastSequenceReceived() { return m_LastSequenceReceived; }
 	private:
 		// Outgoing packets
-		std::queue<Ref<Packet>> m_ReliableOutgoingPackets;
+		std::vector<Ref<Packet>> m_ReliableOutgoingPackets;
 		std::queue<Ref<Packet>> m_UnreliableOutgoingPackets;
 
 		// Incoming packets
 		std::queue<Ref<Packet>> m_ReliableIncomingPackets;
 		std::queue<Ref<Packet>> m_UnreliableIncomingPackets;
 	private:
-		uint16_t m_LastSequenceSent = 0;
 		uint16_t m_LastSequenceReceived = 0;
+		std::unordered_map<uint16_t, unsigned long long> m_SequencePacketMap;
 	};
 }

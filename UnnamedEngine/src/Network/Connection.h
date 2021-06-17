@@ -29,6 +29,7 @@ namespace UE
 		virtual int Connect() = 0;
 		virtual int Disconnect() = 0;
 		virtual int OnUpdate() = 0;
+		virtual int SendHeartbeat() = 0;
 
 		bool IsConnected() const { return (m_CurrentConnectionState == Connection::ConnectionState::Connected); }
 
@@ -52,5 +53,7 @@ namespace UE
 		IPEndpoint m_IPEndpoint;
 		uint64_t m_ClientSalt = 0;
 		uint64_t m_ServerSalt = 0;
+	protected:
+		uint16_t m_LastSequenceSent = 12;
 	};
 }

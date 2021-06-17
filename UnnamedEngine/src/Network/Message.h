@@ -8,8 +8,8 @@ namespace UE
 
 	enum MessageType : uint16_t
 	{
-		Continuation,
-		Invalid
+		Invalid,
+		Continuation
 	};
 
 	class Message

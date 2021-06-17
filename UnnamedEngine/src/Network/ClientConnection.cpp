@@ -20,7 +20,7 @@ namespace UE
 		{
 			// Send connection request
 			Packet ConnectionRequest(PacketType::ConnectionRequestPacket);
-			ConnectionRequest.SetPacketReliability(true);
+			ConnectionRequest.SetPacketReliability(false);
 			m_ClientSalt = SaltUint64();
 			ConnectionRequest << m_ClientSalt;
 
@@ -32,10 +32,10 @@ namespace UE
 		}
 		case Connection::ConnectionState::PendingChallenge:
 		{
-			if (m_PacketManager->RemainingReliableIncomingPackets() > 0)
+			if (m_PacketManager->RemainingUnreliableIncomingPackets() > 0)
 			{
 				// Received challenge
-				Packet ReceivedPacket = *m_PacketManager->GetReliableIncomingPacket();
+				Packet ReceivedPacket = *m_PacketManager->GetUnreliableIncomingPacket();
 
 				uint64_t ReceivedClientSalt = 0;
 				uint64_t ReceivedServerSalt = 0;
@@ -60,7 +60,7 @@ namespace UE
 		{
 			// Sending challenge response
 			Packet ChallengeResponse(PacketType::ConnectionChallengeResponsePacket);
-			ChallengeResponse.SetPacketReliability(true);
+			ChallengeResponse.SetPacketReliability(false);
 			ChallengeResponse << (m_ClientSalt ^ m_ServerSalt);
 
 			SendPacket(CreateRef<Packet>(ChallengeResponse));
@@ -100,6 +100,17 @@ namespace UE
 
 			// Set ClientServer salt
 			ReliablePacket << (m_ClientSalt ^ m_ServerSalt);
+
+			// Set sequence
+			ReliablePacket << m_LastSequenceSent;
+
+			// Set ACK
+			uint16_t LastSequenceReceived = m_PacketManager->GetLastSequenceReceived();
+			ReliablePacket << LastSequenceReceived;
+
+			// Set ACKBits
+			uint32_t ACKBits = 0;
+			ReliablePacket << ACKBits;
 
 			// Reliable packet data
 			while (m_MessageManager->GetReliableOutgoingMessageCount() > 0)
@@ -141,6 +152,11 @@ namespace UE
 			m_PacketManager->Send(CreateRef<Packet>(UnreliablePacket));
 		}
 
+		return 0;
+	}
+
+	int ClientConnection::SendHeartbeat()
+	{
 		return 0;
 	}
 }

@@ -210,6 +210,8 @@ namespace UE
 
 	bool Application::OnServerPacket(ServerPacketEvent& event)
 	{
+
+
 		UE_CORE_INFO("Packet received from client {0}", event.GetIPEndpoint().GetAddress());
 		return false;
 	}

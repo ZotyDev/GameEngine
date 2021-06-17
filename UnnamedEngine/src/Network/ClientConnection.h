@@ -13,5 +13,6 @@ namespace UE
 		virtual int Connect() override;
 		virtual int Disconnect() override;
 		virtual int OnUpdate() override;
+		virtual int SendHeartbeat() override;
 	};
 }

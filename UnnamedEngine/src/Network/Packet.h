@@ -37,10 +37,10 @@ namespace UE
 
 		void SetPacketProtocol(const PacketProtocol& packetProtocol);
 		PacketProtocol GetPacketProtocol();
-		void SetPacketType(const PacketType& packetType);
-		PacketType GetPacketType();
 		void SetPacketReliability(bool isReliable);
 		bool IsReliable();
+		void SetPacketType(const PacketType& packetType);
+		PacketType GetPacketType();
 
 		bool IsChecksum(uint32_t checksum);
 		bool IsGreaterEqualToChecksum(uint32_t checksum);

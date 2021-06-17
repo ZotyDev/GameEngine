@@ -1,6 +1,8 @@
 #include "uepch.h"
 #include "Platform/Winsock/WinsockSocket.h"
 
+#include "Platform/Winsock/WinsockHelper.h"
+
 namespace UE
 {
 	WinsockSocket::WinsockSocket()
@@ -18,12 +20,9 @@ namespace UE
 		m_Socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 		if (m_Socket == INVALID_SOCKET)
 		{
-			UE_CORE_ERROR("Winsock socket() failed: {0}", WSAGetLastError());
+			UE_CORE_ERROR("Winsock socket() failed: {0}", StringfyErrorCode(WSAGetLastError()));
 			return -1;
 		}
-
-		//bool value = true;
-		//setsockopt(m_Socket, SOL_SOCKET, SO_BROADCAST, (char*)&value, sizeof(int));
 
 		return 0;
 	}
@@ -43,7 +42,7 @@ namespace UE
 		int result = bind(m_Socket, (sockaddr*)&ReceiveAddr, sizeof(ReceiveAddr));
 		if (result == SOCKET_ERROR)
 		{
-			UE_CORE_ERROR("Winsock bind() failed: {0}", WSAGetLastError());
+			UE_CORE_ERROR("Winsock bind() failed: {0}", StringfyErrorCode(WSAGetLastError()));
 			return -1;
 		}
 
@@ -61,7 +60,7 @@ namespace UE
 		int resut = ioctlsocket(m_Socket, FIONBIO, &blocking);
 		if (resut == SOCKET_ERROR)
 		{
-			UE_CORE_ERROR("Winsock failed to put Socket {0} on {1} mode: {2}", m_Socket, block ? "blocking" : "non-blocking", WSAGetLastError());
+			UE_CORE_ERROR("Winsock failed to put Socket {0} on {1} mode: {2}", m_Socket, block ? "blocking" : "non-blocking", StringfyErrorCode(WSAGetLastError()));
 			return -1;
 		}
 
@@ -81,7 +80,7 @@ namespace UE
 
 		if (bytesSent == SOCKET_ERROR)
 		{
-			UE_CORE_ERROR("Winsock sendto() failed: {0}", WSAGetLastError());
+			UE_CORE_ERROR("Winsock sendto() failed: {0}", StringfyErrorCode(WSAGetLastError()));
 			return -1;
 		}
 
@@ -102,7 +101,7 @@ namespace UE
 
 		if (bytesReceived == SOCKET_ERROR)
 		{
-			UE_CORE_ERROR("Winsock recvfrom failed: {0}", WSAGetLastError());
+			UE_CORE_ERROR("Winsock recvfrom failed: {0}", StringfyErrorCode(WSAGetLastError()));
 			return -1;
 		}
 
@@ -218,7 +217,7 @@ namespace UE
 		int result = WSAPoll(ListeningSocketFD, 1, 0);
 		if (result == SOCKET_ERROR)
 		{
-			UE_CORE_ERROR("Winsock WSAPoll() failed: {0}", WSAGetLastError());
+			UE_CORE_ERROR("Winsock WSAPoll() failed: {0}", StringfyErrorCode(WSAGetLastError()));
 			return -1;
 		}
 		else if (result == 0)

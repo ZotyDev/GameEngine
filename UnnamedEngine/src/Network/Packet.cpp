@@ -23,18 +23,6 @@ namespace UE
 		return static_cast<PacketProtocol>(*packetProtocolPtr);
 	}
 
-	void Packet::SetPacketType(const PacketType& packetType)
-	{
-		PacketType* packetTypePtr = reinterpret_cast<PacketType*>(&m_Buffer[2]);
-		*packetTypePtr = static_cast<PacketType>(UE_UINT16_HTON(packetType));
-	}
-
-	PacketType Packet::GetPacketType()
-	{
-		PacketType* packetTypePtr = reinterpret_cast<PacketType*>(&m_Buffer[2]);
-		return static_cast<PacketType>(UE_UINT16_NTOH(*packetTypePtr));
-	}
-
 	void Packet::SetPacketReliability(bool isReliable)
 	{
 		bool* packetReliabilityPtr = reinterpret_cast<bool*>(&m_Buffer[1]);
@@ -45,6 +33,18 @@ namespace UE
 	{
 		bool* packetReliabilityPtr = reinterpret_cast<bool*>(&m_Buffer[1]);
 		return static_cast<bool>(*packetReliabilityPtr);
+	}
+
+	void Packet::SetPacketType(const PacketType& packetType)
+	{
+		PacketType* packetTypePtr = reinterpret_cast<PacketType*>(&m_Buffer[2]);
+		*packetTypePtr = static_cast<PacketType>(UE_UINT16_HTON(packetType));
+	}
+
+	PacketType Packet::GetPacketType()
+	{
+		PacketType* packetTypePtr = reinterpret_cast<PacketType*>(&m_Buffer[2]);
+		return static_cast<PacketType>(UE_UINT16_NTOH(*packetTypePtr));
 	}
 
 	bool Packet::IsChecksum(uint32_t checksum)
