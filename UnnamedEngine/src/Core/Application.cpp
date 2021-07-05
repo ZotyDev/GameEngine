@@ -166,10 +166,22 @@ namespace UE
 			m_Running = false;
 			break;
 		case KeyCode::Enter:
-			Message randomNumber(0, MessageType::Invalid);
-			randomNumber << SaltUint64();
+			MessageLayout RandomNumberMessageLayout
+			({
+				{MessageDataType::Uint64,		"RandomNumber"}
+			});
 
-			NetworkCommand::SendClientMessage(CreateRef<Message>(randomNumber));
+			uint64_t RandomNumber = SaltUint64();
+
+			RandomNumberMessageLayout.SetElements
+			({
+				{UE::CreateUnknown(&RandomNumber)}
+			});
+
+			Message RandomNumberMessage;
+			RandomNumberMessageLayout.CreateMessage(RandomNumberMessage);
+
+			NetworkCommand::SendClientMessage(CreateRef<Message>(RandomNumberMessage));
 
 			break;
 		}
@@ -210,9 +222,21 @@ namespace UE
 
 	bool Application::OnServerPacket(ServerPacketEvent& event)
 	{
-
-
 		UE_CORE_INFO("Packet received from client {0}", event.GetIPEndpoint().GetAddress());
+
+		Message ReceivedMessage(false);
+		event.GetPacket() >> ReceivedMessage;
+		uint64_t ReceivedRandomNumber;
+		
+		MessageLayout ReceivedMessageLayout
+		({
+			{MessageDataType::Uint64,		"RandomNumber"}
+		});
+		ReceivedMessageLayout.FromMessage(ReceivedMessage);
+
+		std::vector<UE::UnknownType>ReceivedMessageElements = ReceivedMessageLayout.GetElements();
+		UE_CORE_INFO("Received random number is {0}", UE::FromUknown<uint64_t>(ReceivedMessageElements[0]));
+
 		return false;
 	}
 }

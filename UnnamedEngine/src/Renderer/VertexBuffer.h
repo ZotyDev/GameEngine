@@ -28,7 +28,7 @@ namespace UE
 			case ShaderDataType::Bool:		return 1;
 		}
 
-		UE_CORE_ERROR( "Uknown ShaderDataType!");
+		UE_CORE_ERROR( "Uknown ShaderDataType");
 		return 0;
 	};
 
