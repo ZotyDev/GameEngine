@@ -46,19 +46,6 @@ namespace UE
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
-
-	using UnknownType = void*;
-	template<typename T>
-	constexpr UnknownType CreateUnknown(T* ptr)
-	{
-		return (UnknownType)ptr;
-	}
-
-	template<typename T>
-	constexpr T FromUknown(UnknownType unknown)
-	{
-		return *(T*)unknown;
-	}
 }
 
 #include "Core/Log.h"
