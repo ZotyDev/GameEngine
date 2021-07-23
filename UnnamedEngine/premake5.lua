@@ -31,7 +31,8 @@ project "UnnamedEngine"
 		"%{IncludeDir.GLM}",
 		"%{IncludeDir.STB}",
 		"%{IncludeDir.LUA}",
-		"%{IncludeDir.Vulkan}"
+		"%{IncludeDir.Vulkan}",
+		"%{IncludeDir.Nochyis}"
 	}
 	
 	libdirs
@@ -44,6 +45,7 @@ project "UnnamedEngine"
 		"GLFW",
 		"GLAD",
 		"LUA",
+		"AudioEngine",
 		"opengl32.lib",
 		"vulkan-1.lib"
 	}

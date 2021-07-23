@@ -15,6 +15,8 @@
 
 #include "Math/Random/Salt.h"
 
+#include <Nochyis.h>
+
 namespace UE
 {
 	Application* Application::s_Instance = nullptr;
@@ -164,6 +166,7 @@ namespace UE
 			m_Running = false;
 			break;
 		case KeyCode::Enter:
+			InitAudio();
 			break;
 		}
 		return false;

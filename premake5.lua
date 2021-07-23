@@ -22,6 +22,8 @@ IncludeDir["GLAD"] = "%{wks.location}/UnnamedEngine/vendor/GLAD/include"
 IncludeDir["GLM"] = "%{wks.location}/UnnamedEngine/vendor/GLM"
 IncludeDir["STB"] = "%{wks.location}/UnnamedEngine/vendor/STB"
 IncludeDir["LUA"] = "%{wks.location}/UnnamedEngine/vendor/LUA"
+IncludeDir["Nochyis"] = "%{wks.location}/UnnamedEngine/vendor/Nochyis/include"
+
 IncludeDir["Vulkan"] = "C:/VulkanSDK/1.2.182.0/Include"
 
 LibDir = {}
@@ -32,6 +34,7 @@ group "Dependencies"
 	include "UnnamedEngine/vendor/GLAD"
 	include "UnnamedEngine/vendor/LUA"
 	include "UnnamedEngine/vendor/Nochyis"
+	include "UnnamedEngine/vendor/Nochyis/vendor/OpenAL-Soft"
 group ""
 
 include "UnnamedEngine"
