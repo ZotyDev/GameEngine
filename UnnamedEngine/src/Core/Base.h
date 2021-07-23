@@ -46,6 +46,13 @@ namespace UE
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
+
+	enum class UEResult
+	{
+		Error = -1,
+		Success = 0,
+		Warn = 1
+	};
 }
 
 #include "Core/Log.h"

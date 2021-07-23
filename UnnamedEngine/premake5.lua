@@ -30,7 +30,13 @@ project "UnnamedEngine"
 		"%{IncludeDir.GLAD}",
 		"%{IncludeDir.GLM}",
 		"%{IncludeDir.STB}",
-		"%{IncludeDir.LUA}"
+		"%{IncludeDir.LUA}",
+		"%{IncludeDir.Vulkan}"
+	}
+	
+	libdirs
+	{
+		"%{LibDir.Vulkan}"
 	}
 
 	links
@@ -38,7 +44,8 @@ project "UnnamedEngine"
 		"GLFW",
 		"GLAD",
 		"LUA",
-		"opengl32.lib"
+		"opengl32.lib",
+		"vulkan-1.lib"
 	}
 
 	filter "system:windows"

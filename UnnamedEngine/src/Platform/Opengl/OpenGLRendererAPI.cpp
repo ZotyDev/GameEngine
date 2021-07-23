@@ -68,8 +68,7 @@ namespace UE
 		GLint t_viewport[4];
 		glGetIntegerv(GL_VIEWPORT, t_viewport);
 		width = t_viewport[2];
-		height = t_viewport[3];
-		
+		height = t_viewport[3];	
 	}
 
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)

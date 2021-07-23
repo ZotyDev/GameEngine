@@ -4,6 +4,7 @@
 	#ifdef _WIN64
 		/* Windows x64 */
 		#define UE_PLATFORM_WINDOWS
+		#define UE_PLATFORM_GLFW
 
 		#define UE_BYTESWAP_16(x)		_byteswap_ushort(x)
 		#define UE_BYTESWAP_32(x)		_byteswap_ulong(x)
