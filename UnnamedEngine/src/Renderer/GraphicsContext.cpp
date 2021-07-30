@@ -12,7 +12,7 @@ namespace UE
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None: 
-			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); 
+			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported"); 
 			return nullptr;
 		case RendererAPI::API::OpenGL:
 			return CreateScope<OpenGLContext>(static_cast<GLFWwindow*>(window));
@@ -20,7 +20,7 @@ namespace UE
 			return CreateScope<VulkanContext>(static_cast<GLFWwindow*>(window));
 		}
 
-		UE_CORE_ASSERT(false, "Unkown RendererAPI!");
+		UE_CORE_ASSERT(false, "Unkown RendererAPI");
 		return nullptr;
 	}
 }

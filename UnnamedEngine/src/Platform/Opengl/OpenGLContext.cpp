@@ -18,10 +18,10 @@ namespace UE
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		UE_CORE_ASSERT(status, "Failed to initialize GLFW!");
 
-		UE_CORE_INFO("OpenGL Info:");
-		UE_CORE_INFO("  Vendor: {0}", glGetString(GL_VENDOR));
-		UE_CORE_INFO("  Renderer: {0}", glGetString(GL_RENDERER));
-		UE_CORE_INFO("  Version: {0}", glGetString(GL_VERSION));
+		UE_CORE_INFO("OpenGL Info:\n Vendor: {0}\n Renderer: {1}\n Version: {2}",
+			glGetString(GL_VENDOR),
+			glGetString(GL_RENDERER),
+			glGetString(GL_VERSION));
 
 		UE_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 6), "UnnamedEngine requires at least OpenGL version 4.6");
 	}

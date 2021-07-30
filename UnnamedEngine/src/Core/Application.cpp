@@ -15,11 +15,20 @@
 
 #include "Math/Random/Salt.h"
 
-#include <Nochyis.h>
+//#include <Nochyis.h>
+#include "Sound/SoundCommand.h"
+#include "Sound/Sound.h"
+#include "Sound/SoundSource.h"
+#include "Sound/SoundListener.h"
 
 namespace UE
 {
 	Application* Application::s_Instance = nullptr;
+
+	Ref<Sound> Music;
+	Ref<SoundSource> MusicSource;
+	Ref<SoundListener> Listener;
+	Ref<SoundListener> Earrape;
 
 	Application::Application(const std::string& name)
 	{
@@ -29,6 +38,8 @@ namespace UE
 		m_Window->SetEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();
+
+		SoundCommand::Init();
 
 		NetworkCommand::Init();
 
@@ -42,6 +53,20 @@ namespace UE
 		NetworkCommand::Connect(ServerAddress);
 
 		LuaAPI::Init();
+
+		Music = Sound::Create();
+		Music->LoadFromFile("Data/sounds/The Cruel Angel's Thesis(mono).wav");
+
+		MusicSource = SoundSource::Create();
+		MusicSource->Init();
+		MusicSource->SetPitch(1.0f);
+		MusicSource->SetGain(1.0f);
+		MusicSource->SetBuffer(Music->GetID());
+		MusicSource->Play();
+
+		Listener = SoundListener::Create();
+		Earrape = SoundListener::Create();
+		Earrape->SetGain(10.0f);
 	}
 
 	Application::~Application()
@@ -165,8 +190,11 @@ namespace UE
 		case KeyCode::Escape:
 			m_Running = false;
 			break;
-		case KeyCode::Enter:
-			InitAudio();
+		case KeyCode::Up:
+			Earrape->MakeCurrent();
+			break;
+		case KeyCode::Down:
+			Listener->MakeCurrent();
 			break;
 		}
 		return false;

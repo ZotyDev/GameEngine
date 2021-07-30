@@ -11,19 +11,19 @@ namespace UE
 		switch(Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:
-			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
 			return nullptr;
 		case RendererAPI::API::OpenGL:
 			Ref<OpenGLTexture2D> tempTexture2D = CreateRef<OpenGLTexture2D>();
 			if (tempTexture2D->LoadFromSource(path))
 			{
-				UE_CORE_ERROR("Failed to create Texture2D!");
+				UE_CORE_ERROR("Failed to create Texture2D");
 				return nullptr;
 			}
 			return tempTexture2D;
 		}
 
-		UE_CORE_ASSERT(false, "Unknown RendererAPI!");
+		UE_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
 }

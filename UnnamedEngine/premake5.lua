@@ -32,12 +32,13 @@ project "UnnamedEngine"
 		"%{IncludeDir.STB}",
 		"%{IncludeDir.LUA}",
 		"%{IncludeDir.Vulkan}",
-		"%{IncludeDir.Nochyis}"
+		"%{IncludeDir.OpenAL}"
 	}
 	
 	libdirs
 	{
-		"%{LibDir.Vulkan}"
+		"%{LibDir.Vulkan}",
+		"%{LibDir.OpenAL}"
 	}
 
 	links
@@ -45,22 +46,23 @@ project "UnnamedEngine"
 		"GLFW",
 		"GLAD",
 		"LUA",
-		"AudioEngine",
 		"opengl32.lib",
-		"vulkan-1.lib"
+		"vulkan-1.lib",
+		"OpenAL32.lib"
 	}
 
 	filter "system:windows"
 		systemversion "latest"
 
-		defines
-		{
-		}
-
 	filter "configurations:Debug"
 		defines "UE_DEBUG"
 		runtime "Debug"
 		symbols "on"
+		
+		--postbuildcommands
+		--{
+		--	"{COPY} %{wks.location}/UnnamedEngine/vendor/Nochyis/bin/Debug/AudioEngine/AudioEngine.dll %{wks.location}/VoxelGame/"
+		--}
 
 	filter "configurations:Release"
 		defines "UE_RELEASE"

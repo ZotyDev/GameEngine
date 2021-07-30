@@ -11,8 +11,9 @@
 	#elif defined(UE_PLATFORM_LINUX)
 		#include <signal.h>
 		#define UE_DEBUG_BREAK() raise(SIGTRAP)
+	
 	#else
-		#error "Platform doesn't support debugbreak yet!'"
+		#error "Platform doesn't support debugbreak yet!"
 	#endif
 	#define UE_ENABLE_ASSERTS
 #else
