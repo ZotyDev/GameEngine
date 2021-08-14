@@ -2,11 +2,13 @@
 
 #include "Core/Base.h"
 
-#include "Renderer/Camera3D.h"
+#include "Renderer/Camera.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Framebuffer.h"
 #include "Renderer/Primitives.h"
 #include "Renderer/Texture.h"
+
+#include "Renderer/Material.h"
 
 namespace UE
 {
@@ -18,7 +20,7 @@ namespace UE
 
 		static void OnWindowResize(uint32_t width, uint32_t height);
 
-		static void BeginRender(const Camera3D& camera);
+		static void BeginRender(Ref<Camera> camera);
 		static void EndRender();
 		static void Flush();
 
@@ -42,6 +44,7 @@ namespace UE
 			int Index;
 		};
 
+		static Scope<MaterialLibrary> s_MaterialLibrary;
 		static Scope<Renderer3DData> s_Data;
 	};
 }

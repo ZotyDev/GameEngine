@@ -20,7 +20,7 @@ namespace UE
 	class Application
 	{
 	public:
-		Application(const std::string& name = "UnnamedProject");
+		Application();
 		virtual ~Application();
 
 		void OnEvent(Event& event);

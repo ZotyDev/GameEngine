@@ -3,7 +3,7 @@
 
 namespace UE
 {
-	CameraController::CameraController(Camera3D camera)
+	CameraController::CameraController(Ref<Camera> camera)
 		: m_Camera(camera), m_ForwardMovement(0.0f), m_RightMovement(0.0f), m_UpMovement(0.0f), m_Velocity(5.0f)
 	{
 	}
@@ -11,11 +11,11 @@ namespace UE
 	void CameraController::OnUpdate(Timestep timestep)
 	{
 
-		m_Camera.SetPosition(m_Camera.GetPosition() + (m_Camera.GetForwardDirection() * m_ForwardMovement * m_Velocity * timestep.GetSeconds()));
-		m_Camera.SetPosition(m_Camera.GetPosition() + (m_Camera.GetRightDirection() * m_RightMovement * m_Velocity * timestep.GetSeconds()));
-		m_Camera.SetPosition(m_Camera.GetPosition() + (m_Camera.GetUpDirection() * m_UpMovement * m_Velocity * timestep.GetSeconds()));
+		m_Camera->SetPosition(m_Camera->GetPosition() + (m_Camera->GetForwardDirection() * m_ForwardMovement * m_Velocity * timestep.GetSeconds()));
+		m_Camera->SetPosition(m_Camera->GetPosition() + (m_Camera->GetRightDirection() * m_RightMovement * m_Velocity * timestep.GetSeconds()));
+		m_Camera->SetPosition(m_Camera->GetPosition() + (m_Camera->GetUpDirection() * m_UpMovement * m_Velocity * timestep.GetSeconds()));
 
-		m_Camera.Update();
+		m_Camera->Update();
 	}
 
 	void CameraController::MoveForward()
@@ -71,7 +71,7 @@ namespace UE
 
 	bool CameraController::OnWindowResize(WindowResizeEvent& event)
 	{
-		m_Camera.SetViewportSize(event.GetWidth(), event.GetHeight());
+		m_Camera->SetViewportSize(event.GetWidth(), event.GetHeight());
 		return false;
 	}
 

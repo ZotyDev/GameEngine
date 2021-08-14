@@ -7,7 +7,7 @@
 
 #include "Renderer/Renderer.h"
 
-#include "Platform/Opengl/OpenGLContext.h"
+#include "Renderer/GraphicsContext.h"
 
 namespace UE
 {
@@ -44,12 +44,25 @@ namespace UE
 		}
 
 		{
-			#if defined(UE_DEBUG)
-			if (Renderer::GetAPI() == RendererAPI::API::OpenGL)
-				{
-					glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-				}
-			#endif
+			switch (RendererAPI::GetAPI())
+			{
+			case RendererAPI::API::None:
+				UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+				break;
+			case RendererAPI::API::OpenGL:
+				glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+				
+				#if defined(UE_DEBUG)
+				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+				#endif
+
+				break;
+			case RendererAPI::API::Vulkan:
+				glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+				glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+				break;
+			}
+
 			m_Window = glfwCreateWindow((int)m_WindowData.Width, (int)m_WindowData.Height, m_WindowData.Title.c_str(), nullptr, nullptr);
 			++s_GLFWWindowCount;
 		}
@@ -59,7 +72,7 @@ namespace UE
 
 		// SetWindowUserPointer being used to define a pointer to m_WindowData
 		glfwSetWindowUserPointer(m_Window, &m_WindowData);
-		SetVSync(true);
+		//SetVSync(true);
 
 		glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 			{
@@ -211,5 +224,10 @@ namespace UE
 	bool WindowsWindow::IsVSync() const
 	{
 		return m_WindowData.VSync;
+	}
+
+	void WindowsWindow::SetCursorHidden(bool hidden)
+	{
+		glfwSetInputMode(m_Window, GLFW_CURSOR, hidden ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 	}
 }

@@ -2,7 +2,7 @@
 
 #include "RenderCommand.h"
 
-#include "Renderer/Camera3D.h"
+#include "Renderer/Camera.h"
 #include "Renderer/Shader.h"
 
 namespace UE
@@ -18,7 +18,7 @@ namespace UE
 		static void SetClearColor(glm::vec4 color);
 		static void Clear();
 
-		static void BeginRender(Camera3D& camera);
+		static void BeginRender(Camera& camera);
 		static void EndRender();
 
 		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray);

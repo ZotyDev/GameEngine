@@ -5,13 +5,13 @@
 
 namespace UE
 {
-	class Camera3D
+	class Camera
 	{
 	public:
-		Camera3D(float width, float height, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), float nearClip = 0.1f, float farClip = 1000.0f, float fov = 45.0f);
-		Camera3D();
+		Camera(float width, float height, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), float nearClip = 0.1f, float farClip = 1000.0f, float fov = 45.0f);
+		Camera();
 
-		virtual ~Camera3D() = default;
+		virtual ~Camera() = default;
 
 		const glm::mat4 GetViewMatrix() const { return m_ViewMatrix; }
 		glm::mat4 GetViewProjection() const { return m_Projection * m_ViewMatrix; }
@@ -22,7 +22,7 @@ namespace UE
 			m_ViewportHeight = height;
 		}
 
-		void Update()
+		virtual void Update()
 		{
 			UpdateProjection();
 			UpdateView();
@@ -46,7 +46,7 @@ namespace UE
 		void UpdateProjection();
 		void UpdateView();
 
-	private:
+	protected:
 		float m_FOV = 45.0f;
 		float m_AspectRatio = 1.77f;
 		float m_NearClip = 0.1f;

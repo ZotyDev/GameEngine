@@ -39,8 +39,7 @@ project "UnnamedEngine"
 	libdirs
 	{
 		"%{LibDir.Vulkan}",
-		"%{LibDir.OpenAL}",
-		"%{LibDir.FreeType}"
+		"%{LibDir.OpenAL}"
 	}
 
 	links
@@ -51,7 +50,7 @@ project "UnnamedEngine"
 		"opengl32.lib",
 		"vulkan-1.lib",
 		"OpenAL32.lib",
-		""
+		"FreeType"
 	}
 
 	filter "system:windows"

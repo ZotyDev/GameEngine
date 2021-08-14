@@ -23,6 +23,10 @@ namespace UE
 		s_Data->ShadowBuffer = Framebuffer::Create(specs);
 
 		s_Data->ShadowShader = Shader::Create("data/shaders/shadow");
+
+		Ref<Material> DefaultMaterial = CreateRef<Material>();
+		DefaultMaterial->RegisterValue("TextureID", uint32_t(0));
+		s_MaterialLibrary->Add("Default", DefaultMaterial);
 	}
 
 	void Renderer3D::Shutdown()
@@ -35,9 +39,9 @@ namespace UE
 		s_Data->ScreenFramebuffer->Resize(width, height);
 	}
 
-	void Renderer3D::BeginRender(const Camera3D& camera)
+	void Renderer3D::BeginRender(Ref<Camera> camera)
 	{
-		s_Data->ViewProjectionMatrix = camera.GetViewProjection();
+		s_Data->ViewProjectionMatrix = camera->GetViewProjection();
 
 		s_Data->VaoArray.fill(nullptr);
 		s_Data->ShaderArray.fill(nullptr);

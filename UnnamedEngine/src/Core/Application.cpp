@@ -21,6 +21,10 @@
 
 #include "ECS/System.h"
 
+//#include "Interface/Text/TextCommand.h"
+
+#include "Renderer/Material.h"
+
 namespace UE
 {
 	Application* Application::s_Instance = nullptr;
@@ -32,11 +36,11 @@ namespace UE
 
 	Ref<EntityManager> m_EntityManager;
 
-	Application::Application(const std::string& name)
+	Application::Application()
 	{
 		UE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
-		m_Window = Window::Create(WindowProps(name));
+		m_Window = Window::Create(WindowProps("UnnamedProject"));
 		m_Window->SetEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
 		m_Window->SetVSync(true);
 
@@ -58,7 +62,7 @@ namespace UE
 		LuaAPI::Init();
 
 		Music = Sound::Create();
-		Music->LoadFromFile("Data/sounds/The Cruel Angel's Thesis(mono).wav");
+		Music->LoadFromFile("data/sounds/The Cruel Angel's Thesis(mono).wav");
 
 		MusicSource = SoundSource::Create();
 		MusicSource->Init();
@@ -75,6 +79,8 @@ namespace UE
 
 		Entity Goblin;
 		m_EntityManager->CreateEntity(Goblin);
+
+		//TextCommand::Init();
 	}
 
 	Application::~Application()

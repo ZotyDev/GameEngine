@@ -16,8 +16,8 @@ void VoxelGameApp::OnAttach()
 
 	m_Texture2D = UE::Texture2D::Create("data/textures/grass.png");
 
-	m_Camera = UE::Camera3D(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
-	m_CameraController = UE::CreateRef<UE::CameraController>(m_Camera);
+	m_Camera = UE::Camera(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
+	m_CameraController = UE::CreateRef<UE::CameraController>(UE::CreateRef<UE::Camera>(m_Camera));
 
 	UE::FramebufferSpecification specs;
 	specs.Width = 1280;
@@ -173,8 +173,8 @@ bool VoxelGameApp::OnMouseReleased(UE::MouseButtonReleasedEvent& event)
 
 bool VoxelGameApp::OnMouseMoved(UE::MouseMovedEvent& event)
 {
-	m_CameraController->GetCamera().SetYaw(event.GetX() * 0.001f);
-	m_CameraController->GetCamera().SetPitch(event.GetY() * 0.001f);
+	m_CameraController->GetCamera()->SetYaw(event.GetX() * 0.001f);
+	m_CameraController->GetCamera()->SetPitch(event.GetY() * 0.001f);
 	return false;
 }
 

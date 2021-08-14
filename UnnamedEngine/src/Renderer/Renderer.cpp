@@ -33,7 +33,7 @@ namespace UE
 		RenderCommand::Clear();
 	}
 
-	void Renderer::BeginRender(Camera3D& camera)
+	void Renderer::BeginRender(Camera& camera)
 	{
 		SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Clear();

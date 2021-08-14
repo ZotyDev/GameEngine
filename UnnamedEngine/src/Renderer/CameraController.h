@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/Camera3D.h"
+#include "Renderer/Camera.h"
 #include "Core/Timestep.h"
 
 #include "Events/WindowEvent.h"
@@ -11,7 +11,7 @@ namespace UE
 	class CameraController
 	{
 	public:
-		CameraController(Camera3D camera);
+		CameraController(Ref<Camera> camera);
 
 		void OnUpdate(Timestep timestep);
 		void OnEvent(Event& event);
@@ -28,8 +28,7 @@ namespace UE
 		void MoveDown();
 		void StopUp();
 
-		Camera3D& GetCamera() { return m_Camera; };
-		const Camera3D& GetCamera() const { return m_Camera; }
+		Ref<Camera> GetCamera() { return m_Camera; };
 
 	private:
 		bool OnWindowResize(WindowResizeEvent& event);
@@ -39,6 +38,6 @@ namespace UE
 		float m_UpMovement;
 		float m_Velocity;
 	private:
-		Camera3D m_Camera;
+		Ref<Camera> m_Camera;
 	};
 }

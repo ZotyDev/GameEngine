@@ -30,7 +30,7 @@
 #include "Renderer/Framebuffer.h"
 #include "Renderer/Texture.h"
 
-#include "Renderer/Camera3D.h"
+#include "Renderer/Camera.h"
 #include "Renderer/CameraController.h"
 
 #include "Renderer/Primitives.h""
