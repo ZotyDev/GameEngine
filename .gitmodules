@@ -16,3 +16,6 @@
 [submodule "UnnamedEngine/vendor/Nochyis"]
 	path = UnnamedEngine/vendor/Nochyis
 	url = https://github.com/ZotyDev/Nochyis
+[submodule "UnnamedEngine/vendor/FreeType"]
+	path = UnnamedEngine/vendor/FreeType
+	url = https://github.com/ZotyDev/freetype

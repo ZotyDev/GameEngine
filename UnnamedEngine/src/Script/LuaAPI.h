@@ -23,6 +23,8 @@ namespace UE
 
 		static int ExecuteFile(const std::string& filePath);
 
+		static int LoadTable(const std::string& name);
+
 	private:
 		static bool CheckFunction(int msg);
 		static int GetStackSize();

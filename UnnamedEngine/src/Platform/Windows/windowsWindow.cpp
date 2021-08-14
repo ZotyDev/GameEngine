@@ -225,4 +225,9 @@ namespace UE
 	{
 		return m_WindowData.VSync;
 	}
+
+	void WindowsWindow::SetCursorHidden(bool hidden)
+	{
+		glfwSetInputMode(m_Window, GLFW_CURSOR, hidden ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+	}
 }

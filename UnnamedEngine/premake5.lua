@@ -32,13 +32,15 @@ project "UnnamedEngine"
 		"%{IncludeDir.STB}",
 		"%{IncludeDir.LUA}",
 		"%{IncludeDir.Vulkan}",
-		"%{IncludeDir.OpenAL}"
+		"%{IncludeDir.OpenAL}",
+		"%{IncludeDir.FreeType}"
 	}
 	
 	libdirs
 	{
 		"%{LibDir.Vulkan}",
-		"%{LibDir.OpenAL}"
+		"%{LibDir.OpenAL}",
+		"%{LibDir.FreeType}"
 	}
 
 	links
@@ -48,7 +50,8 @@ project "UnnamedEngine"
 		"LUA",
 		"opengl32.lib",
 		"vulkan-1.lib",
-		"OpenAL32.lib"
+		"OpenAL32.lib",
+		""
 	}
 
 	filter "system:windows"

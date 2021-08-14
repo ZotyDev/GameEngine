@@ -10,6 +10,10 @@ ChunkManager m_ChunkManager;
 
 void VoxelGameApp::OnAttach()
 {
+	// Todo: 
+	// Implement 2D renderer (GUI, etc)
+	// Implement particles
+
 	m_Texture2D = UE::Texture2D::Create("data/textures/grass.png");
 
 	m_Camera = UE::Camera3D(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));

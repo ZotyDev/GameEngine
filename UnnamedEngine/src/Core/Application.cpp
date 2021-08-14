@@ -14,12 +14,12 @@
 #include "Network/Connection.h"
 
 #include "Math/Random/Salt.h"
-
-//#include <Nochyis.h>
 #include "Sound/SoundCommand.h"
 #include "Sound/Sound.h"
 #include "Sound/SoundSource.h"
 #include "Sound/SoundListener.h"
+
+#include "ECS/System.h"
 
 namespace UE
 {
@@ -30,12 +30,15 @@ namespace UE
 	Ref<SoundListener> Listener;
 	Ref<SoundListener> Earrape;
 
+	Ref<EntityManager> m_EntityManager;
+
 	Application::Application(const std::string& name)
 	{
 		UE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		m_Window = Window::Create(WindowProps(name));
 		m_Window->SetEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
+		m_Window->SetVSync(true);
 
 		Renderer::Init();
 
@@ -67,6 +70,11 @@ namespace UE
 		Listener = SoundListener::Create();
 		Earrape = SoundListener::Create();
 		Earrape->SetGain(10.0f);
+
+		m_EntityManager = CreateRef<EntityManager>();
+
+		Entity Goblin;
+		m_EntityManager->CreateEntity(Goblin);
 	}
 
 	Application::~Application()
@@ -176,16 +184,8 @@ namespace UE
 		switch (event.GetKeyCode())
 		{
 		case KeyCode::LeftAlt:
-			if (IsCursorHidden)
-			{
-				glfwSetInputMode((GLFWwindow*)m_Window->GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-				IsCursorHidden = !IsCursorHidden;
-			}
-			else
-			{
-				glfwSetInputMode((GLFWwindow*)m_Window->GetNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-				IsCursorHidden = !IsCursorHidden;
-			}
+			m_Window->SetCursorHidden(!IsCursorHidden);
+			IsCursorHidden = !IsCursorHidden;
 			break;
 		case KeyCode::Escape:
 			m_Running = false;
