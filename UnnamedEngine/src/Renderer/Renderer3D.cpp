@@ -9,6 +9,7 @@
 namespace UE
 {
 	Scope<Renderer3D::Renderer3DData> Renderer3D::s_Data = CreateScope<Renderer3D::Renderer3DData>();
+	Scope<MaterialLibrary> Renderer3D::s_MaterialLibrary = CreateScope<MaterialLibrary>();
 
 	void Renderer3D::Init(Ref<Shader> ScreenShader, Ref<Framebuffer> ScreenFramebuffer)
 	{
@@ -25,7 +26,8 @@ namespace UE
 		s_Data->ShadowShader = Shader::Create("data/shaders/shadow");
 
 		Ref<Material> DefaultMaterial = CreateRef<Material>();
-		DefaultMaterial->RegisterValue("TextureID", uint32_t(0));
+		DefaultMaterial->RegisterTexture("Texture", nullptr);
+		DefaultMaterial->RegisterShader("Shader", nullptr);
 		s_MaterialLibrary->Add("Default", DefaultMaterial);
 	}
 
@@ -143,12 +145,13 @@ namespace UE
 		s_Data->Index++;
 	}
 
-	void Renderer3D::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray)
+	UEResult Renderer3D::DrawVAO(const Ref<VertexArray>& vao, const std::string& material, const glm::vec3& position, const glm::vec3& size, const glm::vec3& rotation)
 	{
-		shader->Bind();
-		shader->SetMat4("u_ViewProjection", s_Data->ViewProjectionMatrix);
+		return UEResult::Success;
+	}
 
-		vertexArray->Bind();
-		RenderCommand::DrawIndexed(vertexArray);
+	UEResult Renderer3D::DrawVAO(const Ref<VertexArray>& vao, const Ref<Material> material, const glm::vec3& position, const glm::vec3& size, const glm::vec3& rotation)
+	{
+		return UEResult::Success;
 	}
 }

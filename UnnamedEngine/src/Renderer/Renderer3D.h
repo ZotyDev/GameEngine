@@ -26,7 +26,9 @@ namespace UE
 
 		static void DrawVao(const Ref<VertexArray>& vao, const Ref<Texture2D>& texture, const Ref<Shader>& shader, const glm::vec3& position);
 
-		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray);
+		static UEResult DrawVAO(const Ref<VertexArray>& vao, const Ref<Material> material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
+		static UEResult DrawVAO(const Ref<VertexArray>& vao, const std::string& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
+
 	private:
 		struct Renderer3DData
 		{
@@ -41,6 +43,9 @@ namespace UE
 			std::array<Ref<Shader>, 32> ShaderArray;
 			std::array<Ref<Texture2D>, 32> TextureArray;
 			std::array<glm::vec3, 32> PositionArray;
+			std::array<glm::vec3, 32> SizeArray;
+			std::array<glm::vec3, 32> RotationArray;
+			std::array<Ref<Material>, 32> MaterialArray;
 			int Index;
 		};
 
