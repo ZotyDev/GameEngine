@@ -15,6 +15,11 @@
 #include "Events/MouseEvent.h"
 #include "Events/WindowEvent.h"*/
 
+/* ECS */
+#include "ECS/Entity.h"
+#include "ECS/Component.h"
+#include "ECS/System.h"
+
 /* Script */
 #include "Script/LuaAPI.h"
 

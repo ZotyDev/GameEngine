@@ -2,6 +2,8 @@
 
 #define UE_INVALID_ENTITY 0
 
+#include <queue>
+
 namespace UE
 {
 	// 0 as ID represents a invalid Entity

@@ -22,7 +22,7 @@ namespace UE
 		UEResult RegisterFloat(const std::string& name, float value);
 		
 		UEResult RegisterShader(const std::string& name, Ref<Shader> shader);
-		UEResult RegisterTexture(const std::string& name, Ref<Texture> texture);
+		UEResult RegisterTexture(const std::string& name, Ref<Texture2D> texture);
 		
 		UEResult Remove(const std::string& name);
 
@@ -32,7 +32,7 @@ namespace UE
 		UEResult SetFloat(const std::string& name, float value);
 
 		UEResult SetShader(const std::string& name, Ref<Shader> shader);
-		UEResult SetTexture(const std::string& name, Ref<Texture> texture);
+		UEResult SetTexture(const std::string& name, Ref<Texture2D> texture);
 
 		UEResult GetBool(const std::string& name, bool& value);
 		UEResult GetInt(const std::string& name, int& value);
@@ -40,7 +40,7 @@ namespace UE
 		UEResult GetFloat(const std::string& name, float& value);
 
 		UEResult GetShader(const std::string& name, Ref<Shader>& shader);
-		UEResult GetTexture(const std::string& name, Ref<Texture>& texture);
+		UEResult GetTexture(const std::string& name, Ref<Texture2D>& texture);
 
 		bool Exists(const std::string& name);
 	private:
@@ -50,7 +50,7 @@ namespace UE
 		std::unordered_map<std::string, float> m_FloatValues;
 	private:
 		std::unordered_map<std::string, Ref<Shader>> m_Shaders;
-		std::unordered_map<std::string, Ref<Texture>> m_Textures;
+		std::unordered_map<std::string, Ref<Texture2D>> m_Textures;
 	};
 
 	class MaterialLibrary

@@ -8,6 +8,8 @@ VoxelGameApp::VoxelGameApp()
 
 ChunkManager m_ChunkManager;
 
+UE::Ref<UE::Material> GrassMaterial = UE::CreateRef<UE::Material>();
+
 void VoxelGameApp::OnAttach()
 {
 	// Todo: 
@@ -49,6 +51,10 @@ void VoxelGameApp::OnAttach()
 
 	// TEMPORARY CHUNK
 	m_ChunkManager.AddChunk({ 0, 0, 0 });
+
+	// TEMPORARY MATERIAL
+	GrassMaterial->RegisterShader("Shader", m_ShaderLibrary->Get("default"));
+	GrassMaterial->RegisterTexture("Texture", m_Texture2D);
 }
 
 void VoxelGameApp::OnDetach()
@@ -67,13 +73,13 @@ void VoxelGameApp::Render()
 	UE::Renderer3D::BeginRender(m_CameraController->GetCamera());
 	/*============================================================================*/
 
-	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 0.0f, 0.0f, 0.0f });
-	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 1.0f, 0.0f, 0.0f });
-	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 0.0f, 1.0f, 0.0f });
-	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 0.0f, 0.0f, 1.0f });
-	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { -1.0f, 0.0f, 0.0f });
-	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 0.0f, -1.0f, 0.0f });
-	UE::Renderer3D::DrawVao(m_Quad->VAO, m_Texture2D, m_ShaderLibrary->Get("default"), { 0.0f, 0.0f, -1.0f });
+	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
+	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 1.0f, 0.0f, 0.0f });
+	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 1.0f, 0.0f });
+	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 1.0f });
+	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { -1.0f, 0.0f, 0.0f });
+	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, -1.0f, 0.0f });
+	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, -1.0f });
 
 	/*============================================================================*/
 	UE::Renderer3D::EndRender();

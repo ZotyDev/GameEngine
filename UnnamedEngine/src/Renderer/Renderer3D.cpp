@@ -145,12 +145,81 @@ namespace UE
 		s_Data->Index++;
 	}
 
+	UEResult Renderer3D::DrawVAO(const Ref<VertexArray>& vao, const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size, const glm::vec3& rotation)
+	{
+		return UEResult::Success;
+	}
+
 	UEResult Renderer3D::DrawVAO(const Ref<VertexArray>& vao, const std::string& material, const glm::vec3& position, const glm::vec3& size, const glm::vec3& rotation)
 	{
 		return UEResult::Success;
 	}
 
-	UEResult Renderer3D::DrawVAO(const Ref<VertexArray>& vao, const Ref<Material> material, const glm::vec3& position, const glm::vec3& size, const glm::vec3& rotation)
+	UEResult Renderer3D::Submit(const Ref<VertexArray>& vao, const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size, const glm::vec3& rotation)
+	{	
+		Ref<Shader> MaterialShader;
+		if (material->GetShader("Shader", MaterialShader) == UEResult::Error)
+		{
+			UE_CORE_ERROR("Failed to submit to Renderer3D: material does not contain shader");
+			return UEResult::Error;
+		}
+		Ref<Texture2D> MaterialTexture;
+		if (material->GetTexture("Texture", MaterialTexture) == UEResult::Error)
+		{
+			UE_CORE_ERROR("Failed to submit to Renderer3D: material does not contain texture");
+			return UEResult::Error;
+		}
+
+		s_Data->VaoArray[s_Data->Index] = vao;
+		s_Data->ShaderArray[s_Data->Index] = MaterialShader;
+		s_Data->TextureArray[s_Data->Index] = MaterialTexture;
+		s_Data->PositionArray[s_Data->Index] = position;
+		s_Data->SizeArray[s_Data->Index] = size;
+		s_Data->RotationArray[s_Data->Index] = rotation;
+		s_Data->Index++;
+
+		return UEResult::Success;
+	}
+
+	UEResult Renderer3D::Submit(const Ref<VertexArray>& vao, const std::string& material, const glm::vec3& position, const glm::vec3& size, const glm::vec3& rotation)
+	{
+		Ref<Material> MaterialMaterial;
+		if (s_MaterialLibrary->Get(material, MaterialMaterial) == UEResult::Error)
+		{
+			UE_CORE_ERROR("Failed to submit to Renderer3D: material does not exist");
+			return UEResult::Error;
+		}
+
+		Ref<Shader> MaterialShader;
+		if (MaterialMaterial->GetShader("Shader", MaterialShader) == UEResult::Error)
+		{
+			UE_CORE_ERROR("Failed to submit to Renderer3D: material does not contain shader");
+			return UEResult::Error;
+		}
+		Ref<Texture2D> MaterialTexture;
+		if (MaterialMaterial->GetTexture("Texture", MaterialTexture) == UEResult::Error)
+		{
+			UE_CORE_ERROR("Failed to submit to Renderer3D: material does not contain texture");
+			return UEResult::Error;
+		}
+
+		s_Data->VaoArray[s_Data->Index] = vao;
+		s_Data->ShaderArray[s_Data->Index] = MaterialShader;
+		s_Data->TextureArray[s_Data->Index] = MaterialTexture;
+		s_Data->PositionArray[s_Data->Index] = position;
+		s_Data->SizeArray[s_Data->Index] = size;
+		s_Data->RotationArray[s_Data->Index] = rotation;
+		s_Data->Index++;
+
+		return UEResult::Success;
+	}
+
+	UEResult Renderer3D::Submit(Entity entity, const Ref<Material> material)
+	{
+		return UEResult::Success;
+	}
+
+	UEResult Renderer3D::Submit(Entity entity)
 	{
 		return UEResult::Success;
 	}

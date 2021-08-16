@@ -78,7 +78,7 @@ namespace UE
 		return UEResult::Success;
 	}
 
-	UEResult Material::RegisterTexture(const std::string& name, Ref<Texture> texture)
+	UEResult Material::RegisterTexture(const std::string& name, Ref<Texture2D> texture)
 	{
 		if (Exists(name))
 		{
@@ -228,7 +228,7 @@ namespace UE
 		return UEResult::Success;
 	}
 
-	UEResult Material::SetTexture(const std::string& name, Ref<Texture> texture)
+	UEResult Material::SetTexture(const std::string& name, Ref<Texture2D> texture)
 	{
 		if (!Exists(name))
 		{
@@ -348,7 +348,7 @@ namespace UE
 		return UEResult::Success;
 	}
 
-	UEResult Material::GetTexture(const std::string& name, Ref<Texture>& texture)
+	UEResult Material::GetTexture(const std::string& name, Ref<Texture2D>& texture)
 	{
 		if (!Exists(name))
 		{
