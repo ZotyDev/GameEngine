@@ -29,8 +29,6 @@ namespace UE
 // 		static UEResult RegisterMaterial(const std::string& name, const Ref<Material>& material);
 // 		static UEResult GetMaterial(const std::string& name, Ref<Material>& material);
 
-		static void DrawVao(const Ref<VertexArray>& vao, const Ref<Texture2D>& texture, const Ref<Shader>& shader, const glm::vec3& position);
-
 		static UEResult DrawVAO(const Ref<VertexArray>& vao, const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
 		static UEResult DrawVAO(const Ref<VertexArray>& vao, const std::string& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
 
@@ -72,7 +70,9 @@ namespace UE
 			std::array<glm::vec3, 32> SizeArray;
 			std::array<glm::vec3, 32> RotationArray;
 			std::array<Ref<Material>, 32> MaterialArray;
-			int Index;
+			uint32_t Index;
+
+			std::unordered_map<Ref<Material>, std::vector<uint32_t>> MaterialIndexMap;
 		};
 
 		static Scope<MaterialLibrary> s_MaterialLibrary;

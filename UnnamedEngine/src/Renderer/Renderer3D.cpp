@@ -8,6 +8,9 @@
 
 namespace UE
 {
+	// Todo:
+	// Send entire transform instead of position, rotation, size, etc..
+
 	Scope<Renderer3D::Renderer3DData> Renderer3D::s_Data = CreateScope<Renderer3D::Renderer3DData>();
 	Scope<MaterialLibrary> Renderer3D::s_MaterialLibrary = CreateScope<MaterialLibrary>();
 
@@ -80,14 +83,23 @@ namespace UE
 		glm::mat4 lightView = glm::lookAt(glm::vec3(5.0f, 2.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glm::mat4 lightViewProjection = lightProjection * lightView;
 
-		for (int i = 0; i < s_Data->Index; i++)
+		for (auto& it : s_Data->MaterialIndexMap)
 		{
-			s_Data->TextureArray[i]->Bind();
-			s_Data->ShaderArray[i]->Bind();
-			s_Data->ShaderArray[i]->SetFloat3("u_Position", s_Data->PositionArray[i]);
-			s_Data->ShaderArray[i]->SetMat4("u_ViewProjection", lightViewProjection);
-			s_Data->VaoArray[i]->Bind();
-			RenderCommand::DrawIndexed(s_Data->VaoArray[i]);
+			Ref<Material> CurrentMaterial = it.first;
+
+			Ref<Shader> MaterialShader;
+			CurrentMaterial->GetShader("Shadow", MaterialShader);
+
+			MaterialShader->Bind();
+
+			MaterialShader->SetMat4("u_ViewProjection", lightViewProjection);
+
+			for (auto& CurrentIndex : it.second)
+			{
+				MaterialShader->SetFloat3("u_Transform", s_Data->PositionArray[CurrentIndex]);
+				s_Data->VaoArray[CurrentIndex]->Bind();
+				RenderCommand::DrawIndexed(s_Data->VaoArray[CurrentIndex]);
+			}
 		}
 
 		// End of Rendering
@@ -104,18 +116,31 @@ namespace UE
 		
 		// Rendering
 		RenderCommand::CullBack();
-		for (int i = 0; i < s_Data->Index; i++)
+
+		for (auto& it : s_Data->MaterialIndexMap)
 		{
-			s_Data->ShaderArray[i]->Bind();
-			s_Data->ShaderArray[i]->SetInt("u_Texture1", 0);
-			s_Data->ShaderArray[i]->SetInt("u_ShadowMap", 1);
+			Ref<Material> CurrentMaterial = it.first;
+
+			Ref<Shader> MaterialShader;
+			CurrentMaterial->GetShader("Shader", MaterialShader);
+			Ref<Texture2D> MaterialTexture;
+			CurrentMaterial->GetTexture("Texture", MaterialTexture);
+
+			MaterialShader->Bind();
+			MaterialShader->SetInt("u_Texture1", 0);
+			MaterialShader->SetInt("u_ShadowMap", 1);
 			s_Data->ShadowBuffer->BindDepthAttachment(1);
-			s_Data->TextureArray[i]->Bind(0);
-			s_Data->ShaderArray[i]->SetFloat3("u_Position", s_Data->PositionArray[i]);
-			s_Data->ShaderArray[i]->SetMat4("u_ViewProjection", s_Data->ViewProjectionMatrix);
-			s_Data->ShaderArray[i]->SetMat4("u_LightViewProjection", lightViewProjection);
-			s_Data->VaoArray[i]->Bind();
-			RenderCommand::DrawIndexed(s_Data->VaoArray[i]);
+			
+			MaterialShader->SetMat4("u_ViewProjection", s_Data->ViewProjectionMatrix);
+			MaterialShader->SetMat4("u_LightViewProjection", lightViewProjection);
+
+			for (auto& CurrentIndex : it.second)
+			{
+				MaterialTexture->Bind();
+				MaterialShader->SetFloat3("u_Transform", s_Data->PositionArray[CurrentIndex]);
+				s_Data->VaoArray[CurrentIndex]->Bind();
+				RenderCommand::DrawIndexed(s_Data->VaoArray[CurrentIndex]);
+			}
 		}
 
 		// End of Rendering
@@ -129,20 +154,16 @@ namespace UE
 
 		// Bind Screen Framebuffer Texture, Mesh and Camera ViewProjection to render it to the screen
 		s_Data->ScreenFramebuffer->BindColorAttachment();
-		//s_Data->ShadowBuffer->BindDepthAttachment();
+		//s_Data->ShadowBuffer->BindDepthAttachment(); // When this is enabled it is possible to see the shadow map
 		s_Data->ScreenShader->Bind();
 		s_Data->ScreenShader->SetMat4("u_ViewProjection", s_Data->ViewProjectionMatrix);
 		s_Data->ScreenMesh->VAO->Bind();
 		RenderCommand::DrawIndexed(s_Data->ScreenMesh->VAO);
-	}
 
-	void Renderer3D::DrawVao(const Ref<VertexArray>& vao, const Ref<Texture2D>& texture, const Ref<Shader>& shader, const glm::vec3& position)
-	{
-		s_Data->VaoArray[s_Data->Index] = vao;
-		s_Data->ShaderArray[s_Data->Index] = shader;
-		s_Data->TextureArray[s_Data->Index] = texture;
-		s_Data->PositionArray[s_Data->Index] = position;
-		s_Data->Index++;
+		for (auto& it : s_Data->MaterialIndexMap)
+		{
+			it.second.empty();
+		}
 	}
 
 	UEResult Renderer3D::DrawVAO(const Ref<VertexArray>& vao, const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size, const glm::vec3& rotation)
@@ -176,6 +197,19 @@ namespace UE
 		s_Data->PositionArray[s_Data->Index] = position;
 		s_Data->SizeArray[s_Data->Index] = size;
 		s_Data->RotationArray[s_Data->Index] = rotation;
+
+		auto it = s_Data->MaterialIndexMap.find(material);
+		if (it == s_Data->MaterialIndexMap.end())
+		{
+			std::vector<uint32_t> IndexMap;
+			IndexMap.push_back(s_Data->Index);
+			s_Data->MaterialIndexMap.insert({ material, IndexMap });
+		}
+		else
+		{
+			it->second.push_back(s_Data->Index);
+		}
+
 		s_Data->Index++;
 
 		return UEResult::Success;
@@ -209,6 +243,19 @@ namespace UE
 		s_Data->PositionArray[s_Data->Index] = position;
 		s_Data->SizeArray[s_Data->Index] = size;
 		s_Data->RotationArray[s_Data->Index] = rotation;
+
+		auto it = s_Data->MaterialIndexMap.find(MaterialMaterial);
+		if (it == s_Data->MaterialIndexMap.end())
+		{
+			std::vector<uint32_t> IndexMap;
+			IndexMap.push_back(s_Data->Index);
+			s_Data->MaterialIndexMap.insert({ MaterialMaterial, IndexMap });
+		}
+		else
+		{
+			it->second.push_back(s_Data->Index);
+		}
+
 		s_Data->Index++;
 
 		return UEResult::Success;

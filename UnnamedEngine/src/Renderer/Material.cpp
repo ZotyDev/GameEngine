@@ -454,4 +454,9 @@ namespace UE
 
 		return UEResult::Success;
 	}
+
+	bool MaterialLibrary::Exists(const std::string& name)
+	{
+		return m_Materials.find(name) != m_Materials.end();
+	}
 }

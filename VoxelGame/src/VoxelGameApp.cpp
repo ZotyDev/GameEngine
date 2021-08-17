@@ -28,8 +28,7 @@ void VoxelGameApp::OnAttach()
 	specs.Attachments.Attachments.push_back(UE::FramebufferTextureSpecification(UE::FramebufferTextureFormat::Depth));
 	m_Framebuffer = UE::Framebuffer::Create(specs);
 
-	m_Screen = UE::CreateRef<UE::Primitives::Quad>(glm::vec2(-1.0f, 1.0f), glm::vec2(1.0f, -1.0f));
-	m_Quad = UE::CreateRef<UE::Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));	
+	m_Quad = UE::CreateRef<UE::Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));
 
 	// LoadShader LUA function register
 	UE::LuaAPI::RegisterFunction("LoadShader", [](lua_State* L)
@@ -54,6 +53,7 @@ void VoxelGameApp::OnAttach()
 
 	// TEMPORARY MATERIAL
 	GrassMaterial->RegisterShader("Shader", m_ShaderLibrary->Get("default"));
+	GrassMaterial->RegisterShader("Shadow", m_ShaderLibrary->Get("shadow"));
 	GrassMaterial->RegisterTexture("Texture", m_Texture2D);
 }
 

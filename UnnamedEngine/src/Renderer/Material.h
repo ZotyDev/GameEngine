@@ -61,6 +61,8 @@ namespace UE
 		UEResult Get(const std::string& name, Ref<Material>& material);
 		UEResult CopyFrom(const std::string& name, Ref<Material>& material);
 		UEResult AddFromDefault(const std::string& name, Ref<Material>& material);
+		
+		bool Exists(const std::string& name);
 	private:
 		std::unordered_map<std::string, Ref<Material>> m_Materials;
 	};
