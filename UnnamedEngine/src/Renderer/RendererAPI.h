@@ -4,6 +4,9 @@
 
 #include "Renderer/VertexArray.h"
 
+// Todo:
+// Enable/Disable wire rendering
+
 namespace UE
 {
 	class RendererAPI

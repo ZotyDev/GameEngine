@@ -17,37 +17,22 @@ namespace UE
 
 	void LuaAPI::RegisterFunction(const std::string& fnName, lua_CFunction fn)
 	{
-		lua_pushcclosure(m_LuaState, fn, 0);
-		lua_setglobal(m_LuaState, fnName.c_str());
+		LuaRegisterFunction(m_LuaState, fnName, fn);
 	}
 
 	void LuaAPI::RegisterFunction(const std::string& fnName, lua_CFunction fn, void* userPtr)
 	{
-		lua_pushlightuserdata(m_LuaState, userPtr);
-		lua_pushcclosure(m_LuaState, fn, 1);
-		lua_setglobal(m_LuaState, fnName.c_str());
+		LuaRegisterFunction(m_LuaState, fnName, fn, userPtr);
 	}
 
-	int LuaAPI::ExecuteFile(const std::string& filePath)
+	void LuaAPI::ExecuteFile(const std::string& filePath)
 	{
-		if (!CheckFunction(luaL_dofile(m_LuaState, filePath.c_str())))
-		{
-			UE_CORE_ERROR("Failed to execute ", filePath);
-			return -1;
-		}
-		return 0;
+		LuaExecuteFile(m_LuaState, filePath);
 	}
 
-	bool LuaAPI::CheckFunction(int msg)
+	void LuaAPI::ExecuteString(const std::string& string)
 	{
-		if (msg != LUA_OK)
-		{
-			std::string errorMsg = lua_tostring(m_LuaState, -1);
-			UE_CORE_ERROR(errorMsg);
-			return false;
-		}
-		
-		return true;
+		LuaExecuteString(m_LuaState, string);
 	}
 
 	int LuaAPI::GetStackSize()

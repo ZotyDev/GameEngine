@@ -2,9 +2,9 @@
 
 #include "World/ChunkManager.h"
 
-VoxelGameApp::VoxelGameApp()
-{
-}
+VoxelGameApp::VoxelGameApp(UE::Ref<UE::Window> masterWindow, bool* running, bool* minimized)
+	: m_MasterWindow(masterWindow), m_Running(running), m_Minimized(minimized)
+{}
 
 ChunkManager m_ChunkManager;
 
@@ -38,13 +38,81 @@ void VoxelGameApp::OnAttach()
 			const char* t_FilePath = (const char*)lua_tostring(L, -1);
 
 			t_ShaderLibrary->Load(t_FilePath);
-			UE_INFO("Loaded texture: {0}", t_FilePath);
+			UE_INFO("Loaded shader: {0}", t_FilePath);
 
 			return 1;
 		}, (void*)m_ShaderLibrary.get());
 
+	// RegisterMessagesLayout LUA function register
+	UE::LuaAPI::RegisterFunction("RegisterMessagesLayout", [](lua_State* L)
+		{
+			UE::MessageLayoutLibrary* l_MessageLayoutLibrary = (UE::MessageLayoutLibrary*)lua_touserdata(L, lua_upvalueindex(1));
+
+			if (lua_istable(L, -1) == false)
+			{
+				UE_LUA_ERROR("RegisterMessagesLayout failed: object is not table");
+				return 1;
+			}
+
+			lua_pushnil(L);
+			while (lua_next(L, -2) != 0)
+			{
+				char* LayoutName;
+				UE::LuaGetString(L, -2, LayoutName);
+				UE_LUA_INFO("{0}:", lua_tostring(L, -2));
+
+				UE::MessageLayout CurrentMessageLayout;
+
+				lua_pushnil(L);
+				while (lua_next(L, -2) != 0)
+				{
+
+					UE::UEVValue MyVar;
+					switch (lua_type(L, -1))
+					{
+					case LUA_TNIL:
+						break;
+					case LUA_TBOOLEAN:
+						MyVar.Type = UE::UEType::Bool;
+						UE::LuaGetString(L, -2, MyVar.Name);
+						UE::LuaGetBoolean(L, -1, MyVar.Bool);
+						CurrentMessageLayout.Elements.push_back(MyVar);
+						UE_LUA_INFO("	{0} : {1}", lua_tostring(L, -2), MyVar.Bool);
+						break;
+					case LUA_TNUMBER:
+						MyVar.Type = UE::UEType::Double;
+						UE::LuaGetString(L, -2, MyVar.Name);
+						UE::LuaGetNumber(L, -1, MyVar.Double);
+						CurrentMessageLayout.Elements.push_back(MyVar);
+						UE_LUA_INFO("	{0} : {1}", lua_tostring(L, -2), MyVar.Double);
+						break;
+					case LUA_TSTRING:
+						MyVar.Type = UE::UEType::String;
+						UE::LuaGetString(L, -2, MyVar.Name);
+						UE::LuaGetString(L, -1, MyVar.String);
+						CurrentMessageLayout.Elements.push_back(MyVar);
+						UE_LUA_INFO("	{0} : {1}", lua_tostring(L, -2), MyVar.String);
+						break;
+					}
+
+					lua_pop(L, 1);
+				}
+
+				l_MessageLayoutLibrary->RegisterMessageLayout(LayoutName, UE::CreateRef<UE::MessageLayout>(CurrentMessageLayout));
+
+				lua_pop(L, 1);
+			}
+
+			return 1;
+		}, (void*)m_MessageLayoutLibrary.get());
+
+
+
 	// Execute file that load the shaders
 	UE::LuaAPI::ExecuteFile("data/mods/shaders.lua");
+	UE::LuaAPI::ExecuteFile("data/mods/messages.lua");
+
+	UE_LUA_INFO("Stack size is {0}", lua_gettop(UE::LuaAPI::GetLua()));
 
 	UE::Renderer3D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer);
 
@@ -112,6 +180,16 @@ bool VoxelGameApp::OnKeyPressed(UE::KeyPressedEvent& event)
 {
 	switch (event.GetKeyCode())
 	{
+	case UE::KeyCode::LeftAlt:
+	{
+		bool CurrentState = m_Keyboard->GetState(UE::KeyCode::LeftAlt);
+		m_MasterWindow->SetCursorHidden(!CurrentState);
+		m_Keyboard->SetState(UE::KeyCode::LeftAlt, !CurrentState);
+		break;
+	}
+	case UE::KeyCode::Escape:
+		m_Running = false;
+		break;
 	case UE::KeyCode::W:
 		m_CameraController->MoveForward();
 		break;
@@ -177,10 +255,30 @@ bool VoxelGameApp::OnMouseReleased(UE::MouseButtonReleasedEvent& event)
 	return false;
 }
 
+float LastMouseX = 0;
+float LastMouseY = 0;
+
 bool VoxelGameApp::OnMouseMoved(UE::MouseMovedEvent& event)
 {
-	m_CameraController->GetCamera()->SetYaw(event.GetX() * 0.001f);
-	m_CameraController->GetCamera()->SetPitch(event.GetY() * 0.001f);
+	UE::Ref<UE::Camera> CurrentCamera = m_CameraController->GetCamera();
+
+	int CurrentMouseX = event.GetX();
+	int CurrentMouseY = event.GetY();
+
+	int DiffMouseX = CurrentMouseX - LastMouseX;
+	int DiffMouseY = CurrentMouseY - LastMouseY;
+	LastMouseX = CurrentMouseX;
+	LastMouseY = CurrentMouseY;
+
+	if (m_Keyboard->GetState(UE::KeyCode::LeftAlt))
+	{
+		float CurrentYaw = CurrentCamera->GetYaw();
+		float CurrentPitch = CurrentCamera->GetPitch();
+
+		CurrentCamera->SetYaw(CurrentYaw + (DiffMouseX * 0.001f));
+		CurrentCamera->SetPitch(CurrentPitch + (DiffMouseY * 0.001f));
+	}
+
 	return false;
 }
 

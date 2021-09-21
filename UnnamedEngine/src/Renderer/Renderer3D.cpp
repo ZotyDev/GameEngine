@@ -10,6 +10,10 @@ namespace UE
 {
 	// Todo:
 	// Send entire transform instead of position, rotation, size, etc..
+	// Make shadows more abstract
+	// Make material rendering better
+	//	Automatically send values that start with "u_" to the shader
+	// Support alpha blending (idea: if a predefined value is set on the material, the rendering is sorted);
 
 	Scope<Renderer3D::Renderer3DData> Renderer3D::s_Data = CreateScope<Renderer3D::Renderer3DData>();
 	Scope<MaterialLibrary> Renderer3D::s_MaterialLibrary = CreateScope<MaterialLibrary>();
@@ -81,7 +85,7 @@ namespace UE
 		float t_FarPlane = 100.0f;
 		glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, t_NearPlane, t_FarPlane);
 		glm::mat4 lightView = glm::lookAt(glm::vec3(5.0f, 2.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::mat4 lightViewProjection = lightProjection * lightView;
+		s_Data->LighViewProjectionMatrix = lightProjection * lightView;
 
 		for (auto& it : s_Data->MaterialIndexMap)
 		{
@@ -92,7 +96,7 @@ namespace UE
 
 			MaterialShader->Bind();
 
-			MaterialShader->SetMat4("u_ViewProjection", lightViewProjection);
+			MaterialShader->SetMat4("u_ViewProjection", s_Data->LighViewProjectionMatrix);
 
 			for (auto& CurrentIndex : it.second)
 			{
@@ -132,7 +136,7 @@ namespace UE
 			s_Data->ShadowBuffer->BindDepthAttachment(1);
 			
 			MaterialShader->SetMat4("u_ViewProjection", s_Data->ViewProjectionMatrix);
-			MaterialShader->SetMat4("u_LightViewProjection", lightViewProjection);
+			MaterialShader->SetMat4("u_LightViewProjection", s_Data->LighViewProjectionMatrix);
 
 			for (auto& CurrentIndex : it.second)
 			{
@@ -160,10 +164,7 @@ namespace UE
 		s_Data->ScreenMesh->VAO->Bind();
 		RenderCommand::DrawIndexed(s_Data->ScreenMesh->VAO);
 
-		for (auto& it : s_Data->MaterialIndexMap)
-		{
-			it.second.empty();
-		}
+		s_Data->MaterialIndexMap.clear();
 	}
 
 	UEResult Renderer3D::DrawVAO(const Ref<VertexArray>& vao, const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size, const glm::vec3& rotation)

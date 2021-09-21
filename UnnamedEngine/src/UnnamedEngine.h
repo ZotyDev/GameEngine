@@ -39,3 +39,6 @@
 #include "Renderer/CameraController.h"
 
 #include "Renderer/Primitives.h""
+
+/* Input */
+#include "Input/keyBoard.h"

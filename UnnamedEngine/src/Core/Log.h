@@ -17,9 +17,16 @@ namespace UE
 
 		static Ref<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
 		static Ref<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+		static Ref<spdlog::logger>& GetLuaLogger() { return s_LuaLogger; }
+	public:
+		static UEResult CreateCustomLogger(const std::string& name);
+		static Ref<spdlog::logger> GetCustomLogger(const std::string& name);
 	private:
 		static Ref<spdlog::logger> s_CoreLogger;
 		static Ref<spdlog::logger> s_ClientLogger;
+		static Ref<spdlog::logger> s_LuaLogger;
+	private:
+		static std::unordered_map<std::string, Ref<spdlog::logger>> s_CustomLoggers;
 	};
 }
 
@@ -36,3 +43,10 @@ namespace UE
 #define UE_WARN(...)			::UE::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define UE_ERROR(...)			::UE::Log::GetClientLogger()->error(__VA_ARGS__)
 #define UE_CRITICAL(...)		::UE::Log::GetClientLogger()->critical(__VA_ARGS__)
+
+// Lua log macros
+#define UE_LUA_TRACE(...)		::UE::Log::GetLuaLogger()->trace(__VA_ARGS__)
+#define UE_LUA_INFO(...)		::UE::Log::GetLuaLogger()->info(__VA_ARGS__)
+#define UE_LUA_WARN(...)		::UE::Log::GetLuaLogger()->warn(__VA_ARGS__)
+#define UE_LUA_ERROR(...)		::UE::Log::GetLuaLogger()->error(__VA_ARGS__)
+#define UE_LUA_CRITICAL(...)	::UE::Log::GetLuaLogger()->critical(__VA_ARGS__)

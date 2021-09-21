@@ -34,7 +34,7 @@ namespace UE
 		static Application& Get() { return *s_Instance; }
 	private:
 		void Run();
-	private:
+	protected:
 		Ref<Window> m_Window;
 		bool m_Running = true;
 		bool m_Minimized = false;

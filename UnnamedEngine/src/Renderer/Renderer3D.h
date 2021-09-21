@@ -57,6 +57,7 @@ namespace UE
 		struct Renderer3DData
 		{
 			glm::mat4 ViewProjectionMatrix;
+			glm::mat4 LighViewProjectionMatrix;
 			Ref<Framebuffer> ScreenFramebuffer;
 			Ref<Framebuffer> ShadowBuffer;
 			Ref<Shader> ShadowShader;

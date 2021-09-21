@@ -9,6 +9,7 @@
 #include <lua.h>
 
 #include "Network/NetworkCommand.h"
+#include "Network/Message.h"
 #include "Network/Packet.h"
 #include "Network/Socket.h"
 #include "Network/Connection.h"
@@ -69,7 +70,7 @@ namespace UE
 		MusicSource->SetPitch(1.0f);
 		MusicSource->SetGain(1.0f);
 		MusicSource->SetBuffer(Music->GetID());
-		MusicSource->Play();
+		//MusicSource->Play();
 
 		Listener = SoundListener::Create();
 		Earrape = SoundListener::Create();
@@ -183,19 +184,10 @@ namespace UE
 		return false;
 	}
 
-	bool IsCursorHidden = false;
-
 	bool Application::OnKeyPressed(KeyPressedEvent& event)
 	{
 		switch (event.GetKeyCode())
 		{
-		case KeyCode::LeftAlt:
-			m_Window->SetCursorHidden(!IsCursorHidden);
-			IsCursorHidden = !IsCursorHidden;
-			break;
-		case KeyCode::Escape:
-			m_Running = false;
-			break;
 		case KeyCode::Up:
 			Earrape->MakeCurrent();
 			break;

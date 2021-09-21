@@ -3,6 +3,25 @@
 
 namespace UE
 {
+	MessageLayout::MessageLayout(int size)
+	{
+		Elements.resize(size);
+	}
+
+	UEResult MessageLayoutLibrary::RegisterMessageLayout(std::string name, const Ref<MessageLayout>& messageLayout)
+	{
+		auto it = m_MessageLayouts.find(name);
+		if (it != m_MessageLayouts.end())
+		{
+			UE_CORE_ERROR("Failed to register message layout: already registered");
+			return UEResult::Error;
+		}
+
+		m_MessageLayouts.insert({ name, messageLayout });
+
+		return UEResult::Success;
+	}
+
 	uint64_t Message::MessageCounter = 0;
 
 	Message::Message(bool reliable)

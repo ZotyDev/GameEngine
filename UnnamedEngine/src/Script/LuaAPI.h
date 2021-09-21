@@ -1,13 +1,6 @@
 #pragma once
 
-#include "Core/Base.h"
-
-extern "C"
-{
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
-}
+#include "Script/LUA/LuaFunctionWrapper.h"
 
 namespace UE
 {
@@ -21,12 +14,11 @@ namespace UE
 		static void RegisterFunction(const std::string& fnName, lua_CFunction fn);
 		static void RegisterFunction(const std::string& fnName, lua_CFunction fn, void* userPtr);
 
-		static int ExecuteFile(const std::string& filePath);
+		static void ExecuteFile(const std::string& filePath);
+		static void ExecuteString(const std::string& string);
 
-		static int LoadTable(const std::string& name);
-
+		static lua_State* GetLua() { return m_LuaState; }
 	private:
-		static bool CheckFunction(int msg);
 		static int GetStackSize();
 
 	private:

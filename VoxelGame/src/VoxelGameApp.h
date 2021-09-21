@@ -5,7 +5,7 @@
 class VoxelGameApp : public UE::Layer
 {
 public:
-	VoxelGameApp();
+	VoxelGameApp(UE::Ref<UE::Window> masterWindow, bool* running, bool* minimized);
 	virtual ~VoxelGameApp() = default;
 
 	virtual void OnAttach() override;
@@ -15,6 +15,14 @@ public:
 	virtual void OnEvent(UE::Event& event) override;
 private:
 	void Render();
+private:
+	UE::Ref<UE::MessageLayoutLibrary> m_MessageLayoutLibrary = UE::CreateRef<UE::MessageLayoutLibrary>();
+private:
+	UE::Ref<UE::Keyboard> m_Keyboard = UE::CreateRef<UE::Keyboard>();
+private:
+	UE::Ref<UE::Window> m_MasterWindow;
+	bool* m_Running;
+	bool* m_Minimized;
 private:
 	UE::Ref<UE::ShaderLibrary> m_ShaderLibrary = UE::CreateRef<UE::ShaderLibrary>();
 

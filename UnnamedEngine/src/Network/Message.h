@@ -4,6 +4,24 @@
 
 namespace UE
 {
+	class MessageLayout
+	{
+	public:
+		MessageLayout(int size = 1);
+
+		std::vector<UEVValue> Elements;
+	};
+
+	class MessageLayoutLibrary
+	{
+	public:
+
+		UEResult RegisterMessageLayout(std::string name, const Ref<MessageLayout>& messageLayout);
+
+	private:
+		std::unordered_map<std::string, Ref<MessageLayout>> m_MessageLayouts;
+	};
+
 	class Message
 	{
 	public:
