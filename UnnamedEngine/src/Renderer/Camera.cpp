@@ -6,24 +6,12 @@
 
 namespace UE
 {
-	Camera::Camera(float width, float height, glm::vec3 position, float nearClip, float farClip, float fov)
-		: m_ViewportWidth(width), m_ViewportHeight(height), m_Position(position), m_FOV(fov), m_NearClip(nearClip), m_FarClip(farClip)
-	{
-		UpdateProjection();
-		UpdateView();
-	}
+	Camera::Camera(float width, float height, glm::vec3 position, float nearClip, float farClip)
+		: m_ViewportWidth(width), m_ViewportHeight(height), m_Position(position), m_NearClip(nearClip), m_FarClip(farClip)
+	{}
 
 	Camera::Camera()
-	{
-		UpdateProjection();
-		UpdateView();
-	}
-
-	void Camera::UpdateProjection()
-	{
-		m_AspectRatio = m_ViewportWidth / m_ViewportHeight;
-		m_Projection = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_NearClip, m_FarClip);
-	}
+	{}
 
 	void Camera::UpdateView()
 	{

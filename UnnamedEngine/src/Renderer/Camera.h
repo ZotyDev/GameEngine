@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/Base.h"
 #include "glm/glm.hpp"
 
 namespace UE
@@ -8,7 +7,7 @@ namespace UE
 	class Camera
 	{
 	public:
-		Camera(float width, float height, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), float nearClip = 0.1f, float farClip = 1000.0f, float fov = 45.0f);
+		Camera(float width, float height, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), float nearClip = 0.1f, float farClip = 1000.0f);
 		Camera();
 
 		virtual ~Camera() = default;
@@ -22,7 +21,7 @@ namespace UE
 			m_ViewportHeight = height;
 		}
 
-		virtual void Update()
+		void Update()
 		{
 			UpdateProjection();
 			UpdateView();
@@ -43,17 +42,16 @@ namespace UE
 		void SetRoll(float roll) { m_Roll = roll; }
 
 	private:
-		void UpdateProjection();
+		virtual void UpdateProjection() = 0;
 		void UpdateView();
 
 	protected:
-		float m_FOV = 45.0f;
 		float m_AspectRatio = 1.77f;
 		float m_NearClip = 0.1f;
 		float m_FarClip = 1000.0f;
 
-		glm::mat4 m_ViewMatrix;
-		glm::mat4 m_Projection;
+		glm::mat4 m_ViewMatrix = {};
+		glm::mat4 m_Projection = {};
 		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
 
 		float m_Pitch = 0.0f;

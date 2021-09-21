@@ -28,7 +28,7 @@ private:
 
 	UE::Ref<UE::Texture2D> m_Texture2D;
 
-	UE::Camera m_Camera;
+	UE::Ref<UE::Camera> m_Camera;
 	UE::Ref<UE::CameraController> m_CameraController;
 
 	UE::Ref<UE::Framebuffer> m_Framebuffer;

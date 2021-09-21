@@ -18,8 +18,8 @@ void VoxelGameApp::OnAttach()
 
 	m_Texture2D = UE::Texture2D::Create("data/textures/grass.png");
 
-	m_Camera = UE::Camera(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
-	m_CameraController = UE::CreateRef<UE::CameraController>(UE::CreateRef<UE::Camera>(m_Camera));
+	m_Camera = UE::CreateRef<UE::Camera2D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
+	m_CameraController = UE::CreateRef<UE::CameraController>(m_Camera);
 
 	UE::FramebufferSpecification specs;
 	specs.Width = 1280;
@@ -105,8 +105,6 @@ void VoxelGameApp::OnAttach()
 
 			return 1;
 		}, (void*)m_MessageLayoutLibrary.get());
-
-
 
 	// Execute file that load the shaders
 	UE::LuaAPI::ExecuteFile("data/mods/shaders.lua");

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Renderer/Camera.h"
+#include "Renderer/Camera2D.h"
+#include "Renderer/Camera3D.h"
 #include "Core/Timestep.h"
 
 #include "Events/WindowEvent.h"
