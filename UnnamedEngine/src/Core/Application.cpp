@@ -62,7 +62,7 @@ namespace UE
 
 		LuaAPI::Init();
 
-		Music = Sound::Create();
+		/*Music = Sound::Create();
 		Music->LoadFromFile("data/sounds/The Cruel Angel's Thesis(mono).wav");
 
 		MusicSource = SoundSource::Create();
@@ -70,18 +70,9 @@ namespace UE
 		MusicSource->SetPitch(1.0f);
 		MusicSource->SetGain(1.0f);
 		MusicSource->SetBuffer(Music->GetID());
-		//MusicSource->Play();
+		MusicSource->Play();
 
-		Listener = SoundListener::Create();
-		Earrape = SoundListener::Create();
-		Earrape->SetGain(10.0f);
-
-		m_EntityManager = CreateRef<EntityManager>();
-
-		Entity Goblin;
-		m_EntityManager->CreateEntity(Goblin);
-
-		//TextCommand::Init();
+		Listener = SoundListener::Create();*/
 	}
 
 	Application::~Application()
@@ -188,12 +179,6 @@ namespace UE
 	{
 		switch (event.GetKeyCode())
 		{
-		case KeyCode::Up:
-			Earrape->MakeCurrent();
-			break;
-		case KeyCode::Down:
-			Listener->MakeCurrent();
-			break;
 		}
 		return false;
 	}

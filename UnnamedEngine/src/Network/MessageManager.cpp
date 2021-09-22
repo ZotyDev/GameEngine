@@ -1,6 +1,8 @@
 #include "uepch.h"
 #include "Network/MessageManager.h"
 
+#include "Script/LuaAPI.h"
+
 namespace UE
 {
 	int MessageManager::Send(Ref<Message> message)

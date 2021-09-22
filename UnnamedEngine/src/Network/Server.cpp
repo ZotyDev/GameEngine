@@ -164,7 +164,6 @@ namespace UE
 			}
 		}
 
-
 		// Send packets
 		{
 			std::unordered_map<IPEndpoint, Ref<ServerConnection>>::iterator iter = m_ConnectionManager.GetConnections().begin();

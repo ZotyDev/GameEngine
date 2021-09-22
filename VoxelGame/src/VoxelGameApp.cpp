@@ -1,12 +1,8 @@
 #include "VoxelGameApp.h"
 
-#include "World/ChunkManager.h"
-
 VoxelGameApp::VoxelGameApp(UE::Ref<UE::Window> masterWindow, bool* running, bool* minimized)
 	: m_MasterWindow(masterWindow), m_Running(running), m_Minimized(minimized)
 {}
-
-ChunkManager m_ChunkManager;
 
 UE::Ref<UE::Material> GrassMaterial = UE::CreateRef<UE::Material>();
 
@@ -114,9 +110,6 @@ void VoxelGameApp::OnAttach()
 
 	UE::Renderer3D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer);
 	//UE::Renderer2D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer, m_ShaderLibrary->Get("quad"));
-
-	// TEMPORARY CHUNK
-	m_ChunkManager.AddChunk({ 0, 0, 0 });
 
 	// TEMPORARY MATERIAL
 	GrassMaterial->RegisterShader("Shader", m_ShaderLibrary->Get("default"));
