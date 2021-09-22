@@ -39,9 +39,7 @@ namespace UE
 	}
 
 	void Renderer3D::Shutdown()
-	{
-
-	}
+	{}
 
 	void Renderer3D::OnWindowResize(uint32_t width, uint32_t height)
 	{
@@ -63,10 +61,6 @@ namespace UE
 	{
 		Flush();
 	}
-
-	float x = 0.0f;
-	float y = 0.0f;
-	float z = 0.0f;
 
 	void Renderer3D::Flush()
 	{
@@ -141,7 +135,7 @@ namespace UE
 			for (auto& CurrentIndex : it.second)
 			{
 				MaterialTexture->Bind();
-				MaterialShader->SetFloat3("u_Transform", s_Data->PositionArray[CurrentIndex]);
+				MaterialShader->SetFloat4("u_Transform", glm::vec4(s_Data->PositionArray[CurrentIndex], 1.0f));
 				s_Data->VaoArray[CurrentIndex]->Bind();
 				RenderCommand::DrawIndexed(s_Data->VaoArray[CurrentIndex]);
 			}

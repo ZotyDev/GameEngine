@@ -18,7 +18,7 @@ void VoxelGameApp::OnAttach()
 
 	m_Texture2D = UE::Texture2D::Create("data/textures/grass.png");
 
-	m_Camera = UE::CreateRef<UE::Camera2D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
+	m_Camera = UE::CreateRef<UE::Camera3D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
 	m_CameraController = UE::CreateRef<UE::CameraController>(m_Camera);
 
 	UE::FramebufferSpecification specs;
@@ -113,6 +113,7 @@ void VoxelGameApp::OnAttach()
 	UE_LUA_INFO("Stack size is {0}", lua_gettop(UE::LuaAPI::GetLua()));
 
 	UE::Renderer3D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer);
+	//UE::Renderer2D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer, m_ShaderLibrary->Get("quad"));
 
 	// TEMPORARY CHUNK
 	m_ChunkManager.AddChunk({ 0, 0, 0 });
@@ -137,6 +138,7 @@ void VoxelGameApp::OnUpdate(UE::Timestep timestep)
 void VoxelGameApp::Render()
 {
 	UE::Renderer3D::BeginRender(m_CameraController->GetCamera());
+//	UE::Renderer2D::BeginRender(m_CameraController->GetCamera());
 	/*============================================================================*/
 
 	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
@@ -149,6 +151,7 @@ void VoxelGameApp::Render()
 
 	/*============================================================================*/
 	UE::Renderer3D::EndRender();
+//	UE::Renderer2D::EndRender();
 }
 
 void VoxelGameApp::OnEvent(UE::Event& event)

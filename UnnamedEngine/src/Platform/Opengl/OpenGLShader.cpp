@@ -108,7 +108,7 @@ namespace UE
 		if (!success)
 		{
 			glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-			UE_CORE_ERROR("Failed to compile Vertex Shader:\n");
+			UE_CORE_ERROR("Failed to compile Vertex Shader:\n {0}", infoLog);
 			return -1;
 		}
 
@@ -123,7 +123,7 @@ namespace UE
 		if (!success)
 		{
 			glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-			UE_CORE_ERROR("Failed to compile Fragment Shader:\n");
+			UE_CORE_ERROR("Failed to compile Fragment Shader:\n {0}", infoLog);
 			std::cout << infoLog << "\n";
 			return -1;
 		}
@@ -139,7 +139,7 @@ namespace UE
 		if (!success)
 		{
 			glGetProgramInfoLog(m_ID, 512, NULL, infoLog);
-			UE_CORE_ERROR("Failed to link Shader Program:\n");
+			UE_CORE_ERROR("Failed to link Shader Program:\n {0}", infoLog);
 			std::cout << infoLog << "\n";
 			return -1;
 		}

@@ -1,4 +1,4 @@
-#version 460
+#version 460 core
 
 in vec2 out_Texture;
 
