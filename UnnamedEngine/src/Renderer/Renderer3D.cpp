@@ -94,7 +94,9 @@ namespace UE
 
 			for (auto& CurrentIndex : it.second)
 			{
-				MaterialShader->SetFloat3("u_Transform", s_Data->PositionArray[CurrentIndex]);
+				glm::mat4 Transform = glm::mat4(1.0f);
+				Transform = glm::translate(Transform, s_Data->PositionArray[CurrentIndex]);
+				MaterialShader->SetMat4("u_Transform", Transform);
 				s_Data->VaoArray[CurrentIndex]->Bind();
 				RenderCommand::DrawIndexed(s_Data->VaoArray[CurrentIndex]);
 			}
@@ -135,7 +137,14 @@ namespace UE
 			for (auto& CurrentIndex : it.second)
 			{
 				MaterialTexture->Bind();
-				MaterialShader->SetFloat4("u_Transform", glm::vec4(s_Data->PositionArray[CurrentIndex], 1.0f));
+
+				glm::mat4 Transform = glm::mat4(1.0f);
+				Transform = glm::translate(Transform, s_Data->PositionArray[CurrentIndex]);
+				Transform = glm::scale(Transform, s_Data->SizeArray[CurrentIndex]);
+				Transform = glm::rotate(Transform, glm::radians(s_Data->RotationArray[CurrentIndex].x), glm::vec3(1.0f, 0.0f, 0.0f));
+				Transform = glm::rotate(Transform, glm::radians(s_Data->RotationArray[CurrentIndex].y), glm::vec3(0.0f, 1.0f, 0.0f));
+				Transform = glm::rotate(Transform, glm::radians(s_Data->RotationArray[CurrentIndex].z), glm::vec3(0.0f, 0.0f, 1.0f));
+				MaterialShader->SetMat4("u_Transform", Transform);
 				s_Data->VaoArray[CurrentIndex]->Bind();
 				RenderCommand::DrawIndexed(s_Data->VaoArray[CurrentIndex]);
 			}
