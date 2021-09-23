@@ -8,12 +8,6 @@
 
 #include <lua.h>
 
-#include "Network/NetworkCommand.h"
-#include "Network/Message.h"
-#include "Network/Packet.h"
-#include "Network/Socket.h"
-#include "Network/Connection.h"
-
 #include "Math/Random/Salt.h"
 #include "Sound/SoundCommand.h"
 #include "Sound/Sound.h"
@@ -49,16 +43,16 @@ namespace UE
 
 		SoundCommand::Init();
 
-		NetworkCommand::Init();
+		//NetworkCommand::Init();
 
-		NetworkCommand::InitServer("27015");
-		NetworkCommand::SetServerEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
+		//NetworkCommand::InitServer("27015");
+		//NetworkCommand::SetServerEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
 
-		NetworkCommand::InitClient();
-		NetworkCommand::SetClientEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
+		//NetworkCommand::InitClient();
+		//NetworkCommand::SetClientEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
 
-		IPEndpoint ServerAddress("127.0.0.1", "27015");
-		NetworkCommand::Connect(ServerAddress);
+		//IPEndpoint ServerAddress("127.0.0.1", "27015");
+		//NetworkCommand::Connect(ServerAddress);
 
 		LuaAPI::Init();
 
@@ -79,8 +73,8 @@ namespace UE
 	{
 		Renderer::Shutdown();
 
-		NetworkCommand::ShutdownClient();
-		NetworkCommand::ShutdownServer();
+		//NetworkCommand::ShutdownClient();
+		//NetworkCommand::ShutdownServer();
 
 		LuaAPI::Shutdown();
 	}
@@ -114,16 +108,16 @@ namespace UE
 				}
 
 				// Update the client
-				if (NetworkCommand::IsClient)
-				{
-					NetworkCommand::OnClientUpdate(timestep);
-				}
+				//if (NetworkCommand::IsClient)
+				//{
+				//	NetworkCommand::OnClientUpdate(timestep);
+				//}
 
 				// Update the server
-				if (NetworkCommand::IsServer)
-				{
-					NetworkCommand::OnServerUpdate(timestep);
-				}
+				//if (NetworkCommand::IsServer)
+				//{
+				//	NetworkCommand::OnServerUpdate(timestep);
+				//}
 			}
 
 			m_Window->OnUpdate();
@@ -136,12 +130,12 @@ namespace UE
 		dispatcher.Dispatch<WindowCloseEvent>(UE_BIND_EVENT_FN(OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
 		dispatcher.Dispatch<KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
-		dispatcher.Dispatch<ClientConnectedEvent>(UE_BIND_EVENT_FN(OnClientConnected));
-		dispatcher.Dispatch<ClientDisconectedEvent>(UE_BIND_EVENT_FN(OnClientDisconnected));
-		dispatcher.Dispatch<ClientPacketEvent>(UE_BIND_EVENT_FN(OnClientPacket));
-		dispatcher.Dispatch<ServerConnectedEvent>(UE_BIND_EVENT_FN(OnServerConnected));
-		dispatcher.Dispatch<ServerDisconnectedEvent>(UE_BIND_EVENT_FN(OnServerDisconnected));
-		dispatcher.Dispatch<ServerPacketEvent>(UE_BIND_EVENT_FN(OnServerPacket));
+		//dispatcher.Dispatch<ClientConnectedEvent>(UE_BIND_EVENT_FN(OnClientConnected));
+		//dispatcher.Dispatch<ClientDisconectedEvent>(UE_BIND_EVENT_FN(OnClientDisconnected));
+		//dispatcher.Dispatch<ClientPacketEvent>(UE_BIND_EVENT_FN(OnClientPacket));
+		//dispatcher.Dispatch<ServerConnectedEvent>(UE_BIND_EVENT_FN(OnServerConnected));
+		//dispatcher.Dispatch<ServerDisconnectedEvent>(UE_BIND_EVENT_FN(OnServerDisconnected));
+		//dispatcher.Dispatch<ServerPacketEvent>(UE_BIND_EVENT_FN(OnServerPacket));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
@@ -184,7 +178,7 @@ namespace UE
 	}
 
 	// Client events
-	bool Application::OnClientConnected(ClientConnectedEvent& event)
+	/*bool Application::OnClientConnected(ClientConnectedEvent& event)
 	{
 		UE_CORE_INFO("Connected to {0}", event.GetIPEndpoint().GetAddress());
 		return false;
@@ -219,5 +213,5 @@ namespace UE
 	{
 		UE_CORE_INFO("Packet received from client {0}", event.GetIPEndpoint().GetAddress());
 		return false;
-	}
+	}*/
 }

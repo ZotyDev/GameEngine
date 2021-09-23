@@ -14,7 +14,7 @@ void VoxelGameApp::OnAttach()
 
 	m_Texture2D = UE::Texture2D::Create("data/textures/grass.png");
 
-	m_Camera = UE::CreateRef<UE::Camera3D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
+	m_Camera = UE::CreateRef<UE::Camera2D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
 	m_CameraController = UE::CreateRef<UE::CameraController>(m_Camera);
 
 	UE::FramebufferSpecification specs;
@@ -39,72 +39,9 @@ void VoxelGameApp::OnAttach()
 			return 1;
 		}, (void*)m_ShaderLibrary.get());
 
-	// RegisterMessagesLayout LUA function register
-	UE::LuaAPI::RegisterFunction("RegisterMessagesLayout", [](lua_State* L)
-		{
-			UE::MessageLayoutLibrary* l_MessageLayoutLibrary = (UE::MessageLayoutLibrary*)lua_touserdata(L, lua_upvalueindex(1));
-
-			if (lua_istable(L, -1) == false)
-			{
-				UE_LUA_ERROR("RegisterMessagesLayout failed: object is not table");
-				return 1;
-			}
-
-			lua_pushnil(L);
-			while (lua_next(L, -2) != 0)
-			{
-				char* LayoutName;
-				UE::LuaGetString(L, -2, LayoutName);
-				UE_LUA_INFO("{0}:", lua_tostring(L, -2));
-
-				UE::MessageLayout CurrentMessageLayout;
-
-				lua_pushnil(L);
-				while (lua_next(L, -2) != 0)
-				{
-
-					UE::UEVValue MyVar;
-					switch (lua_type(L, -1))
-					{
-					case LUA_TNIL:
-						break;
-					case LUA_TBOOLEAN:
-						MyVar.Type = UE::UEType::Bool;
-						UE::LuaGetString(L, -2, MyVar.Name);
-						UE::LuaGetBoolean(L, -1, MyVar.Bool);
-						CurrentMessageLayout.Elements.push_back(MyVar);
-						UE_LUA_INFO("	{0} : {1}", lua_tostring(L, -2), MyVar.Bool);
-						break;
-					case LUA_TNUMBER:
-						MyVar.Type = UE::UEType::Double;
-						UE::LuaGetString(L, -2, MyVar.Name);
-						UE::LuaGetNumber(L, -1, MyVar.Double);
-						CurrentMessageLayout.Elements.push_back(MyVar);
-						UE_LUA_INFO("	{0} : {1}", lua_tostring(L, -2), MyVar.Double);
-						break;
-					case LUA_TSTRING:
-						MyVar.Type = UE::UEType::String;
-						UE::LuaGetString(L, -2, MyVar.Name);
-						UE::LuaGetString(L, -1, MyVar.String);
-						CurrentMessageLayout.Elements.push_back(MyVar);
-						UE_LUA_INFO("	{0} : {1}", lua_tostring(L, -2), MyVar.String);
-						break;
-					}
-
-					lua_pop(L, 1);
-				}
-
-				l_MessageLayoutLibrary->RegisterMessageLayout(LayoutName, UE::CreateRef<UE::MessageLayout>(CurrentMessageLayout));
-
-				lua_pop(L, 1);
-			}
-
-			return 1;
-		}, (void*)m_MessageLayoutLibrary.get());
-
 	// Execute file that load the shaders
 	UE::LuaAPI::ExecuteFile("data/mods/shaders.lua");
-	UE::LuaAPI::ExecuteFile("data/mods/messages.lua");
+	//UE::LuaAPI::ExecuteFile("data/mods/messages.lua");
 
 	UE_LUA_INFO("Stack size is {0}", lua_gettop(UE::LuaAPI::GetLua()));
 
@@ -278,6 +215,8 @@ bool VoxelGameApp::OnMouseMoved(UE::MouseMovedEvent& event)
 
 bool VoxelGameApp::OnMouseScrolled(UE::MouseScrolledEvent& event)
 {
+	m_Camera->ZoomIn(event.GetYOffset());
+
 	return false;
 }
 

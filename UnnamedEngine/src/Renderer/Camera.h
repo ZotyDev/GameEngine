@@ -27,6 +27,10 @@ namespace UE
 			UpdateView();
 		}
 
+		virtual void ZoomIn(float value) = 0;
+		virtual void ZoomOut(float value) = 0;
+		virtual float GetZoom() = 0;
+
 		glm::vec3 GetUpDirection() const;
 		glm::vec3 GetRightDirection() const;
 		glm::vec3 GetForwardDirection() const;

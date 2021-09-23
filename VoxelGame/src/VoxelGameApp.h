@@ -22,8 +22,6 @@ private:
 	bool* m_Running;
 	bool* m_Minimized;
 private:
-	UE::Ref<UE::MessageLayoutLibrary> m_MessageLayoutLibrary = UE::CreateRef<UE::MessageLayoutLibrary>();
-private:
 	UE::Ref<UE::ShaderLibrary> m_ShaderLibrary = UE::CreateRef<UE::ShaderLibrary>();
 
 	UE::Ref<UE::Texture2D> m_Texture2D;
