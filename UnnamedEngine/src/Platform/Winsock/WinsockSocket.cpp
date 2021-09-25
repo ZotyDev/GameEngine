@@ -153,7 +153,7 @@ namespace UE
 		return 0;
 	}
 
-	int WinsockSocket::SendTo(IPEndpoint destination, Packet& packet)
+	/*int WinsockSocket::SendTo(IPEndpoint destination, Packet& packet)
 	{
 		uint16_t EncodedSize = UE_HTONS(packet.m_Buffer.size());
 		int result = SendAllTo(destination, &EncodedSize, sizeof(uint16_t));
@@ -202,7 +202,7 @@ namespace UE
 		}
 
 		return 0;
-	}
+	}*/
 
 	int WinsockSocket::Poll()
 	{

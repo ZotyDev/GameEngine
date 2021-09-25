@@ -25,8 +25,8 @@ namespace UE
 		virtual int SendAllTo(IPEndpoint destination, const void* data, int numberOfBytes) override;
 		virtual int RecvAllFrom(IPEndpoint& sender, void* data, int numberOfBytes) override;
 
-		virtual int SendTo(IPEndpoint destination, Packet& packet) override;
-		virtual int RecvFrom(IPEndpoint& sender, Packet& packet) override;
+		//virtual int SendTo(IPEndpoint destination, Packet& packet) override;
+		//virtual int RecvFrom(IPEndpoint& sender, Packet& packet) override;
 
 		virtual int Poll() override;
 
