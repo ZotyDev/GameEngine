@@ -10,7 +10,7 @@ namespace UE
 	public:
 		OpenGLTexture2D() = default;
 
-		virtual int LoadFromSource(const std::string& filepath) override;
+		virtual UEResult LoadFromSource(const std::string& filepath) override;
 		virtual ~OpenGLTexture2D();
 
 		virtual uint32_t GetWidth() const override { return m_Width; };

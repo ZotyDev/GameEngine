@@ -5,7 +5,7 @@ namespace UE
 	class Texture
 	{
 	public:
-		virtual int LoadFromSource(const std::string& filepath) = 0;
+		virtual UEResult LoadFromSource(const std::string& filepath) = 0;
 
 		virtual ~Texture() = default;
 
@@ -19,6 +19,6 @@ namespace UE
 	class Texture2D : public Texture
 	{
 	public:
-		static Ref<Texture2D> Create(const std::string& path);
+		static Ref<Texture2D> Create();
 	};
 }

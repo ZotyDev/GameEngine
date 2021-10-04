@@ -26,20 +26,19 @@ namespace UE
 	class Message
 	{
 	public:
+		Message() = default;
+		Message(Ref<MessageLayout> layout);
 
 		Message& operator << (bool data);
 		Message& operator >> (bool& data);
 
 	private:
-		UEUint32 m_WriteIndex = 0;
-		UEUint32 m_ReadIndex = 0;
+		Ref<MessageLayout> m_Layout;
 
+	private:
 		UEUint64 m_Packer = 0;
 		UEUint8 m_PackerIndex = 0;
 
-		UEUint64 m_Unpacker = 0;
-		UEUint8 m_UnpackerIndex = 0;
-
-		std::vector<char> m_Buffer;
+		//UEUint64* m_Buffer;
 	};
 }

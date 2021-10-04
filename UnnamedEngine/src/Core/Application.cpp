@@ -20,6 +20,8 @@
 
 #include "Renderer/Material.h"
 
+#include "Network/Message.h"
+
 namespace UE
 {
 	Application* Application::s_Instance = nullptr;
@@ -38,10 +40,17 @@ namespace UE
 		m_Window = Window::Create(WindowProps("UnnamedProject"));
 		m_Window->SetEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
 		m_Window->SetVSync(true);
+		m_Window->SetIcon("res/icon.png");
 
 		Renderer::Init();
 
 		SoundCommand::Init();
+
+		Message t_Message;
+		t_Message << true;
+		t_Message << true;
+		t_Message << true;
+		//t_Message << true;
 
 		//NetworkCommand::Init();
 

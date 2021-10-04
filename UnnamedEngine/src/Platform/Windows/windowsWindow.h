@@ -24,6 +24,8 @@ namespace UE
 		virtual void SetVSync(bool enabled) override;
 		virtual bool IsVSync() const override;
 
+		virtual UEResult SetIcon(const std::string& path) override;
+
 		virtual void SetCursorHidden(bool hidden) override;
 
 		virtual void* GetNativeWindow() { return m_Window; };

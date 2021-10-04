@@ -6,7 +6,7 @@
 
 namespace UE 
 {
-	Ref<Texture2D> Texture2D::Create(const std::string& path)
+	Ref<Texture2D> Texture2D::Create()
 	{
 		switch(Renderer::GetAPI())
 		{
@@ -15,11 +15,6 @@ namespace UE
 			return nullptr;
 		case RendererAPI::API::OpenGL:
 			Ref<OpenGLTexture2D> tempTexture2D = CreateRef<OpenGLTexture2D>();
-			if (tempTexture2D->LoadFromSource(path))
-			{
-				UE_CORE_ERROR("Failed to create Texture2D");
-				return nullptr;
-			}
 			return tempTexture2D;
 		}
 

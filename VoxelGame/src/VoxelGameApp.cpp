@@ -12,9 +12,14 @@ void VoxelGameApp::OnAttach()
 	// Implement 2D renderer (GUI, etc)
 	// Implement particles
 
-	m_Texture2D = UE::Texture2D::Create("data/textures/grass.png");
+	m_Texture2D = UE::Texture2D::Create();
+	const std::string TexturePath = "data/textures/grass.png";
+	if (m_Texture2D->LoadFromSource(TexturePath) == UE::UEResult::Error)
+	{
+		UE_CORE_ERROR("Failed to load {0}: not found", TexturePath);
+	}
 
-	m_Camera = UE::CreateRef<UE::Camera2D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
+	m_Camera = UE::CreateRef<UE::Camera3D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
 	m_CameraController = UE::CreateRef<UE::CameraController>(m_Camera);
 
 	UE::FramebufferSpecification specs;
