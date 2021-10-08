@@ -20,7 +20,10 @@
 
 #include "Renderer/Material.h"
 
+#include "Core/Bitpacker.h"
 #include "Network/Message.h"
+
+// Todo: implement minify or iconify function inside OnWindowResize()
 
 namespace UE
 {
@@ -35,6 +38,8 @@ namespace UE
 
 	Application::Application()
 	{
+		UE_CORE_INFO("Platform is {0} endian", UE_IS_NATIVE_BIG_ENDIAN() ? "big" : "little");
+
 		UE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		m_Window = Window::Create(WindowProps("UnnamedProject"));
@@ -76,6 +81,16 @@ namespace UE
 		MusicSource->Play();
 
 		Listener = SoundListener::Create();*/
+
+		Bitpacker tBitPacker;
+		tBitPacker << true;
+		tBitPacker << false;
+		tBitPacker << false;
+		tBitPacker << 64;
+
+		//tBitPacker.Check(0);
+
+		m_Window->IsVSync();
 	}
 
 	Application::~Application()
