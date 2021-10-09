@@ -20,4 +20,9 @@ namespace UE
 	{
 		return *this;
 	}
+
+	void Bitpacker::EndPacking()
+	{
+		FlushTargetBitStream(m_Packer, m_Index, m_RawData);
+	}
 }

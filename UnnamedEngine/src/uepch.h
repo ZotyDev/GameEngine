@@ -17,6 +17,7 @@
 #include <iostream>
 #include <random>
 #include <bitset>
+#include <chrono>
 
 #include "Core/Base.h"
 

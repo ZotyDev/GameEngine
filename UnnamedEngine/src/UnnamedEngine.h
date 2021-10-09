@@ -7,9 +7,17 @@
 #include "Core/Layer.h"
 #include "Core/Log.h"
 
+#include "Core/Bitwise.h"
+#include "Core/Bitpacker.h"
+
 #include "Core/Assert.h"
 
 #include "Core/Timestep.h"
+
+/* Time */
+/*============================================================*/
+#include "Time/localTime.h"
+#include "Time/Stopwatch.h"
 
 /* Event */
 /*============================================================*/

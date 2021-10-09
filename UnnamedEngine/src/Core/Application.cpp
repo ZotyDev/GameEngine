@@ -23,6 +23,8 @@
 #include "Core/Bitpacker.h"
 #include "Network/Message.h"
 
+#include "Time/Stopwatch.h"
+
 // Todo: implement minify or iconify function inside OnWindowResize()
 
 namespace UE
@@ -83,10 +85,14 @@ namespace UE
 		Listener = SoundListener::Create();*/
 
 		Bitpacker tBitPacker;
-		tBitPacker << true;
-		tBitPacker << false;
-		tBitPacker << false;
+		//tBitPacker << true;
+		//tBitPacker << false;
+		//tBitPacker << false;
 		tBitPacker << 64;
+		tBitPacker.EndPacking();
+
+		UEUint64 ReceivedValue = 0;
+		tBitPacker >> ReceivedValue;
 
 		//tBitPacker.Check(0);
 
