@@ -3,8 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Visual Studion solutions
+# Visual Studio solutions
 *.sln
+
+# Visual Studio configurations
+.claudiaideconfig
+.editorconfig 
 
 # Output
 bin/
