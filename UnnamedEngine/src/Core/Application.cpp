@@ -84,18 +84,6 @@ namespace UE
 
 		Listener = SoundListener::Create();*/
 
-		Bitpacker tBitPacker;
-		//tBitPacker << true;
-		//tBitPacker << false;
-		//tBitPacker << false;
-		tBitPacker << 64;
-		tBitPacker.EndPacking();
-
-		UEUint64 ReceivedValue = 0;
-		tBitPacker >> ReceivedValue;
-
-		//tBitPacker.Check(0);
-
 		m_Window->IsVSync();
 	}
 

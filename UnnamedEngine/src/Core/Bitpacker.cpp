@@ -9,20 +9,10 @@ namespace UE
 	Bitpacker::~Bitpacker()
 	{}
 
-	Bitpacker& Bitpacker::operator<<(UEBool data)
-	{
-		WriteBitStream(data, 1, m_Packer, m_Index, m_RawData);
-
-		return *this;
-	}
-
-	Bitpacker& Bitpacker::operator>>(UEBool& data)
-	{
-		return *this;
-	}
-
 	void Bitpacker::EndPacking()
 	{
-		FlushTargetBitStream(m_Packer, m_Index, m_RawData);
+		m_RawData.push_back(m_Packer);
+		m_Packer = 0;
+		m_PackerPosition = 1;
 	}
 }

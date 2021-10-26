@@ -7,6 +7,8 @@ uniform sampler2D u_ShadowMap;
 
 in vec4 out_FragPositionLightSpace;
 
+out vec4 FragColor;
+
 float ShadowCalculation(vec4 fragPositionLightSpace)
 {
 	vec3 projCoords = fragPositionLightSpace.xyz / fragPositionLightSpace.w;
@@ -32,5 +34,5 @@ void main()
 	float ambient = 0.2;
 	vec3 Color = texture(u_Texture1, out_Texture).rgb;
 	vec3 Lighting = vec3(ambient + (1.0 - ShadowCalculation(out_FragPositionLightSpace)));
-	gl_FragColor = vec4(Color * Lighting, 1.0);
+	FragColor = vec4(Color * Lighting, 1.0);
 }
