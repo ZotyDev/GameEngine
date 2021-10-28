@@ -8,12 +8,6 @@
 
 #include <lua.h>
 
-#include "Network/NetworkCommand.h"
-#include "Network/Message.h"
-#include "Network/Packet.h"
-#include "Network/Socket.h"
-#include "Network/Connection.h"
-
 #include "Math/Random/Salt.h"
 #include "Sound/SoundCommand.h"
 #include "Sound/Sound.h"
@@ -25,6 +19,13 @@
 //#include "Interface/Text/TextCommand.h"
 
 #include "Renderer/Material.h"
+
+#include "Core/Bitpacker.h"
+#include "Network/Message.h"
+
+#include "Time/Stopwatch.h"
+
+// Todo: implement minify or iconify function inside OnWindowResize()
 
 namespace UE
 {
@@ -39,26 +40,56 @@ namespace UE
 
 	Application::Application()
 	{
+		UE_CORE_INFO("Platform is {0} endian", UE_IS_NATIVE_BIG_ENDIAN() ? "big" : "little");
+
 		UE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		m_Window = Window::Create(WindowProps("UnnamedProject"));
 		m_Window->SetEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
 		m_Window->SetVSync(true);
+		m_Window->SetIcon("res/icon.png");
 
 		Renderer::Init();
 
 		SoundCommand::Init();
 
-		NetworkCommand::Init();
+		MessageLayout t_Layout(
+			{
+				{UEType::Bool, "Running", 1},
+				{UEType::Uint64, "ClientSalt", 1029310293}
+			}
+		);
 
-		NetworkCommand::InitServer("27015");
-		NetworkCommand::SetServerEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
+		Message t_Message(CreateRef<MessageLayout>(t_Layout));
 
-		NetworkCommand::InitClient();
-		NetworkCommand::SetClientEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
+		MessageLayoutData t_LayoutData(
+			{
+				UEVValue(false),
+				UEVValue(UEUint64(1029310293))
+			}
+		);
 
-		IPEndpoint ServerAddress("127.0.0.1", "27015");
-		NetworkCommand::Connect(ServerAddress);
+		Ref<MessageLayoutData> r_LayoutData = CreateRef<MessageLayoutData>();
+
+		Stopwatch Packing;
+		Stopwatch Unpacking;
+		Packing.Start();
+		t_Message.PackData(CreateRef<MessageLayoutData>(t_LayoutData));
+		Packing.End();
+		Unpacking.Start();
+		t_Message.UnpackData(r_LayoutData);
+		Unpacking.End();
+
+		//NetworkCommand::Init();
+
+		//NetworkCommand::InitServer("27015");
+		//NetworkCommand::SetServerEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
+
+		//NetworkCommand::InitClient();
+		//NetworkCommand::SetClientEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
+
+		//IPEndpoint ServerAddress("127.0.0.1", "27015");
+		//NetworkCommand::Connect(ServerAddress);
 
 		LuaAPI::Init();
 
@@ -73,14 +104,16 @@ namespace UE
 		MusicSource->Play();
 
 		Listener = SoundListener::Create();*/
+
+		m_Window->IsVSync();
 	}
 
 	Application::~Application()
 	{
 		Renderer::Shutdown();
 
-		NetworkCommand::ShutdownClient();
-		NetworkCommand::ShutdownServer();
+		//NetworkCommand::ShutdownClient();
+		//NetworkCommand::ShutdownServer();
 
 		LuaAPI::Shutdown();
 	}
@@ -114,16 +147,16 @@ namespace UE
 				}
 
 				// Update the client
-				if (NetworkCommand::IsClient)
-				{
-					NetworkCommand::OnClientUpdate(timestep);
-				}
+				//if (NetworkCommand::IsClient)
+				//{
+				//	NetworkCommand::OnClientUpdate(timestep);
+				//}
 
 				// Update the server
-				if (NetworkCommand::IsServer)
-				{
-					NetworkCommand::OnServerUpdate(timestep);
-				}
+				//if (NetworkCommand::IsServer)
+				//{
+				//	NetworkCommand::OnServerUpdate(timestep);
+				//}
 			}
 
 			m_Window->OnUpdate();
@@ -136,12 +169,12 @@ namespace UE
 		dispatcher.Dispatch<WindowCloseEvent>(UE_BIND_EVENT_FN(OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
 		dispatcher.Dispatch<KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
-		dispatcher.Dispatch<ClientConnectedEvent>(UE_BIND_EVENT_FN(OnClientConnected));
-		dispatcher.Dispatch<ClientDisconectedEvent>(UE_BIND_EVENT_FN(OnClientDisconnected));
-		dispatcher.Dispatch<ClientPacketEvent>(UE_BIND_EVENT_FN(OnClientPacket));
-		dispatcher.Dispatch<ServerConnectedEvent>(UE_BIND_EVENT_FN(OnServerConnected));
-		dispatcher.Dispatch<ServerDisconnectedEvent>(UE_BIND_EVENT_FN(OnServerDisconnected));
-		dispatcher.Dispatch<ServerPacketEvent>(UE_BIND_EVENT_FN(OnServerPacket));
+		//dispatcher.Dispatch<ClientConnectedEvent>(UE_BIND_EVENT_FN(OnClientConnected));
+		//dispatcher.Dispatch<ClientDisconectedEvent>(UE_BIND_EVENT_FN(OnClientDisconnected));
+		//dispatcher.Dispatch<ClientPacketEvent>(UE_BIND_EVENT_FN(OnClientPacket));
+		//dispatcher.Dispatch<ServerConnectedEvent>(UE_BIND_EVENT_FN(OnServerConnected));
+		//dispatcher.Dispatch<ServerDisconnectedEvent>(UE_BIND_EVENT_FN(OnServerDisconnected));
+		//dispatcher.Dispatch<ServerPacketEvent>(UE_BIND_EVENT_FN(OnServerPacket));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
@@ -184,7 +217,7 @@ namespace UE
 	}
 
 	// Client events
-	bool Application::OnClientConnected(ClientConnectedEvent& event)
+	/*bool Application::OnClientConnected(ClientConnectedEvent& event)
 	{
 		UE_CORE_INFO("Connected to {0}", event.GetIPEndpoint().GetAddress());
 		return false;
@@ -219,5 +252,5 @@ namespace UE
 	{
 		UE_CORE_INFO("Packet received from client {0}", event.GetIPEndpoint().GetAddress());
 		return false;
-	}
+	}*/
 }

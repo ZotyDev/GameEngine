@@ -3,7 +3,7 @@
 #include "Core/Base.h"
 
 #include "Network/IPEndpoint.h"
-#include "Network/Packet.h"
+//#include "Network/Packet.h"
 
 namespace UE
 {
@@ -25,8 +25,8 @@ namespace UE
 		virtual int SendAllTo(IPEndpoint destination, const void* data, int numberOfBytes) = 0;
 		virtual int RecvAllFrom(IPEndpoint& sender, void* data, int numberOfBytes) = 0;
 
-		virtual int SendTo(IPEndpoint destination, Packet& packet) = 0;
-		virtual int RecvFrom(IPEndpoint& sender, Packet& packet) = 0;
+		//virtual int SendTo(IPEndpoint destination, Packet& packet) = 0;
+		//virtual int RecvFrom(IPEndpoint& sender, Packet& packet) = 0;
 
 		virtual int Poll() = 0;
 

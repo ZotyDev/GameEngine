@@ -8,7 +8,7 @@
 
 namespace UE
 {
-	int OpenGLTexture2D::LoadFromSource(const std::string& filepath)
+	UEResult OpenGLTexture2D::LoadFromSource(const std::string& filepath)
 	{
 		int width;
 		int height;
@@ -18,7 +18,7 @@ namespace UE
 		if (!data)
 		{
 			UE_CORE_ERROR("Failed to load texture: ", stbi_failure_reason());
-			return -1;
+			return UEResult::Error;
 		}
 		m_Width = width;
 		m_Height = height;
@@ -37,7 +37,7 @@ namespace UE
 			break;
 		default:
 			UE_CORE_ERROR("Unknown format!");
-			return -1;
+			return UEResult::Error;
 		}
 
 		m_InternalFormat = internalFormat;
@@ -54,7 +54,7 @@ namespace UE
 
 		stbi_image_free(data);
 
-		return 0;
+		return UEResult::Success;
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()

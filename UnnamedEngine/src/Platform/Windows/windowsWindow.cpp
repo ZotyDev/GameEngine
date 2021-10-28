@@ -1,6 +1,8 @@
 #include "uepch.h"
 #include "WindowsWindow.h"
 
+#include <stb_image.h>
+
 #include "Events/WindowEvent.h"
 #include "Events/MouseEvent.h"
 #include "Events/KeyEvent.h"
@@ -224,6 +226,25 @@ namespace UE
 	bool WindowsWindow::IsVSync() const
 	{
 		return m_WindowData.VSync;
+	}
+
+	UEResult WindowsWindow::SetIcon(const std::string& path)
+	{
+		GLFWimage IconImage;
+		IconImage.pixels = nullptr;
+
+		IconImage.pixels = stbi_load(path.c_str(), &IconImage.width, &IconImage.height, nullptr, 0);
+		if (!IconImage.pixels)
+		{
+			UE_CORE_ERROR("Failed to set icon of WindowsWindow: {0} not found", path);
+			return UEResult::Error;
+		}
+
+		glfwSetWindowIcon(m_Window, 1, &IconImage);
+
+		stbi_image_free(IconImage.pixels);
+
+		return UEResult::Success;
 	}
 
 	void WindowsWindow::SetCursorHidden(bool hidden)

@@ -2,7 +2,7 @@
 
 #include "Events/Event.h"
 #include "Network/IPEndpoint.h"
-#include "Network/Packet.h"
+//#include "Network/Packet.h"
 
 namespace UE
 {
@@ -41,7 +41,7 @@ namespace UE
 		EVENT_CLASS_TYPE(ClientDisconnected)
 	};
 
-	class ClientPacketEvent : public NetworkEvent
+	/*class ClientPacketEvent : public NetworkEvent
 	{
 	public:
 		ClientPacketEvent(IPEndpoint ipEndpoint, Packet packet)
@@ -87,5 +87,5 @@ namespace UE
 		EVENT_CLASS_TYPE(ServerPacket)
 	private:
 		Packet m_Packet;
-	};
+	};*/
 }

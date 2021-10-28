@@ -16,3 +16,21 @@ int main(int argc, char** argv)
 }
 
 #endif
+
+#ifdef UE_PLATFORM_ANDROID
+
+extern UE::Application* UE::CreateApplication();
+
+extern "C"
+{
+	void android_main(struct android_app* state);
+};
+
+void android_main(struct android_app* android_app)
+{
+	auto app = UE::CreateApplication();
+	app->Run();
+	delete app;
+}
+
+#endif
