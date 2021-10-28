@@ -46,14 +46,33 @@ namespace UE
 		Int = Int32
 	};
 
-	struct UEVValue
+	struct UEVDescriptor
 	{
 		UEType Type;
 		UECString Name;
+		UEUint64 Range;
+	};
+
+	struct UEVValue
+	{
+		UEVValue() = default;
+		UEVValue(UEBool value)		:Bool(value)	{}
+		UEVValue(UEChar value)		:Char(value)	{}
+		UEVValue(UEInt8 value)		:Uint8(value)	{}
+		UEVValue(UEInt16 value)		:Uint16(value)	{}
+		UEVValue(UEInt32 value)		:Uint32(value)	{}
+		UEVValue(UEInt64 value)		:Uint64(value)	{}
+		UEVValue(UEUint8 value)		:Uint8(value)	{}
+		UEVValue(UEUint16 value)	:Uint16(value)	{}
+		UEVValue(UEUint32 value)	:Uint32(value)	{}
+		UEVValue(UEUint64 value)	:Uint64(value)	{}
+		UEVValue(UEFloat value)		:Float(value)	{}
+		UEVValue(UEDouble value)	:Double(value)	{}
+
 		union
 		{
 			UEBool Bool;
-			
+
 			UEChar Char;
 
 			UEInt8 Int8;
@@ -71,5 +90,11 @@ namespace UE
 
 			UECString String;
 		};
+	};
+
+	struct UEVVValue
+	{
+		UEVDescriptor Descriptor;
+		UEVValue Value;
 	};
 }

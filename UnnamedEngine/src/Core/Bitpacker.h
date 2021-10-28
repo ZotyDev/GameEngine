@@ -45,6 +45,7 @@ namespace UE
 		}
 
 		UEUint64 GetPackedBitSize() { return m_RawData.size() * 64; }
+		std::deque<UEUint64> m_RawData;
 
 		void EndPacking();
 
@@ -52,7 +53,5 @@ namespace UE
 		UEUint64 m_Packer = 0;
 		UEUint8 m_PackerPosition = 1;
 		UEUint8 m_UnpackerPosition = 1;
-
-		std::deque<UEUint64> m_RawData;
 	};
 }

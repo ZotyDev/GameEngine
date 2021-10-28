@@ -3,10 +3,13 @@
 
 namespace UE
 {
-	MessageLayout::MessageLayout(UEUint32 size)
-	{
-		m_Elements.resize(size);
-	}
+	MessageLayoutData::MessageLayoutData(const std::vector<UEVValue>& elements)
+		: Elements(elements)
+	{}
+
+	MessageLayout::MessageLayout(const std::vector<UEVDescriptor>& elements)
+		: Elements(elements)
+	{}
 
 	UEResult MessageLayoutLibrary::RegisterMessageLayout(const std::string& name, Ref<MessageLayout> messageLayout)
 	{
@@ -40,15 +43,4 @@ namespace UE
 		: m_Layout(layout)
 	{}
 
-	Message& Message::operator<<(bool data)
-	{
-
-
-		return *this;
-	}
-
-	Message& Message::operator>>(bool& data)
-	{
-		return *this;
-	}
 }

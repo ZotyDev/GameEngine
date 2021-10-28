@@ -53,11 +53,32 @@ namespace UE
 
 		SoundCommand::Init();
 
-		Message t_Message;
-		t_Message << true;
-		t_Message << true;
-		t_Message << true;
-		//t_Message << true;
+		MessageLayout t_Layout(
+			{
+				{UEType::Bool, "Running", 1},
+				{UEType::Uint64, "ClientSalt", 1029310293}
+			}
+		);
+
+		Message t_Message(CreateRef<MessageLayout>(t_Layout));
+
+		MessageLayoutData t_LayoutData(
+			{
+				UEVValue(false),
+				UEVValue(UEUint64(1029310293))
+			}
+		);
+
+		Ref<MessageLayoutData> r_LayoutData = CreateRef<MessageLayoutData>();
+
+		Stopwatch Packing;
+		Stopwatch Unpacking;
+		Packing.Start();
+		t_Message.PackData(CreateRef<MessageLayoutData>(t_LayoutData));
+		Packing.End();
+		Unpacking.Start();
+		t_Message.UnpackData(r_LayoutData);
+		Unpacking.End();
 
 		//NetworkCommand::Init();
 
