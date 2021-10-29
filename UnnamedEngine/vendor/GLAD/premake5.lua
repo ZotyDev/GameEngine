@@ -28,6 +28,14 @@ project "GLAD"
 		systemversion "latest"
 		staticruntime "On"
 
+	filter "platforms:Android_x64"
+	
+	filter "platforms:Linux_x64"
+		architecture "x64"
+
+	filter "platforms:Windows_x64"
+		architecture "x64"
+		
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "on"

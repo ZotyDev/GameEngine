@@ -2,7 +2,10 @@
 #include "Shader.h"
 
 #include "Renderer/Renderer.h"
-#include "Platform/Opengl/OpenGLShader.h"
+
+#if defined(UE_PLATFORM_WINDOWS)
+	#include "OpenGL/OpenGLShader.h"
+#endif
 
 namespace UE
 {
@@ -10,20 +13,26 @@ namespace UE
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::OpenGL: 
-				Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
-				if (t_Shader->LoadFromSource(filepath))
-				{
-					UE_CORE_ERROR("Failed to create Shader!");
-					return nullptr;
-				}
-				if (t_Shader->Compile())
-				{
-					UE_CORE_ERROR("Failed to create Shader!");
-					return nullptr;
-				}
+		case RendererAPI::API::None:
+			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+			return nullptr;
 
-				return t_Shader;
+		#if defined(UE_PLATFORM_WINDOWS)
+		case RendererAPI::API::OpenGL: 
+			Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
+			if (t_Shader->LoadFromSource(filepath))
+			{
+				UE_CORE_ERROR("Failed to create Shader!");
+				return nullptr;
+			}
+			if (t_Shader->Compile())
+			{
+				UE_CORE_ERROR("Failed to create Shader!");
+				return nullptr;
+			}
+
+			return t_Shader;
+		#endif
 		}
 
 		UE_CORE_ASSERT(false, "Unknown RendererAPI");
@@ -34,20 +43,26 @@ namespace UE
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::OpenGL:
-				Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
-				if (t_Shader->LoadFromSource(name, vertexSrc, fragmentSrc))
-				{
-					UE_CORE_ERROR("Failed to create Shader!");
-					return nullptr;
-				}
-				if (t_Shader->Compile())
-				{
-					UE_CORE_ERROR("Failed to create Shader!");
-					return nullptr;
-				}
+		case RendererAPI::API::None:
+			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+			return nullptr;
 
-				return t_Shader;
+		#if defined(UE_PLATFORM_WINDOWS)
+		case RendererAPI::API::OpenGL:
+			Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
+			if (t_Shader->LoadFromSource(name, vertexSrc, fragmentSrc))
+			{
+				UE_CORE_ERROR("Failed to create Shader!");
+				return nullptr;
+			}
+			if (t_Shader->Compile())
+			{
+				UE_CORE_ERROR("Failed to create Shader!");
+				return nullptr;
+			}
+
+			return t_Shader;
+		#endif
 		}
 
 		UE_CORE_ERROR("Unknown RendererAPI");

@@ -1,5 +1,5 @@
 #include "uepch.h"
-#include "Platform/FreeType/FreeTypeFont.h"
+#include "FreeType/FreeTypeFont.h"
 
 #include "Interface/Text/TextCommand.h"
 

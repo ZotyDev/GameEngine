@@ -1,5 +1,5 @@
 #include "uepch.h"
-#include "Platform/OpenAL/OpenALSound.h"
+#include "OpenAL/OpenALSound.h"
 
 #include "Files/Loader/WAV.h"
 

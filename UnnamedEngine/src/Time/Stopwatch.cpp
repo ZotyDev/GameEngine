@@ -37,4 +37,9 @@ namespace UE
 	{
 		return (float)((double)ElapsedNanoseconds() / 1000000);
 	}
+
+	UEFloat Stopwatch::FormattedSeconds()
+	{
+		return (float)((double)ElapsedNanoseconds() / 1000000000);
+	}
 }

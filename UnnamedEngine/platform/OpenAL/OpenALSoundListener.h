@@ -2,7 +2,7 @@
 
 #include "Sound/SoundListener.h"
 
-#include "Platform/OpenAL/OpenALSoundAPI.h"
+#include "OpenAL/OpenALSoundAPI.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>

@@ -50,11 +50,11 @@
 	/* Android x64 */
 	#define UE_PLATFORM_ANDROID
 
+	#include <byteswap.h>
+
 	#define UE_BYTESWAP_16(x)			bswap_16(x)
 	#define UE_BYTESWAP_32(x)			bswap_32(x)
 	#define UE_BYTESWAP_64(x)			bswap_64(x)
-
-	#error "Android is not supported!"
 #elif defined(__linux__)
 	/* Linux x64 */
 	#define UE_PLATFORM_LINUX

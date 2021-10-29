@@ -3,7 +3,7 @@
 
 namespace UE
 {
-	constexpr bool __ue_is_native_big_endian()
+	bool __ue_is_native_big_endian()
 	{
 		int num = 1;
 		if (*(char*)&num == 1)

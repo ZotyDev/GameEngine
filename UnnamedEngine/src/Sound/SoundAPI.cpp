@@ -1,7 +1,9 @@
 #include "uepch.h"
 #include "Sound/SoundAPI.h"
 
-#include "Platform/OpenAL/OpenALSoundAPI.h"
+#if defined(UE_PLATFORM_WINDOWS)
+	#include "OpenAL/OpenALSoundAPI.h"
+#endif
 
 namespace UE
 {
@@ -14,8 +16,11 @@ namespace UE
 		case UE::SoundAPI::API::None:
 			UE_CORE_ASSERT(false, "SoundAPI::None is currently not supported");
 			return nullptr;
+
+		#if defined(UE_PLATFORM_WINDOWS)
 		case UE::SoundAPI::API::OpenAL:
 			return CreateScope<OpenALSoundAPI>();
+		#endif
 		}
 
 		UE_CORE_ERROR("Unknown SoundAPI");

@@ -1,5 +1,5 @@
 #include "uepch.h"
-#include "Platform/Winsock/WinsockNetworkAPI.h"
+#include "Winsock/WinsockNetworkAPI.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 

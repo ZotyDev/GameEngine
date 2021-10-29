@@ -2,7 +2,7 @@
 
 #include "Sound/Sound.h"
 
-#include "Platform/OpenAL/OpenALSoundAPI.h"
+#include "OpenAL/OpenALSoundAPI.h"
 
 namespace UE
 {

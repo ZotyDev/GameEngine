@@ -14,6 +14,7 @@ namespace UE
 		UEUint64 ElapsedSeconds();
 		
 		UEFloat FormattedMilliseconds();
+		UEFloat FormattedSeconds();
 
 	private:
 		std::chrono::steady_clock::time_point m_Begin;

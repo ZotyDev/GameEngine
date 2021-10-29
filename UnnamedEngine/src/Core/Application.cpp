@@ -4,26 +4,14 @@
 #include "Renderer/Renderer.h"
 #include "Script/LuaAPI.h"
 
-#include <GLFW/glfw3.h>
-
 #include <lua.h>
 
-#include "Math/Random/Salt.h"
-#include "Sound/SoundCommand.h"
-#include "Sound/Sound.h"
-#include "Sound/SoundSource.h"
-#include "Sound/SoundListener.h"
-
 #include "ECS/System.h"
-
-//#include "Interface/Text/TextCommand.h"
 
 #include "Renderer/Material.h"
 
 #include "Core/Bitpacker.h"
 #include "Network/Message.h"
-
-#include "Time/Stopwatch.h"
 
 // Todo: implement minify or iconify function inside OnWindowResize()
 
@@ -31,15 +19,12 @@ namespace UE
 {
 	Application* Application::s_Instance = nullptr;
 
-	Ref<Sound> Music;
-	Ref<SoundSource> MusicSource;
-	Ref<SoundListener> Listener;
-	Ref<SoundListener> Earrape;
-
 	Ref<EntityManager> m_EntityManager;
 
 	Application::Application()
 	{
+		m_TimeMeasurer.Start();
+
 		UE_CORE_INFO("Platform is {0} endian", UE_IS_NATIVE_BIG_ENDIAN() ? "big" : "little");
 
 		UE_CORE_ASSERT(!s_Instance, "Application already exists!");
@@ -48,10 +33,8 @@ namespace UE
 		m_Window->SetEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
 		m_Window->SetVSync(true);
 		m_Window->SetIcon("res/icon.png");
-
+		
 		Renderer::Init();
-
-		SoundCommand::Init();
 
 		MessageLayout t_Layout(
 			{
@@ -80,30 +63,7 @@ namespace UE
 		t_Message.UnpackData(r_LayoutData);
 		Unpacking.End();
 
-		//NetworkCommand::Init();
-
-		//NetworkCommand::InitServer("27015");
-		//NetworkCommand::SetServerEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
-
-		//NetworkCommand::InitClient();
-		//NetworkCommand::SetClientEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
-
-		//IPEndpoint ServerAddress("127.0.0.1", "27015");
-		//NetworkCommand::Connect(ServerAddress);
-
 		LuaAPI::Init();
-
-		/*Music = Sound::Create();
-		Music->LoadFromFile("data/sounds/The Cruel Angel's Thesis(mono).wav");
-
-		MusicSource = SoundSource::Create();
-		MusicSource->Init();
-		MusicSource->SetPitch(1.0f);
-		MusicSource->SetGain(1.0f);
-		MusicSource->SetBuffer(Music->GetID());
-		MusicSource->Play();
-
-		Listener = SoundListener::Create();*/
 
 		m_Window->IsVSync();
 	}
@@ -111,9 +71,6 @@ namespace UE
 	Application::~Application()
 	{
 		Renderer::Shutdown();
-
-		//NetworkCommand::ShutdownClient();
-		//NetworkCommand::ShutdownServer();
 
 		LuaAPI::Shutdown();
 	}
@@ -134,7 +91,8 @@ namespace UE
 	{
 		while (m_Running)
 		{
-			float time = (float)glfwGetTime();
+			m_TimeMeasurer.End();
+			float time = m_TimeMeasurer.FormattedSeconds();
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
@@ -145,18 +103,6 @@ namespace UE
 				{
 					layer->OnUpdate(timestep);
 				}
-
-				// Update the client
-				//if (NetworkCommand::IsClient)
-				//{
-				//	NetworkCommand::OnClientUpdate(timestep);
-				//}
-
-				// Update the server
-				//if (NetworkCommand::IsServer)
-				//{
-				//	NetworkCommand::OnServerUpdate(timestep);
-				//}
 			}
 
 			m_Window->OnUpdate();
@@ -169,12 +115,6 @@ namespace UE
 		dispatcher.Dispatch<WindowCloseEvent>(UE_BIND_EVENT_FN(OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
 		dispatcher.Dispatch<KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
-		//dispatcher.Dispatch<ClientConnectedEvent>(UE_BIND_EVENT_FN(OnClientConnected));
-		//dispatcher.Dispatch<ClientDisconectedEvent>(UE_BIND_EVENT_FN(OnClientDisconnected));
-		//dispatcher.Dispatch<ClientPacketEvent>(UE_BIND_EVENT_FN(OnClientPacket));
-		//dispatcher.Dispatch<ServerConnectedEvent>(UE_BIND_EVENT_FN(OnServerConnected));
-		//dispatcher.Dispatch<ServerDisconnectedEvent>(UE_BIND_EVENT_FN(OnServerDisconnected));
-		//dispatcher.Dispatch<ServerPacketEvent>(UE_BIND_EVENT_FN(OnServerPacket));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
@@ -215,42 +155,4 @@ namespace UE
 		}
 		return false;
 	}
-
-	// Client events
-	/*bool Application::OnClientConnected(ClientConnectedEvent& event)
-	{
-		UE_CORE_INFO("Connected to {0}", event.GetIPEndpoint().GetAddress());
-		return false;
-	}
-
-	bool Application::OnClientDisconnected(ClientDisconectedEvent& event)
-	{
-		UE_CORE_INFO("Disconnected from {0}", event.GetIPEndpoint().GetAddress());
-		return false;
-	}
-
-	bool Application::OnClientPacket(ClientPacketEvent& event)
-	{
-		UE_CORE_INFO("Packet received from server {0}", event.GetIPEndpoint().GetAddress());
-		return false;
-	}
-
-	// Server events
-	bool Application::OnServerConnected(ServerConnectedEvent& event)
-	{
-		UE_CORE_INFO("{0} connected", event.GetIPEndpoint().GetAddress());
-		return false;
-	}
-
-	bool Application::OnServerDisconnected(ServerDisconnectedEvent& event)
-	{
-		UE_CORE_INFO("{0} disconnected", event.GetIPEndpoint().GetAddress());
-		return false;
-	}
-
-	bool Application::OnServerPacket(ServerPacketEvent& event)
-	{
-		UE_CORE_INFO("Packet received from client {0}", event.GetIPEndpoint().GetAddress());
-		return false;
-	}*/
 }
