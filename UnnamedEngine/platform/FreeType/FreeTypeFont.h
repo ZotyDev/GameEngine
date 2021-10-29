@@ -2,7 +2,7 @@
 
 #include "Interface/Text/Font.h"
 
-#include "Platform/FreeType/FreeTypeTextAPI.h"
+#include "FreeTypeTextAPI.h"
 
 namespace UE
 {

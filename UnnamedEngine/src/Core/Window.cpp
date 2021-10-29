@@ -2,7 +2,7 @@
 #include "Window.h"
 
 #ifdef UE_PLATFORM_WINDOWS
-	#include "Platform/Windows/WindowsWindow.h" 
+	#include "Windows/WindowsWindow.h" 
 #endif // UE_PLATFORM_WINDOWS
 
 namespace UE

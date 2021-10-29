@@ -12,6 +12,10 @@
 		#include <signal.h>
 		#define UE_DEBUG_BREAK() raise(SIGTRAP)
 	
+	#elif defined(UE_PLATFORM_ANDROID)
+		#include <signal.h>
+		#define UE_DEBUG_BREAK() raise(SIGTRAP)
+
 	#else
 		#error "Platform doesn't support debugbreak yet!"
 	#endif

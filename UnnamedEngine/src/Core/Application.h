@@ -8,7 +8,8 @@
 #include "Events/GamepadEvent.h"
 #include "Events/KeyEvent.h"
 #include "Events/WindowEvent.h"
-#include "Events/NetworkEvent.h"
+
+#include "Time/Stopwatch.h"
 
 #include "Timestep.h"
 #include "LayerStack.h"
@@ -40,6 +41,7 @@ namespace UE
 		bool m_Minimized = false;
 		float m_LastFrameTime = 0.0f;
 		LayerStack m_LayerStack;
+		Stopwatch m_TimeMeasurer;
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);

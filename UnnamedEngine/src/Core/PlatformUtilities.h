@@ -36,7 +36,7 @@
 
 namespace UE
 {
-	constexpr bool __ue_is_native_big_endian();
+	bool __ue_is_native_big_endian();
 
 	// type conversions
 	unsigned long		__ue_float_to_uint32(float number);

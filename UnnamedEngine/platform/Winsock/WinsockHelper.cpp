@@ -1,5 +1,5 @@
 #include "uepch.h"
-#include "Platform/Winsock/WinsockHelper.h"
+#include "Winsock/WinsockHelper.h"
 
 #include <winsock2.h>
 #include <WS2tcpip.h>

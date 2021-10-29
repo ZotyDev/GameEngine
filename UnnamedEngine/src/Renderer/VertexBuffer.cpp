@@ -2,7 +2,10 @@
 #include "VertexBuffer.h"
 
 #include "Renderer.h"
-#include "Platform/Opengl/OpenglVertexBuffer.h"
+
+#if defined(UE_PLATFORM_WINDOWS)
+	#include "OpenGL/OpenglVertexBuffer.h"
+#endif
 
 namespace UE
 {
@@ -13,8 +16,11 @@ namespace UE
 		case RendererAPI::API::None:
 			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
 			return nullptr;
-		case RendererAPI::API::OpenGL: 
+
+		#if defined(UE_PLATFORM_WINDOWS)
+		case RendererAPI::API::OpenGL:
 			return new OpenGLVertexBuffer(vertices, size);
+		#endif
 		}
 
 		UE_CORE_ASSERT(FALSE, "Unknown RendererAPI!");

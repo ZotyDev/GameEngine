@@ -1,5 +1,5 @@
 #include "uepch.h"
-#include "Platform/FreeType/FreeTypeTextAPI.h"
+#include "FreeType/FreeTypeTextAPI.h"
 
 namespace UE
 {

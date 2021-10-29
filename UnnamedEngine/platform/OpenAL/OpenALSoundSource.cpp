@@ -1,5 +1,5 @@
 #include "uepch.h"
-#include "Platform/OpenAL/OpenALSoundSource.h"
+#include "OpenAL/OpenALSoundSource.h"
 
 namespace UE
 {

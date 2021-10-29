@@ -1,7 +1,7 @@
 #include "uepch.h"
-#include "Platform/Winsock/WinsockSocket.h"
+#include "Winsock/WinsockSocket.h"
 
-#include "Platform/Winsock/WinsockHelper.h"
+#include "Winsock/WinsockHelper.h"
 
 namespace UE
 {
