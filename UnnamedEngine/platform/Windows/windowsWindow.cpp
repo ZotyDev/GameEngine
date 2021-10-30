@@ -51,6 +51,7 @@ namespace UE
 			case RendererAPI::API::None:
 				UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
 				break;
+			#if defined(UE_PLATFORM_OPENGL)
 			case RendererAPI::API::OpenGL:
 				glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 				
@@ -59,10 +60,13 @@ namespace UE
 				#endif
 
 				break;
+			#endif
+			#if defined(UE_PLATFORM_VULKAN)
 			case RendererAPI::API::Vulkan:
 				glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 				glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 				break;
+			#endif
 			}
 
 			m_Window = glfwCreateWindow((int)m_WindowData.Width, (int)m_WindowData.Height, m_WindowData.Title.c_str(), nullptr, nullptr);

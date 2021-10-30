@@ -152,6 +152,9 @@ namespace UE
 	{
 		switch (event.GetKeyCode())
 		{
+		case KeyCode::Escape:
+			m_Running = false;
+			break;
 		}
 		return false;
 	}
