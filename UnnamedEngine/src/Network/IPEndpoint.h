@@ -14,7 +14,7 @@ namespace UE
 		void SetPort(const std::string& port) { m_Port = port; }
 		void SetPort(unsigned short port) { m_Port = std::to_string(port); }
 		std::string GetPort() const { return m_Port; }
-		unsigned short GetUPort() const { return std::strtoul(m_Port.c_str(), NULL, 0); }
+		unsigned long GetUPort() const { return std::strtoul(m_Port.c_str(), NULL, 0); }
 
 		std::string GetAddress() { return m_IP + ":" + m_Port; }
 

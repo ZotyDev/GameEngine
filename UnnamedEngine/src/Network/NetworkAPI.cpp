@@ -1,7 +1,7 @@
 #include "uepch.h"
 #include "Network/NetworkAPI.h"
 
-#if defined(UE_PLATFORM_WINDOWS)
+#if defined(UE_PLATFORM_WINSOCK)
 	#include "Winsock/WinsockNetworkAPI.h"
 #endif
 
@@ -17,7 +17,7 @@ namespace UE
 			UE_CORE_ASSERT(false, "NetworkAPI::None is currently not supported!");
 			return nullptr;
 
-		#if defined(UE_PLATFORM_WINDOWS)
+		#if defined(UE_PLATFORM_WINSOCK)
 		case UE::NetworkAPI::API::Winsock:
 			return CreateScope<WinsockNetworkAPI>();
 		#endif

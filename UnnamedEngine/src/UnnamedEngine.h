@@ -29,7 +29,7 @@
 #include "Events/GamepadEvent.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
-#include "Events/WindowEvent.h"*/
+#include "Events/WindowEvent.h"
 
 /* ECS */
 /*============================================================*/
@@ -61,7 +61,7 @@
 #include "Renderer/Camera3D.h"
 #include "Renderer/CameraController.h"
 
-#include "Renderer/Primitives.h""
+#include "Renderer/Primitives.h"
 
 /* Input */
 /*============================================================*/

@@ -198,11 +198,11 @@ bool VoxelGameApp::OnMouseMoved(UE::MouseMovedEvent& event)
 {
 	UE::Ref<UE::Camera> CurrentCamera = m_CameraController->GetCamera();
 
-	int CurrentMouseX = event.GetX();
-	int CurrentMouseY = event.GetY();
+	int CurrentMouseX = (int)event.GetX();
+	int CurrentMouseY = (int)event.GetY();
 
-	int DiffMouseX = CurrentMouseX - LastMouseX;
-	int DiffMouseY = CurrentMouseY - LastMouseY;
+	int DiffMouseX = CurrentMouseX - (int)LastMouseX;
+	int DiffMouseY = CurrentMouseY - (int)LastMouseY;
 	LastMouseX = CurrentMouseX;
 	LastMouseY = CurrentMouseY;
 

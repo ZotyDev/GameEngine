@@ -40,8 +40,8 @@ namespace UE
 		UEResult PackData(Ref<MessageLayoutData> layoutData)
 		{
 			// check for size
-			UEUint32 LayoutDataSize = layoutData->Elements.size();
-			UEUint32 LayoutSize = m_Layout->Elements.size();
+			UEUint32 LayoutDataSize = (UEUint32)layoutData->Elements.size();
+			UEUint32 LayoutSize = (UEUint32)m_Layout->Elements.size();
 			if (LayoutDataSize != LayoutSize)
 			{
 				UE_CORE_ERROR("Failed to pack message data: expected {0} elements, received {1}", LayoutSize, LayoutDataSize);
@@ -161,7 +161,7 @@ namespace UE
 		{
 			// convert char buffer into uint64 buffer
 
-			UEUint32 LayoutSize = m_Layout->Elements.size();
+			UEUint32 LayoutSize = (UEUint32)m_Layout->Elements.size();
 
 			data->Elements.resize(LayoutSize);
 

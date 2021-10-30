@@ -3,8 +3,10 @@
 
 #include "Renderer/Renderer.h"
 
-#if defined(UE_PLATFORM_WINDOWS)
+#if defined(UE_PLATFORM_OPENGL)
 	#include "OpenGL/OpenGLContext.h"
+#endif
+#if defined(UE_PLATFORM_VULKAN)
 	#include "Vulkan/VulkanContext.h"
 #endif
 
@@ -18,9 +20,11 @@ namespace UE
 			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported"); 
 			return nullptr;
 
-		#if defined(UE_PLATFORM_WINDOWS)
+		#if defined(UE_PLATFORM_OPENGL)
 		case RendererAPI::API::OpenGL:
 			return CreateScope<OpenGLContext>(static_cast<GLFWwindow*>(window));
+		#endif
+		#if defined(UE_PLATFORM_VULKAN)
 		case RendererAPI::API::Vulkan:
 			return CreateScope<VulkanContext>(static_cast<GLFWwindow*>(window));
 		#endif

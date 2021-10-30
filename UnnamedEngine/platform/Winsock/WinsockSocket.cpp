@@ -73,7 +73,7 @@ namespace UE
 	{
 		sockaddr_in DestinationAddr;
 		DestinationAddr.sin_family = AF_INET;
-		DestinationAddr.sin_port = UE_HTONS(destination.GetUPort());
+		DestinationAddr.sin_port = (UEUint16)UE_HTONS(destination.GetUPort());
 		DestinationAddr.sin_addr.S_un.S_addr = inet_addr(destination.GetIp().c_str());
 		
 		bytesSent = sendto(m_Socket, (const char*)data, numberOfBytes, 0, (sockaddr*)&DestinationAddr, sizeof(DestinationAddr));

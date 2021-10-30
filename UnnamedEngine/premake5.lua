@@ -32,6 +32,143 @@ project "UnnamedEngine"
 	}
 
 	------------------------------------------------------------------------------------
+	-- OpenGL configuration
+	------------------------------------------------------------------------------------
+	filter {"options:gfxapi=opengl"}
+		defines 
+		{
+			"UE_PLATFORM_OPENGL"
+		}
+
+		files
+		{
+			"platform/OpenGL/**.h",
+			"platform/OpenGL/**.cpp",
+		}
+
+		includedirs
+		{
+			"%{IncludeDir.GLAD}",
+		}
+
+		links
+		{
+			"GLAD",
+			"opengl32.lib",
+		}
+
+	------------------------------------------------------------------------------------
+	-- DirectX11 configuration
+	------------------------------------------------------------------------------------
+	filter {"options:gfxapi=dx11"}
+		defines
+		{
+			"UE_PLATFORM_DIRECTX11"
+		}
+
+	------------------------------------------------------------------------------------
+	-- DirectX12 configuration
+	------------------------------------------------------------------------------------
+	filter {"options:gfxapi=dx12"}
+		defines
+		{
+			"UE_PLATFORM_DIRECTX12"
+		}
+
+	------------------------------------------------------------------------------------
+	-- Metal configuration
+	------------------------------------------------------------------------------------
+	filter {"options:gfxapi=metal"}
+		defines
+		{
+			"UE_PLATFORM_METAL"
+		}
+
+	------------------------------------------------------------------------------------
+	-- Vulkan configuration
+	------------------------------------------------------------------------------------
+	filter {"options:gfxapi=vulkan"}
+		defines
+		{
+			"UE_PLATFORM_VULKAN"
+		}
+
+		files
+		{
+			"platform/Vulkan/**.h",
+			"platform/Vulkan/**.cpp",
+		}
+
+		libdirs
+		{
+			"%{LibDir.Vulkan}",
+		}
+
+		includedirs
+		{
+			"%{IncludeDir.Vulkan}",
+		}
+
+		links
+		{
+			"vulkan-1.lib",
+		}
+
+	------------------------------------------------------------------------------------
+	-- OpengGL-ES configuration
+	------------------------------------------------------------------------------------
+	filter {"options:gfxapi=opengles"}
+		defines
+		{
+			"UE_PLATFORM_OPENGLES"
+		}
+
+	------------------------------------------------------------------------------------
+	-- OpenAL-Soft configuration
+	------------------------------------------------------------------------------------
+	filter {"options:sndapi=openal"}
+		defines
+		{
+			"UE_PLATFORM_OPENAL"
+		}
+
+		files 
+		{
+			"platform/OpenAL/**.h",
+			"platform/OpenAL/**.cpp",
+		}
+
+		libdirs
+		{
+			"%{LibDir.OpenAL}",
+		}
+
+		includedirs
+		{
+			"%{IncludeDir.OpenAL}",
+		}
+
+		links
+		{
+			"OpenAL32.lib",
+		}
+
+	------------------------------------------------------------------------------------
+	-- Winsock configuration
+	------------------------------------------------------------------------------------
+	filter {"options:netapi=winsock"}
+		defines
+		{
+			"UE_PLATFORM_WINSOCK"
+		}
+
+		files
+		{
+			"platform/Winsock/**.h",
+			"platform/Winsock/**.cpp",
+		}
+
+	------------------------------------------------------------------------------------
 	-- Windows-Only configuration
 	------------------------------------------------------------------------------------
 	filter "system:windows"
@@ -49,42 +186,21 @@ project "UnnamedEngine"
 		{
 			"platform/Windows/**.h",
 			"platform/Windows/**.cpp",
-			"platform/Winsock/**.h",
-			"platform/Winsock/**.cpp",
 			"platform/FreeType/**.h",
 			"platform/FreeType/**.cpp",
-			"platform/OpenAL/**.h",
-			"platform/OpenAL/**.cpp",
-			"platform/OpenGL/**.h",
-			"platform/OpenGL/**.cpp",
-			"platform/Vulkan/**.h",
-			"platform/Vulkan/**.cpp"
-		}
-
-		libdirs
-		{
-			"%{LibDir.Vulkan}",
-			"%{LibDir.OpenAL}"
 		}
 
 		includedirs
 		{
 			"vendor/spdlog/include",
 			"%{IncludeDir.GLFW}",
-			"%{IncludeDir.GLAD}",
 			"%{IncludeDir.STB}",
-			"%{IncludeDir.Vulkan}",
-			"%{IncludeDir.OpenAL}",
 			"%{IncludeDir.FreeType}"
 		}
 
 		links
 		{
 			"GLFW",
-			"GLAD",
-			"opengl32.lib",
-			"vulkan-1.lib",
-			"OpenAL32.lib",
 			"FreeType"
 		}
 
@@ -122,3 +238,4 @@ project "UnnamedEngine"
 		runtime "Release"
 		optimize "Full"
 		symbols "Off"
+	filter {}

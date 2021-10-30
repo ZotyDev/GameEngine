@@ -164,7 +164,7 @@ namespace UE
 
 	UEResult LuaExecuteString(lua_State* L, const std::string& string)
 	{
-		if (LuaErrorCheckFunction(L, luaL_dostring(L, string.c_str())) == UEResult::Error);
+		if (LuaErrorCheckFunction(L, luaL_dostring(L, string.c_str())) == UEResult::Error)
 		{
 			UE_LUA_ERROR("Failed to execute string");
 			return UEResult::Error;

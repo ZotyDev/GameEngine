@@ -69,7 +69,7 @@ namespace UE
 
 	bool CameraController::OnWindowResize(WindowResizeEvent& event)
 	{
-		m_Camera->SetViewportSize(event.GetWidth(), event.GetHeight());
+		m_Camera->SetViewportSize((float)event.GetWidth(), (float)event.GetHeight());
 		return false;
 	}
 

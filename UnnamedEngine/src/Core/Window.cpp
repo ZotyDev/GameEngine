@@ -1,9 +1,9 @@
 #include "uepch.h"
 #include "Window.h"
 
-#ifdef UE_PLATFORM_WINDOWS
+#if defined(UE_PLATFORM_WINDOWS)
 	#include "Windows/WindowsWindow.h" 
-#endif // UE_PLATFORM_WINDOWS
+#endif
 
 namespace UE
 {

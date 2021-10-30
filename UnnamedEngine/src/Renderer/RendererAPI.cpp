@@ -1,8 +1,10 @@
 #include "uepch.h"
 #include "Renderer/RendererAPI.h"
 
-#if defined(UE_PLATFORM_WINDOWS)
+#if defined(UE_PLATFORM_OPENGL)
 	#include "OpenGL/OpenGLRendererAPI.h"
+#endif
+#if defined(UE_PLATFORM_VULKAN)
 	#include "Vulkan/VulkanRendererAPI.h"
 #endif
 
@@ -18,9 +20,11 @@ namespace UE
 			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
 			return nullptr;
 
-		#if defined(UE_PLATFORM_WINDOWS)
+		#if defined(UE_PLATFORM_OPENGL)
 		case RendererAPI::API::OpenGL:
 			return CreateScope<OpenGLRendererAPI>();
+		#endif
+		#if defined(UE_PLATFORM_VULKAN)
 		case RendererAPI::API::Vulkan:
 			return CreateScope<VulkanRendererAPI>();
 		#endif

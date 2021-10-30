@@ -71,7 +71,7 @@ namespace UE
 		std::string BinaryString = ToBinary(n);
 		if (BinaryString.size() < 64)
 		{
-			UEUint8 ZerosToAdd = 64 - BinaryString.size();
+			UEUint8 ZerosToAdd = 64 - (UEUint8)BinaryString.size();
 			BinaryString.insert(0, std::string(ZerosToAdd, '0'));
 		}
 		return BinaryString;

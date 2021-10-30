@@ -153,6 +153,7 @@ namespace UE
 			// return data
 			target = (T)Holder;
 			targetPosition += size;
+			return UEResult::Success;
 		}
 		else
 		{
