@@ -108,7 +108,7 @@ void VoxelGameApp::OnEvent(UE::Event& event)
 
 bool VoxelGameApp::OnWindowResize(UE::WindowResizeEvent& event)
 {
-	m_Framebuffer->Resize(event.GetWidth(), event.GetHeight());
+	UE::Renderer3D::OnWindowResize(event.GetWidth(), event.GetHeight());
 	return false;
 }
 

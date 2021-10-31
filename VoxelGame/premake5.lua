@@ -70,3 +70,4 @@ project "VoxelGame"
 		runtime "Release"
 		optimize "Full"
 		symbols "Off"
+	filter {}

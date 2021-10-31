@@ -42,16 +42,11 @@ namespace UE
 		float m_LastFrameTime = 0.0f;
 		LayerStack m_LayerStack;
 		Stopwatch m_TimeMeasurer;
+		float m_SimulationSpeed = 1.0f;
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);
 		bool OnKeyPressed(KeyPressedEvent& event);
-		//bool OnClientConnected(ClientConnectedEvent& event);
-		//bool OnClientDisconnected(ClientDisconectedEvent& event);
-		//bool OnClientPacket(ClientPacketEvent& event);
-		//bool OnServerConnected(ServerConnectedEvent& event);
-		//bool OnServerDisconnected(ServerDisconnectedEvent& event);
-		//bool OnServerPacket(ServerPacketEvent& event);
 	private:
 		static Application* s_Instance;
 		friend int ::main(int argc, char** argv);

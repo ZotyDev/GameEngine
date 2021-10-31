@@ -10,9 +10,6 @@
 
 #include "Renderer/Material.h"
 
-#include "Core/Bitpacker.h"
-#include "Network/Message.h"
-
 // Todo: implement minify or iconify function inside OnWindowResize()
 
 namespace UE
@@ -35,33 +32,6 @@ namespace UE
 		m_Window->SetIcon("res/icon.png");
 		
 		Renderer::Init();
-
-		MessageLayout t_Layout(
-			{
-				{UEType::Bool, "Running", 1},
-				{UEType::Uint64, "ClientSalt", 1029310293}
-			}
-		);
-
-		Message t_Message(CreateRef<MessageLayout>(t_Layout));
-
-		MessageLayoutData t_LayoutData(
-			{
-				UEVValue(false),
-				UEVValue(UEUint64(1029310293))
-			}
-		);
-
-		Ref<MessageLayoutData> r_LayoutData = CreateRef<MessageLayoutData>();
-
-		Stopwatch Packing;
-		Stopwatch Unpacking;
-		Packing.Start();
-		t_Message.PackData(CreateRef<MessageLayoutData>(t_LayoutData));
-		Packing.End();
-		Unpacking.Start();
-		t_Message.UnpackData(r_LayoutData);
-		Unpacking.End();
 
 		LuaAPI::Init();
 
@@ -93,7 +63,7 @@ namespace UE
 		{
 			m_TimeMeasurer.End();
 			float time = m_TimeMeasurer.FormattedSeconds();
-			Timestep timestep = time - m_LastFrameTime;
+			Timestep timestep = (time - m_LastFrameTime) * m_SimulationSpeed;
 			m_LastFrameTime = time;
 
 			if (!m_Minimized)
