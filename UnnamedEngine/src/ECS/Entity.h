@@ -1,15 +1,12 @@
 #pragma once
 
-#define UE_INVALID_ENTITY 0
-
-#include <queue>
+#define UE_INVALID_ENTITY	0
+#define UE_MAX_ENTITIES		8196
 
 namespace UE
 {
 	// 0 as ID represents a invalid Entity
-	using Entity = uint64_t;
-
-	const Entity UE_MAX_ENTITIES = 4000;
+	using Entity = UEUint32;
 
 	class EntityManager
 	{
@@ -18,13 +15,10 @@ namespace UE
 		~EntityManager();
 
 		UEResult CreateEntity(Entity& entity);
-		UEResult DestroyEntity(Entity& entity);
+		UEResult RemoveEntity(Entity& entity);
 
-		uint64_t GetEntityCount() { return m_EntityCount; }
 	private:
-		// Unused entity IDs
 		std::queue<Entity> m_AvaliableEntities;
-
-		uint64_t m_EntityCount;
+		Entity EntityCount = 0;
 	};
 }
