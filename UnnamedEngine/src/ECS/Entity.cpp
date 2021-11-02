@@ -4,11 +4,10 @@
 namespace UE
 {
 	EntityManager::EntityManager()
-		:m_EntityCount(0)
 	{
-		for (Entity entity = 0; entity < UE_MAX_ENTITIES; ++entity)
+		for (Entity e = 1; e <= UE_MAX_ENTITIES; e++)
 		{
-			m_AvaliableEntities.push(entity);
+			m_AvaliableEntities.push(e);
 		}
 	}
 
@@ -17,33 +16,28 @@ namespace UE
 
 	UEResult EntityManager::CreateEntity(Entity& entity)
 	{
-		if (m_EntityCount > UE_MAX_ENTITIES)
+		if (EntityCount == UE_MAX_ENTITIES)
 		{
-			UE_CORE_ERROR("Could not create entity with ID {0}: Maximun entity number reached");
-			entity = 0;
+			UE_CORE_ERROR("Failed to create entity: reached max number of entities");
 			return UEResult::Error;
 		}
 
-		// Take ID from the front of the queue
 		entity = m_AvaliableEntities.front();
 		m_AvaliableEntities.pop();
-		++m_EntityCount;
 
 		return UEResult::Success;
 	}
 
-	UEResult EntityManager::DestroyEntity(Entity& entity)
+	UEResult EntityManager::RemoveEntity(Entity& entity)
 	{
-		if (entity > UE_MAX_ENTITIES)
+		if (entity > UE_MAX_ENTITIES || entity == UE_INVALID_ENTITY)
 		{
-			UE_CORE_ERROR("Could not destroy entity with ID {0}: ID out of range");
+			UE_CORE_ERROR("Failed to remove entity: invalid entity");
 			return UEResult::Error;
 		}
 
-		// Put the ID at the back of the queue
 		m_AvaliableEntities.push(entity);
-		entity = 0;
-		--m_EntityCount;
+		entity = UE_INVALID_ENTITY;
 
 		return UEResult::Success;
 	}
