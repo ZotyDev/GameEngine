@@ -14,7 +14,7 @@ namespace UE
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
-		glDeleteBuffers(GL_ARRAY_BUFFER, &m_ID);
+		glDeleteBuffers(1, &m_ID);
 	};
 
 	void OpenGLVertexBuffer::Bind() const

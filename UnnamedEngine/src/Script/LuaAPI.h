@@ -2,8 +2,12 @@
 
 #include "Script/LUA/LuaFunctionWrapper.h"
 
+#define UE_LUAF(function, ...) LuaErrorCheck(L, function(L ,__VA_ARGS__))
+
 namespace UE
 {
+	UEResult LuaErrorCheck(lua_State* L, int status);
+
 	class LuaAPI 
 	{
 	public:

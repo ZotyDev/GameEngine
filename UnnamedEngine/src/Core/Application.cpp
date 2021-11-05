@@ -4,16 +4,29 @@
 #include "Renderer/Renderer.h"
 #include "Script/LuaAPI.h"
 
-#include <lua.h>
-
 #include "ECS/System.h"
 
 #include "Renderer/Material.h"
+
+#include "Script/LuaExposer.h"
 
 // Todo: implement minify or iconify function inside OnWindowResize()
 
 namespace UE
 {
+	class Basic
+	{
+	public:
+
+		int Dummy(int value)
+		{
+			return value * InternalValue;
+		}
+
+	private:
+		int InternalValue = 2;
+	};
+
 	Application* Application::s_Instance = nullptr;
 
 	Ref<EntityManager> m_EntityManager;
@@ -34,6 +47,12 @@ namespace UE
 		Renderer::Init();
 
 		LuaAPI::Init();
+
+		Ref<LunaStack> Luna = CreateRef<LunaStack>();
+		ExposeCoreToLua(Luna);
+
+		Luna->ExecuteFile("data/mods/test.lua");
+		Luna->Dump();
 
 		m_Window->IsVSync();
 	}

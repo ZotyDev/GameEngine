@@ -5,6 +5,24 @@ namespace UE
 {
 	lua_State* LuaAPI::m_LuaState = nullptr;
 
+	UEResult LuaErrorCheck(lua_State* L, int status)
+	{
+		if (status != LUA_OK)
+		{
+			if (lua_isstring(L, -1))
+			{
+				UE_LUA_ERROR(lua_tostring(L, -1));
+				lua_pop(L, 1);
+
+				return UEResult::Error;
+			}
+			UE_LUA_ERROR("Unknown error");
+
+			return UEResult::Error;
+		}
+		return UEResult::Success;
+	}
+
 	void LuaAPI::Init()
 	{
 		m_LuaState = luaL_newstate();

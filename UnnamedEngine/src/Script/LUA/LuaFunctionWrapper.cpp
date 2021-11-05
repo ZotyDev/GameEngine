@@ -11,15 +11,14 @@ namespace UE
 			{
 				UE_LUA_ERROR(lua_tostring(L, -1));
 				lua_pop(L, 1);
-				
+
 				return UEResult::Error;
 			}
-			
+
 			UE_LUA_ERROR("Unknown error");
 
 			return UEResult::Error;
 		}
-
 		return UEResult::Success;
 	}
 

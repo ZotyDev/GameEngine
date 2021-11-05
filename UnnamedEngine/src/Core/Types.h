@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace UE
 {
 	typedef bool					UEBool;
@@ -21,6 +23,7 @@ namespace UE
 
 	// Todo: Verify if this is the best approach
 	typedef char*					UECString;
+	typedef std::string				UEString;
 
 	enum class UEType
 	{
