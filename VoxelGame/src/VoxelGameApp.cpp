@@ -31,8 +31,10 @@ void VoxelGameApp::OnAttach()
 
 	m_Quad = UE::CreateRef<UE::Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));
 
+	UE::LuneStack LStack;
+
 	// LoadShader LUA function register
-	UE::LuaAPI::RegisterFunction("LoadShader", [](lua_State* L)
+	UE::LuneFunction LoadShader("LoadShader", [](lua_State* L) -> int 
 		{
 			UE::ShaderLibrary* t_ShaderLibrary = (UE::ShaderLibrary*)lua_touserdata(L, lua_upvalueindex(1));
 
@@ -42,13 +44,14 @@ void VoxelGameApp::OnAttach()
 			UE_INFO("Loaded shader: {0}", t_FilePath);
 
 			return 1;
-		}, (void*)m_ShaderLibrary.get());
+		});
 
+	LoadShader.Register(LStack, (void*)m_ShaderLibrary.get());
 	// Execute file that load the shaders
-	UE::LuaAPI::ExecuteFile("data/mods/shaders.lua");
+	LStack.ExecuteFile("data/mods/shaders.lua");
 	//UE::LuaAPI::ExecuteFile("data/mods/messages.lua");
 
-	UE_LUA_INFO("Stack size is {0}", lua_gettop(UE::LuaAPI::GetLua()));
+	UE_LUA_INFO("Stack size is {0}", LStack.GetTop());
 
 	UE::Renderer3D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer);
 	//UE::Renderer2D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer, m_ShaderLibrary->Get("quad"));

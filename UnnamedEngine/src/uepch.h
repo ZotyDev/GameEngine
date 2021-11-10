@@ -44,6 +44,7 @@
 #include <queue>
 #include <deque>
 #include <vector>
+#include <initializer_list>
 
 /* Engine Stuff */
 /*============================================================*/

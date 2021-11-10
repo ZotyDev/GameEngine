@@ -9,13 +9,13 @@ IncludeDir = {}
 	IncludeDir["STB"] = "%{wks.location}/UnnamedEngine/vendor/STB"
 	IncludeDir["LUA"] = "%{wks.location}/UnnamedEngine/vendor/LUA"
 	IncludeDir["FreeType"] = "%{wks.location}/UnnamedEngine/vendor/FreeType/include"
-	IncludeDir["Vulkan"] = "C:/VulkanSDK/1.2.182.0/Include"
+	IncludeDir["Vulkan"] = "C:/VulkanSDK/1.2.189.2/Include"
 	IncludeDir["OpenAL"] = "%{wks.location}/UnnamedEngine/vendor/OpenAL-Soft/include"
 
 -- Library Directories
 LibDir = {}
 	LibDir["OpenAL"] = "%{wks.location}/UnnamedEngine/vendor/OpenAL-Soft/libs/Win64"
-	LibDir["Vulkan"] = "C:/VulkanSDK/1.2.182.0/Lib"
+	LibDir["Vulkan"] = "C:/VulkanSDK/1.2.189.2/Lib"
 
 workspace "GameEngine"
 	startproject "VoxelGame"

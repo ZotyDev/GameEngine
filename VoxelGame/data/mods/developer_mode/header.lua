@@ -1,20 +1,20 @@
 Info = {
-	name = "Developer Mode" -- REQUIRED
-	uniqueID = "officialdevelopermode" -- REQUIRED
-	version = "1.0.0" -- REQUIRED
-	authors = {
+	["name"] = "Developer Mode", -- REQUIRED
+	["uniqueID"] = "officialdevelopermode", -- REQUIRED
+	["version"] = "1.0.0", -- REQUIRED
+	["authors"] = {
 		-- The index value that you use is also the role of the specified authors
-		"Programmer" = { 
+		["Programmer"] = { 
 			"ZotyDev"
 			-- Specifying more names will make then show bellow the same role
 		}
-	} -- REQUIRED
-	description = "This mod is used to make development easier" -- REQUIRED
-	url = "developer.unnamedengine.com" -- OPTIONAL
-	credits = "My family and all my friends that supported me" -- OPTIONAL
-	tags = {
+	}, -- REQUIRED
+	["description"] = "This mod is used to make development easier", -- REQUIRED
+	["url"] = "developer.unnamedengine.com", -- OPTIONAL
+	["credits"] = "My family and all my friends that supported me", -- OPTIONAL
+	["tags"] = {
 		"official", "developer", "test", "example"
-	}
+	},
 }
 
 --[[ This part is commented out because it is completely optional (but highly recommended) to have dependencies and compatibility
@@ -53,5 +53,4 @@ Compatibility =
 		} -- REQUIRED
 		notes = "This is a note that you can use to tell more about the compatibility" -- OPTIONAL
 	}
-	--]]
-}
+}--]]

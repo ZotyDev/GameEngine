@@ -36,11 +36,10 @@
 
 /* Script */
 /*============================================================*/
-#include "Script/LuaAPI.h"
-
-#include "Script/Luna/LunaStack.h"
-#include "Script/Luna/LunaFunction.h"
-#include "Script/Luna/LunaModule.h"
+#include "Script/Lune/LuneAPI.h"
+#include "Script/Lune/LuneFunction.h"
+#include "Script/Lune/LuneClass.h"
+#include "Script/Lune/LuneModule.h"
 
 /* Renderer */
 /*============================================================*/

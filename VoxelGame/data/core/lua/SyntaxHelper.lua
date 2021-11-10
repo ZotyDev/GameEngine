@@ -6,6 +6,36 @@
 --
 
 ---------------------------------------------------------------------------------
+-- Logging
+---------------------------------------------------------------------------------
+
+---@class Logger
+Logger = {}
+
+---@param name string
+---@return Logger logger
+function Logger.Create(name) end
+
+---@param name string
+---@return Logger logger
+function Logger.Get(name) end
+
+---@param msg string
+function Logger:Trace(msg) end
+
+---@param msg string
+function Logger:Info(msg) end
+
+---@param msg string
+function Logger:Warn(msg) end
+
+---@param msg string
+function Logger:Error(msg) end
+
+---@param msg string
+function Logger:Critical(msg) end
+
+---------------------------------------------------------------------------------
 -- Easing
 ---------------------------------------------------------------------------------
 
@@ -133,11 +163,57 @@ function Easing.EaseOutSine(value) end
 function Easing.EaseInOutSine(value) end
 
 ---------------------------------------------------------------------------------
+-- Framebuffer
+---------------------------------------------------------------------------------
+
+---@class Framebuffer
+Framebuffer = {}
+
+---@param width integer
+---@param height integer
+function Framebuffer.Create(width, height) end
+
+---@param index integer 
+function Framebuffer:AddColorAttachment(index) end
+
+---@param slot integer
+function Framebuffer:AddDepthAttachment(slot) end
+
+---@param width integer
+---@param height integer
+function Framebuffer:Resize(width, height) end
+
+---------------------------------------------------------------------------------
+-- Renderer 2d
+---------------------------------------------------------------------------------
+
+---@class Renderer2D
+Renderer2D = {}
+
+---------------------------------------------------------------------------------
+-- Renderer 3D
+---------------------------------------------------------------------------------
+
+---@class Renderer3D
+Renderer3D = {}
+
+---------------------------------------------------------------------------------
 -- Math Library
 ---------------------------------------------------------------------------------
+
 ---@class Math
 ---@field Easing Easing
 Math = {}
+
+---------------------------------------------------------------------------------
+-- Rendering Library
+---------------------------------------------------------------------------------
+
+---@class Renderer
+---@field Framebuffer Framebuffer
+---@field Renderer2D Renderer2D
+---@field Renderer3D Renderer3D
+Renderer = {}
 
 ---------------------------------------------------------------------------------
 -- Core Library
@@ -145,4 +221,6 @@ Math = {}
 
 ---@class Core
 ---@field Math Math
+---@field Renderer Renderer
+---@field Logger Logger
 Core = {}

@@ -2,7 +2,7 @@
 #include "Core/Application.h"
 
 #include "Renderer/Renderer.h"
-#include "Script/LuaAPI.h"
+#include "Script/Lune/LuneAPI.h"
 
 #include "ECS/System.h"
 
@@ -14,19 +14,6 @@
 
 namespace UE
 {
-	class Basic
-	{
-	public:
-
-		int Dummy(int value)
-		{
-			return value * InternalValue;
-		}
-
-	private:
-		int InternalValue = 2;
-	};
-
 	Application* Application::s_Instance = nullptr;
 
 	Ref<EntityManager> m_EntityManager;
@@ -46,13 +33,16 @@ namespace UE
 		
 		Renderer::Init();
 
-		LuaAPI::Init();
+		//LuaAPI::Init();
 
-		Ref<LunaStack> Luna = CreateRef<LunaStack>();
+		LuneStack Luna;
+
 		ExposeCoreToLua(Luna);
 
-		Luna->ExecuteFile("data/mods/test.lua");
-		Luna->Dump();
+		Luna.Dump();
+
+		Luna.ExecuteFile("data/mods/test.lua");
+		Luna.ExecuteFile("data/core/lua/CoreFunctionality.lua");
 
 		m_Window->IsVSync();
 	}
@@ -61,7 +51,7 @@ namespace UE
 	{
 		Renderer::Shutdown();
 
-		LuaAPI::Shutdown();
+		//LuaAPI::Shutdown();
 	}
 
 	void Application::PushLayer(Layer* layer)
