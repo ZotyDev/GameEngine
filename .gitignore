@@ -9,6 +9,7 @@
 # Visual Studio configurations
 .claudiaideconfig
 .editorconfig 
+.vs
 
 # Output
 bin/

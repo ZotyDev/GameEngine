@@ -4,6 +4,27 @@
 
 namespace UE
 {
+	LuneModule& LuneModule::Add(const UEString& name, UEUint16 value)
+	{
+		Enums.push_back(LuneEnum(name, value));
+
+		return *this;
+	}
+
+	LuneModule& LuneModule::Add(const UEString& name, UEUint32 value)
+	{
+		Enums.push_back(LuneEnum(name, value));
+
+		return *this;
+	}
+
+	LuneModule& LuneModule::Add(const UEString& name, UEUint64 value)
+	{
+		Enums.push_back(LuneEnum(name, value));
+
+		return *this;
+	}
+
 	LuneModule& LuneModule::Add(const UEString& name, lua_CFunction fn)
 	{
 		Functions.push_back(LuneFunction(name, fn));
@@ -37,6 +58,13 @@ namespace UE
 		UEUint32 ModuleIndex = lua_gettop(L);
 		lua_pushvalue(L, ModuleIndex);
 		lua_setglobal(L, Name.c_str());
+
+		// Register enums
+		UEUint32 EnumCount = Enums.size();
+		for (UEUint32 i = 0; i < EnumCount; i++)
+		{
+			Enums[i].RegisterSelf(L, -2);
+		}
 
 		// Register functions
 		UEUint32 FunctionCount = Functions.size();
@@ -75,6 +103,13 @@ namespace UE
 		UEUint32 ModuleIndex = lua_gettop(L);
 		lua_pushvalue(L, ModuleIndex);
 		lua_setfield(L, -3, Name.c_str());
+
+		// Register enums
+		UEUint32 EnumCount = Enums.size();
+		for (UEUint32 i = 0; i < EnumCount; i++)
+		{
+			Enums[i].RegisterSelf(L, -2);
+		}
 
 		// Register functions
 		UEUint32 FunctionCount = Functions.size();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Script/Lune/LuneFunction.h"
+#include "Script/Lune/LuneEnum.h"
 
 namespace UE
 {

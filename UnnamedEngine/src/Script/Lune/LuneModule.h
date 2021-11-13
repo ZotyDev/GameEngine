@@ -11,6 +11,9 @@ namespace UE
 			: Name(name)
 		{}
 
+		LuneModule& Add(const UEString& name, UEUint16 value);
+		LuneModule& Add(const UEString& name, UEUint32 value);
+		LuneModule& Add(const UEString& name, UEUint64 value);
 		LuneModule& Add(const UEString& name, lua_CFunction fn);
 		LuneModule& Add(LuneClass cls);
 		LuneModule& Add(LuneModule mdl);
@@ -22,5 +25,6 @@ namespace UE
 		std::vector<LuneFunction> Functions;
 		std::vector<LuneClass> Classes;
 		std::vector<LuneModule> Modules;
+		std::vector<LuneEnum> Enums;
 	};
 }

@@ -10,7 +10,14 @@
 
 namespace UE
 {
-	RendererAPI::API RendererAPI::s_API = RendererAPI::API::OpenGL;
+	#if defined(UE_PLATFORM_OPENGL)
+		RendererAPI::API RendererAPI::s_API = RendererAPI::API::OpenGL;
+	#elif defined(UE_PLATFORM_VULKAN)
+		RendererAPI::API RendererAPI::s_API = RendererAPI::API::Vulkan;
+	#else
+		RendererAPI::API RendererAPI::s_API = RendererAPI::API::None;
+		#error RendererAPI:None is not supported!
+	#endif
 
 	Scope<RendererAPI> RendererAPI::Create()
 	{

@@ -51,8 +51,6 @@ void VoxelGameApp::OnAttach()
 	LStack.ExecuteFile("data/mods/shaders.lua");
 	//UE::LuaAPI::ExecuteFile("data/mods/messages.lua");
 
-	UE_LUA_INFO("Stack size is {0}", LStack.GetTop());
-
 	UE::Renderer3D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer);
 	//UE::Renderer2D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer, m_ShaderLibrary->Get("quad"));
 
