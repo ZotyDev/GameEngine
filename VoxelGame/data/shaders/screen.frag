@@ -2,11 +2,11 @@
 
 in vec2 out_Texture;
 
-uniform sampler2D u_ScreenTexture;
-
 float gamma = 1.0;
 
 out vec4 FragColor;
+
+layout (binding = 0) uniform sampler2D u_ScreenTexture;
 
 void main()
 {

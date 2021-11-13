@@ -20,41 +20,49 @@ namespace UE
 			UE_CORE_ERROR("Failed to load texture: ", stbi_failure_reason());
 			return UEResult::Error;
 		}
-		m_Width = width;
-		m_Height = height;
 
-		GLenum internalFormat = 0;
-		GLenum dataFormat = 0;
-		switch (channels)
+		if (data)
 		{
-		case 4:
-			internalFormat = GL_RGBA8;
-			dataFormat = GL_RGBA;
-			break;
-		case 3:
-			internalFormat = GL_RGB8;
-			dataFormat = GL_RGB;
-			break;
-		default:
-			UE_CORE_ERROR("Unknown format!");
-			return UEResult::Error;
+			m_Width = width;
+			m_Height = height;
+
+			GLenum internalFormat = 0;
+			GLenum dataFormat = 0;
+			switch (channels)
+			{
+			case 4:
+				internalFormat = GL_RGBA8;
+				dataFormat = GL_RGBA;
+				break;
+			case 3:
+				internalFormat = GL_RGB8;
+				dataFormat = GL_RGB;
+				break;
+			default:
+				UE_CORE_ERROR("Unknown format!");
+				return UEResult::Error;
+			}
+
+			m_InternalFormat = internalFormat;
+			m_DataFormat = dataFormat;
+
+			glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
+			glTextureStorage2D(m_ID, 1, m_InternalFormat, m_Width, m_Height);
+
+			glTextureParameteri(m_ID, GL_TEXTURE_WRAP_R, GL_REPEAT);
+			glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+			glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+			glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+
+			stbi_image_free(data);
+
+			return UEResult::Success;
 		}
-
-		m_InternalFormat = internalFormat;
-		m_DataFormat = dataFormat;
-
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
-		glBindTexture(GL_TEXTURE_2D, m_ID);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_Width, m_Height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
-
-		stbi_image_free(data);
-
-		return UEResult::Success;
+		return UEResult::Error;
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
@@ -64,7 +72,6 @@ namespace UE
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
-		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTexture(GL_TEXTURE_2D, m_ID);
+		glBindTextureUnit(slot, m_ID);
 	}
 }

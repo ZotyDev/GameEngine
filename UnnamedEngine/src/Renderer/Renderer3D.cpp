@@ -70,49 +70,6 @@ namespace UE
 
 	void Renderer3D::Flush()
 	{
-		// Store previous viewport
-		uint32_t t_Width;
-		uint32_t t_Height;
-		RenderCommand::GetViewport(t_Width, t_Height);
-		// Depth Framebuffer Rendering
-		RenderCommand::SetViewport(0, 0, 1024, 1024);
-		s_Data->ShadowBuffer->Bind();
-		RenderCommand::ClearDepth();
-
-		// Rendering
-		//RenderCommand::CullFront();
-		float t_NearPlane = 1.0f;
-		float t_FarPlane = 100.0f;
-		glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, t_NearPlane, t_FarPlane);
-		glm::mat4 lightView = glm::lookAt(glm::vec3(5.0f, 2.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		s_Data->LighViewProjectionMatrix = lightProjection * lightView;
-
-		for (auto& it : s_Data->MaterialIndexMap)
-		{
-			Ref<Material> CurrentMaterial = it.first;
-
-			Ref<Shader> MaterialShader;
-			CurrentMaterial->GetShader("Shadow", MaterialShader);
-
-			MaterialShader->Bind();
-
-			MaterialShader->SetMat4("u_ViewProjection", s_Data->LighViewProjectionMatrix);
-
-			for (auto& CurrentIndex : it.second)
-			{
-				glm::mat4 Transform = glm::mat4(1.0f);
-				Transform = glm::translate(Transform, s_Data->PositionArray[CurrentIndex]);
-				MaterialShader->SetMat4("u_Transform", Transform);
-				s_Data->VaoArray[CurrentIndex]->Bind();
-				RenderCommand::DrawIndexed(s_Data->VaoArray[CurrentIndex]);
-			}
-		}
-
-		// End of Rendering
-
-		// Set viewport to screen size
-		RenderCommand::SetViewport(0, 0, t_Width, t_Height);
-
 		// Bind Screen Framebuffer
 		s_Data->ScreenFramebuffer->Bind();
 
@@ -133,12 +90,6 @@ namespace UE
 			CurrentMaterial->GetTexture("Texture", MaterialTexture);
 
 			MaterialShader->Bind();
-			MaterialShader->SetInt("u_Texture1", 0);
-			MaterialShader->SetInt("u_ShadowMap", 1);
-			s_Data->ShadowBuffer->BindDepthAttachment(1);
-			
-			//MaterialShader->SetMat4("u_ViewProjection", s_Data->ViewProjectionMatrix);
-			MaterialShader->SetMat4("u_LightViewProjection", s_Data->LighViewProjectionMatrix);
 
 			for (auto& CurrentIndex : it.second)
 			{
@@ -166,10 +117,9 @@ namespace UE
 		RenderCommand::Clear();
 
 		// Bind Screen Framebuffer Texture, Mesh and Camera ViewProjection to render it to the screen
-		s_Data->ScreenFramebuffer->BindColorAttachment();
+		s_Data->ScreenFramebuffer->BindColorAttachment(0);
 		//s_Data->ShadowBuffer->BindDepthAttachment(); // When this is enabled it is possible to see the shadow map
 		s_Data->ScreenShader->Bind();
-		//s_Data->ScreenShader->SetMat4("u_ViewProjection", s_Data->ViewProjectionMatrix);
 		s_Data->ScreenMesh->VAO->Bind();
 		RenderCommand::DrawIndexed(s_Data->ScreenMesh->VAO);
 

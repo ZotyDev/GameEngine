@@ -37,12 +37,12 @@ namespace UE
 
 		LuneStack Luna;
 
-		ExposeCoreToLua(Luna);
-
-		Luna.Dump();
-
-		Luna.ExecuteFile("data/mods/test.lua");
-		Luna.ExecuteFile("data/core/lua/CoreFunctionality.lua");
+		//ExposeCoreToLua(Luna);
+		//
+		//Luna.Dump();
+		//
+		//Luna.ExecuteFile("data/mods/test.lua");
+		//Luna.ExecuteFile("data/core/lua/CoreFunctionality.lua");
 
 		m_Window->IsVSync();
 	}
