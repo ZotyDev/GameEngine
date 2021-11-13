@@ -5,7 +5,11 @@ layout (location = 1) in vec2 a_Texture;
 
 out vec2 out_Texture;
 
-uniform mat4 u_ViewProjection;
+layout(std140, binding = 0) uniform Camera
+{
+	mat4 u_ViewProjection;
+};
+
 uniform vec3 u_Transform;
 
 void main()

@@ -5,10 +5,15 @@ layout (location = 1) in vec2 a_Texture;
 
 out vec2 out_Texture;
 
-uniform mat4 u_ViewProjection;
+layout(std140, binding = 0) uniform Camera
+{
+	mat4 u_ViewProjection;
+};
+
 uniform mat4 u_Transform;
 
 uniform mat4 u_LightViewProjection;
+
 out vec4 out_FragPositionLightSpace;
 
 void main()

@@ -1,25 +1,24 @@
 #include "uepch.h"
-#include "Framebuffer.h"
+#include "Renderer/UniformBuffer.h"
 
 #include "Renderer/Renderer.h"
-
 #if defined(UE_PLATFORM_OPENGL)
-	#include "OpenGL/OpenGLFrameBuffer.h"
+	#include "OpenGL/OpenGLUniformBuffer.h"
 #endif
 
 namespace UE
 {
-	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& specs)
+	Ref<UniformBuffer> UniformBuffer::Create(UEUint32 size, UEUint32 binding)
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::None: 
+		case RendererAPI::API::None:
 			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
 			return nullptr;
 
 		#if defined(UE_PLATFORM_OPENGL)
-		case RendererAPI::API::OpenGL: 
-			return CreateRef<OpenGLFramebuffer>(specs);
+		case RendererAPI::API::OpenGL:
+			return CreateRef<OpenGLUniformBuffer>(size, binding);
 		#endif
 		}
 

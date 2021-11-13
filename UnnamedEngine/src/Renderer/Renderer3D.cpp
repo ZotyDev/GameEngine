@@ -36,6 +36,8 @@ namespace UE
 		DefaultMaterial->RegisterTexture("Texture", nullptr);
 		DefaultMaterial->RegisterShader("Shader", nullptr);
 		s_MaterialLibrary->Add("Default", DefaultMaterial);
+
+		s_Data->CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::CameraData), 0);
 	}
 
 	void Renderer3D::Shutdown()
@@ -51,7 +53,8 @@ namespace UE
 
 	void Renderer3D::BeginRender(Ref<Camera> camera)
 	{
-		s_Data->ViewProjectionMatrix = camera->GetViewProjection();
+		s_Data->CameraBuffer.ViewProjectionMatrix = camera->GetViewProjection();
+		s_Data->CameraUniformBuffer->SetData(&s_Data->CameraBuffer, sizeof(Renderer3DData::CameraData));
 
 		s_Data->VaoArray.fill(nullptr);
 		s_Data->ShaderArray.fill(nullptr);
@@ -134,7 +137,7 @@ namespace UE
 			MaterialShader->SetInt("u_ShadowMap", 1);
 			s_Data->ShadowBuffer->BindDepthAttachment(1);
 			
-			MaterialShader->SetMat4("u_ViewProjection", s_Data->ViewProjectionMatrix);
+			//MaterialShader->SetMat4("u_ViewProjection", s_Data->ViewProjectionMatrix);
 			MaterialShader->SetMat4("u_LightViewProjection", s_Data->LighViewProjectionMatrix);
 
 			for (auto& CurrentIndex : it.second)
@@ -166,7 +169,7 @@ namespace UE
 		s_Data->ScreenFramebuffer->BindColorAttachment();
 		//s_Data->ShadowBuffer->BindDepthAttachment(); // When this is enabled it is possible to see the shadow map
 		s_Data->ScreenShader->Bind();
-		s_Data->ScreenShader->SetMat4("u_ViewProjection", s_Data->ViewProjectionMatrix);
+		//s_Data->ScreenShader->SetMat4("u_ViewProjection", s_Data->ViewProjectionMatrix);
 		s_Data->ScreenMesh->VAO->Bind();
 		RenderCommand::DrawIndexed(s_Data->ScreenMesh->VAO);
 

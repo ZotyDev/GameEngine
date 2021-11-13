@@ -7,6 +7,7 @@
 #include "Renderer/Framebuffer.h"
 #include "Renderer/Primitives.h"
 #include "Renderer/Texture.h"
+#include "Renderer/UniformBuffer.h"
 
 #include "Renderer/Material.h"
 
@@ -56,8 +57,14 @@ namespace UE
 	private:
 		struct Renderer3DData
 		{
-			glm::mat4 ViewProjectionMatrix;
+			struct CameraData
+			{
+				glm::mat4 ViewProjectionMatrix;
+			};
+			CameraData CameraBuffer;
+
 			glm::mat4 LighViewProjectionMatrix;
+
 			Ref<Framebuffer> ScreenFramebuffer;
 			Ref<Framebuffer> ShadowBuffer;
 			Ref<Shader> ShadowShader;
@@ -74,6 +81,9 @@ namespace UE
 			uint32_t Index;
 
 			std::unordered_map<Ref<Material>, std::vector<uint32_t>> MaterialIndexMap;
+
+			Ref<UniformBuffer> CameraUniformBuffer;
+			Ref<UniformBuffer> LightUniformBuffer;
 		};
 
 		static Scope<MaterialLibrary> s_MaterialLibrary;
