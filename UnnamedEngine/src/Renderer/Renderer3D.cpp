@@ -23,14 +23,6 @@ namespace UE
 		s_Data->ScreenShader = ScreenShader;
 		s_Data->ScreenFramebuffer = ScreenFramebuffer;
 		s_Data->ScreenMesh = CreateRef<Primitives::Quad>(Primitives::Quad(glm::vec2(-1.0f, 1.0f), glm::vec2(1.0f, -1.0f)));
-		
-		FramebufferSpecification specs;
-		specs.Width = 1024;
-		specs.Height = 1024;
-		specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Depth));
-		s_Data->ShadowBuffer = Framebuffer::Create(specs);
-
-		s_Data->ShadowShader = Shader::Create("data/shaders/shadow");
 
 		Ref<Material> DefaultMaterial = CreateRef<Material>();
 		DefaultMaterial->RegisterTexture("Texture", nullptr);

@@ -3,8 +3,8 @@ local keycode = Core.Input.Keyboard.Codes
 local gamepadcode = Core.Input.Gamepad.Codes
 local mousecode = Core.Input.Mouse.Codes
 
-print(keycode.W)
-print(gamepadcode.Triangle)
+print(keycode.Space)
+print(gamepadcode.Cross)
 print(mousecode.Middle)
 
 local function OnKeyPressed(key)

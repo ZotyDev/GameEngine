@@ -23,6 +23,7 @@ namespace UE
 		DPadLeft			= 14,
 						
 		LastButton			= DPadLeft,
+
 		Cross				= A,
 		Circle				= B,
 		Square				= X,

@@ -221,7 +221,7 @@ bool VoxelGameApp::OnMouseMoved(UE::MouseMovedEvent& event)
 
 bool VoxelGameApp::OnMouseScrolled(UE::MouseScrolledEvent& event)
 {
-	m_Camera->ZoomIn(event.GetYOffset());
+	m_Camera->ZoomIn(event.GetXOffset() * 0.25f);
 
 	return false;
 }
