@@ -27,7 +27,7 @@ void VoxelGameApp::OnAttach()
 	specs.Height = 720;
 	specs.Attachments.Attachments.push_back(UE::FramebufferTextureSpecification(UE::FramebufferTextureFormat::Color));
 	specs.Attachments.Attachments.push_back(UE::FramebufferTextureSpecification(UE::FramebufferTextureFormat::Depth));
-	m_Framebuffer = UE::Framebuffer::Create(specs);
+	UE::Ref<UE::Framebuffer> m_Framebuffer = UE::Framebuffer::Create(specs);
 
 	m_Quad = UE::CreateRef<UE::Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));
 
@@ -51,7 +51,9 @@ void VoxelGameApp::OnAttach()
 	LStack.ExecuteFile("data/mods/shaders.lua");
 	//UE::LuaAPI::ExecuteFile("data/mods/messages.lua");
 
-	UE::Renderer3D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer);
+	m_Screen = UE::CreateRef<UE::Screen>(m_ShaderLibrary->Get("screen"), m_Framebuffer);
+
+	UE::Renderer3D::Init(m_Screen);
 	//UE::Renderer2D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer, m_ShaderLibrary->Get("quad"));
 
 	// TEMPORARY MATERIAL

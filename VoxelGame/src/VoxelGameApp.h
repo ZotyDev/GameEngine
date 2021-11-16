@@ -29,9 +29,7 @@ private:
 	UE::Ref<UE::Camera> m_Camera;
 	UE::Ref<UE::CameraController> m_CameraController;
 
-	UE::Ref<UE::Framebuffer> m_Framebuffer;
-
-	UE::Ref<UE::Primitives::Quad> m_Screen;
+	UE::Ref<UE::Screen> m_Screen;
 	UE::Ref<UE::Primitives::Quad> m_Quad;
 private:
 	bool OnWindowResize(UE::WindowResizeEvent& event);

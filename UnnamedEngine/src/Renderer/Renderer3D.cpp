@@ -18,18 +18,16 @@ namespace UE
 	Scope<Renderer3D::Renderer3DData> Renderer3D::s_Data = CreateScope<Renderer3D::Renderer3DData>();
 	Scope<MaterialLibrary> Renderer3D::s_MaterialLibrary = CreateScope<MaterialLibrary>();
 
-	void Renderer3D::Init(Ref<Shader> ScreenShader, Ref<Framebuffer> ScreenFramebuffer)
+	void Renderer3D::Init(Ref<Screen> screen)
 	{
-		s_Data->ScreenShader = ScreenShader;
-		s_Data->ScreenFramebuffer = ScreenFramebuffer;
-		s_Data->ScreenMesh = CreateRef<Primitives::Quad>(Primitives::Quad(glm::vec2(-1.0f, 1.0f), glm::vec2(1.0f, -1.0f)));
-
 		Ref<Material> DefaultMaterial = CreateRef<Material>();
 		DefaultMaterial->RegisterTexture("Texture", nullptr);
 		DefaultMaterial->RegisterShader("Shader", nullptr);
 		s_MaterialLibrary->Add("Default", DefaultMaterial);
 
 		s_Data->CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::CameraData), 0);
+
+		s_Data->Screen = screen;
 	}
 
 	void Renderer3D::Shutdown()
@@ -39,7 +37,7 @@ namespace UE
 	{
 		if (width != 0 && height != 0)
 		{
-			s_Data->ScreenFramebuffer->Resize(width, height);
+			s_Data->Screen->Resize(width, height);
 		}
 	}
 
@@ -63,11 +61,7 @@ namespace UE
 	void Renderer3D::Flush()
 	{
 		// Bind Screen Framebuffer
-		s_Data->ScreenFramebuffer->Bind();
-
-		// Clear Screen Framebuffer to start rendering
-		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-		RenderCommand::Clear();
+		s_Data->Screen->Bind();
 		
 		// Rendering
 		RenderCommand::CullBack();
@@ -101,19 +95,21 @@ namespace UE
 
 		// End of Rendering
 		
-		// Unbind Screen Framebuffer
-		s_Data->ScreenFramebuffer->Unbind();
+		s_Data->Screen->RenderScreen();
 
-		// Clear Window Framebuffer
-		RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1.0f });
-		RenderCommand::Clear();
-
-		// Bind Screen Framebuffer Texture, Mesh and Camera ViewProjection to render it to the screen
-		s_Data->ScreenFramebuffer->BindColorAttachment(0);
-		//s_Data->ShadowBuffer->BindDepthAttachment(); // When this is enabled it is possible to see the shadow map
-		s_Data->ScreenShader->Bind();
-		s_Data->ScreenMesh->VAO->Bind();
-		RenderCommand::DrawIndexed(s_Data->ScreenMesh->VAO);
+		//// Unbind Screen Framebuffer
+		//s_Data->ScreenFramebuffer->Unbind();
+		//
+		//// Clear Window Framebuffer
+		//RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1.0f });
+		//RenderCommand::Clear();
+		//
+		//// Bind Screen Framebuffer Texture, Mesh and Camera ViewProjection to render it to the screen
+		//s_Data->ScreenFramebuffer->BindColorAttachment(0);
+		////s_Data->ShadowBuffer->BindDepthAttachment(); // When this is enabled it is possible to see the shadow map
+		//s_Data->ScreenShader->Bind();
+		//s_Data->ScreenMesh->VAO->Bind();
+		//RenderCommand::DrawIndexed(s_Data->ScreenMesh->VAO);
 
 		s_Data->MaterialIndexMap.clear();
 	}

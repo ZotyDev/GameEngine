@@ -2,6 +2,8 @@
 
 #include "Core/Base.h"
 
+#include "Renderer/Screen.h"
+
 #include "Renderer/Camera.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Framebuffer.h"
@@ -18,7 +20,7 @@ namespace UE
 	class Renderer3D
 	{
 	public:
-		static void Init(Ref<Shader> ScreenShader, Ref<Framebuffer> ScreenFramebuffer);
+		static void Init(Ref<Screen> screen);
 		static void Shutdown();
 
 		static void OnWindowResize(uint32_t width, uint32_t height);
@@ -63,13 +65,7 @@ namespace UE
 			};
 			CameraData CameraBuffer;
 
-			glm::mat4 LighViewProjectionMatrix;
-
-			Ref<Framebuffer> ScreenFramebuffer;
-			Ref<Framebuffer> ShadowBuffer;
-			Ref<Shader> ShadowShader;
-			Ref<Shader> ScreenShader;
-			Ref<Primitives::Quad> ScreenMesh;
+			Ref<Screen> Screen;
 
 			std::array<Ref<VertexArray>, 32> VaoArray;
 			std::array<Ref<Shader>, 32> ShaderArray;

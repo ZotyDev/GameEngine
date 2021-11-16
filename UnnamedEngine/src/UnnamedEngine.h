@@ -45,6 +45,7 @@
 /*============================================================*/
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderCommand.h"
+#include "Renderer/Screen.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/Renderer3D.h"
 
