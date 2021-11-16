@@ -60,10 +60,10 @@ namespace UE
 
 	void Renderer3D::Flush()
 	{
-		// Bind Screen Framebuffer
+		// Bind screen framebuffer
 		s_Data->Screen->Bind();
 		
-		// Rendering
+		// Start of rendering
 		RenderCommand::CullBack();
 
 		for (auto& it : s_Data->MaterialIndexMap)
@@ -93,23 +93,9 @@ namespace UE
 			}
 		}
 
-		// End of Rendering
-		
+		// End of rendering
+		s_Data->Screen->Unbind();
 		s_Data->Screen->RenderScreen();
-
-		//// Unbind Screen Framebuffer
-		//s_Data->ScreenFramebuffer->Unbind();
-		//
-		//// Clear Window Framebuffer
-		//RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1.0f });
-		//RenderCommand::Clear();
-		//
-		//// Bind Screen Framebuffer Texture, Mesh and Camera ViewProjection to render it to the screen
-		//s_Data->ScreenFramebuffer->BindColorAttachment(0);
-		////s_Data->ShadowBuffer->BindDepthAttachment(); // When this is enabled it is possible to see the shadow map
-		//s_Data->ScreenShader->Bind();
-		//s_Data->ScreenMesh->VAO->Bind();
-		//RenderCommand::DrawIndexed(s_Data->ScreenMesh->VAO);
 
 		s_Data->MaterialIndexMap.clear();
 	}

@@ -20,7 +20,8 @@ namespace UE
 		virtual uint32_t GetHeight() const override { return m_WindowData.Height; };
 		virtual std::string GetTitle() const override { return m_WindowData.Title; };
 
-		virtual void SetEventCallback(const EventCallbackFn& callback) override { m_WindowData.m_EventCallbackFn = callback; };
+		virtual void SetWindowEventCallback(const EventCallbackFn& callback) override { m_WindowData.m_WindowEventCallbackFn = callback; }
+		virtual void SetInputEventCallback(const EventCallbackFn& callback) override { m_WindowData.m_InputEventCallbackFn = callback; }
 		virtual void SetVSync(bool enabled) override;
 		virtual bool IsVSync() const override;
 
@@ -41,7 +42,8 @@ namespace UE
 			std::string Title;
 			bool VSync;
 
-			EventCallbackFn m_EventCallbackFn;
+			EventCallbackFn m_WindowEventCallbackFn;
+			EventCallbackFn m_InputEventCallbackFn;
 		};
 
 		WindowData m_WindowData;

@@ -92,12 +92,18 @@ void VoxelGameApp::Render()
 //	UE::Renderer2D::EndRender();
 }
 
-void VoxelGameApp::OnEvent(UE::Event& event)
+void VoxelGameApp::OnWindowEvent(UE::Event& event)
 {
 	m_CameraController->OnEvent(event);
 
 	UE::EventDispatcher dispatcher(event);
 	dispatcher.Dispatch<UE::WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
+}
+
+void VoxelGameApp::OnInputEvent(UE::Event& event)
+{
+	UE::EventDispatcher dispatcher(event);
+
 	dispatcher.Dispatch<UE::KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
 	dispatcher.Dispatch<UE::KeyReleasedEvent>(UE_BIND_EVENT_FN(OnKeyReleased));
 	dispatcher.Dispatch<UE::KeyTypedEvent>(UE_BIND_EVENT_FN(OnKeyTyped));

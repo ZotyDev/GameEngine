@@ -89,7 +89,7 @@ namespace UE
 				data.Height = height;
 
 				WindowResizeEvent event(width, height);
-				data.m_EventCallbackFn(event);
+				data.m_WindowEventCallbackFn(event);
 			});
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
@@ -97,7 +97,7 @@ namespace UE
 				// GetWindowUserPointer being used to retrieve a pointer to m_WindowData inside the WindowsWindow class
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 				WindowCloseEvent event;
-				data.m_EventCallbackFn(event);
+				data.m_WindowEventCallbackFn(event);
 			});
 
 		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focused)
@@ -107,12 +107,12 @@ namespace UE
 				if (focused)
 				{
 					WindowFocusEvent event;
-					data.m_EventCallbackFn(event);
+					data.m_WindowEventCallbackFn(event);
 				}
 				else
 				{
 					WindowLostFocusEvent event;
-					data.m_EventCallbackFn(event);
+					data.m_WindowEventCallbackFn(event);
 				}
 			});
 
@@ -121,7 +121,7 @@ namespace UE
 				// GetWindowUserPointer being used to retrieve a pointer to m_WindowData inside the WindowsWindow class
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 				WindowMovedEvent event(xpos, ypos);
-				data.m_EventCallbackFn(event);
+				data.m_WindowEventCallbackFn(event);
 			});
 
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -134,19 +134,19 @@ namespace UE
 				case GLFW_PRESS:
 				{
 					KeyPressedEvent event(static_cast<KeyCode>(key), 0);
-					data.m_EventCallbackFn(event);
+					data.m_InputEventCallbackFn(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					KeyReleasedEvent event(static_cast<KeyCode>(key));
-					data.m_EventCallbackFn(event);
+					data.m_InputEventCallbackFn(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
 					KeyPressedEvent event(static_cast<KeyCode>(key), 0);
-					data.m_EventCallbackFn(event);
+					data.m_InputEventCallbackFn(event);
 					break;
 				}
 				}
@@ -158,7 +158,7 @@ namespace UE
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 				KeyTypedEvent event(static_cast<KeyCode>(keycode));
-				data.m_EventCallbackFn(event);
+				data.m_InputEventCallbackFn(event);
 			});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
@@ -171,13 +171,13 @@ namespace UE
 				case GLFW_PRESS:
 				{
 					MouseButtonPressedEvent event(static_cast<MouseCode>(button));
-					data.m_EventCallbackFn(event);
+					data.m_InputEventCallbackFn(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
-					data.m_EventCallbackFn(event);
+					data.m_InputEventCallbackFn(event);
 					break;
 				}
 				}
@@ -189,7 +189,7 @@ namespace UE
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 				MouseScrolledEvent event((float)xOffset, (float)yOffset);
-				data.m_EventCallbackFn(event);
+				data.m_InputEventCallbackFn(event);
 			});
 
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
@@ -198,7 +198,7 @@ namespace UE
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 				MouseMovedEvent event((float)xPos, (float)yPos);
-				data.m_EventCallbackFn(event);
+				data.m_InputEventCallbackFn(event);
 			});
 
 		// Set Viewport

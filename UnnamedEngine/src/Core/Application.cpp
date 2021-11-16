@@ -27,7 +27,8 @@ namespace UE
 		UE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		m_Window = Window::Create(WindowProps("UnnamedProject"));
-		m_Window->SetEventCallback(UE_BIND_EVENT_FN(Application::OnEvent));
+		m_Window->SetWindowEventCallback(UE_BIND_EVENT_FN(Application::OnWindowEvent));
+		m_Window->SetInputEventCallback(UE_BIND_EVENT_FN(Application::OnInputEvent));
 		m_Window->SetVSync(true);
 		m_Window->SetIcon("res/icon.png");
 		
@@ -88,12 +89,11 @@ namespace UE
 		}
 	};
 
-	void Application::OnEvent(Event& event)
+	void Application::OnWindowEvent(Event& event)
 	{
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<WindowCloseEvent>(UE_BIND_EVENT_FN(OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
-		dispatcher.Dispatch<KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
@@ -101,7 +101,22 @@ namespace UE
 			{
 				break;
 			}
-			(*it)->OnEvent(event);
+			(*it)->OnWindowEvent(event);
+		}
+	}
+
+	void Application::OnInputEvent(Event& event)
+	{
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
+
+		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); it++)
+		{
+			if (event.m_Handled)
+			{
+				break;
+			}
+			(*it)->OnInputEvent(event);
 		}
 	}
 

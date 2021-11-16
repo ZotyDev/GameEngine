@@ -18,6 +18,8 @@ namespace UE
 		void Resize(UEUint32 width, UEUint32 height);
 
 		void Bind();
+		void Unbind();
+
 		void RenderScreen();
 
 	private:

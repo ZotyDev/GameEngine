@@ -30,12 +30,15 @@ namespace UE
 		
 	}
 
-	void Screen::RenderScreen()
+	void Screen::Unbind()
 	{
 		// Unbind screen frambuffer
 		m_Framebuffer->Unbind();
+	}
 
-		// Clear window frambuffer
+	void Screen::RenderScreen()
+	{
+		// Clear target frambuffer
 		RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1.0f });
 		RenderCommand::Clear();
 
@@ -44,7 +47,7 @@ namespace UE
 		m_Shader->Bind();
 		m_Mesh->VAO->Bind();
 
-		// Render screen framebuffer into window
+		// Render screen framebuffer into target framebuffer
 		RenderCommand::DrawIndexed(m_Mesh->VAO);
 	}
 }

@@ -24,7 +24,8 @@ namespace UE
 		Application();
 		virtual ~Application();
 
-		void OnEvent(Event& event);
+		void OnWindowEvent(Event& event);
+		void OnInputEvent(Event& event);
 
 		void PushLayer(Layer* layer);
 
@@ -46,6 +47,7 @@ namespace UE
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);
+	private:
 		bool OnKeyPressed(KeyPressedEvent& event);
 	private:
 		static Application* s_Instance;

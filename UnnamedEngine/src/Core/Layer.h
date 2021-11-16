@@ -16,7 +16,8 @@ namespace UE
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 		virtual void OnUpdate(Timestep timestep) {}
-		virtual void OnEvent(Event& event) {}
+		virtual void OnWindowEvent(Event& event) {}
+		virtual void OnInputEvent(Event& event) {}
 
 		const std::string& GetName() const { return m_Name; }
 	protected:

@@ -12,7 +12,8 @@ public:
 	virtual void OnDetach() override;
 
 	virtual void OnUpdate(UE::Timestep ts) override;
-	virtual void OnEvent(UE::Event& event) override;
+	virtual void OnWindowEvent(UE::Event& event) override;
+	virtual void OnInputEvent(UE::Event& event) override;
 private:
 	void Render();
 private:
