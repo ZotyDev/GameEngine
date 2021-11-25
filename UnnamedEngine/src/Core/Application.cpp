@@ -2,15 +2,15 @@
 #include "Core/Application.h"
 
 #include "Renderer/Renderer.h"
-#include "Script/Lune/LuneAPI.h"
 
 #include "ECS/System.h"
 
-#include "Renderer/Material.h"
-
-#include "Script/LuaExposer.h"
-
 // Todo: implement minify or iconify function inside OnWindowResize()
+
+#include "Script/Lune/LuneModule.h"
+#include "ECS/EntityLua.h"
+
+#include "Script/LuneExposer.h"
 
 namespace UE
 {
@@ -31,19 +31,53 @@ namespace UE
 		m_Window->SetInputEventCallback(UE_BIND_EVENT_FN(Application::OnInputEvent));
 		m_Window->SetVSync(true);
 		m_Window->SetIcon("res/icon.png");
-		
+
 		Renderer::Init();
 
-		//LuaAPI::Init();
+		m_Lune = CreateRef<LuneStack>();
 
-		LuneStack Luna;
+		//Game.Register(*m_Lune);
 
-		//ExposeCoreToLua(Luna);
+		//LuneModule Core("Core");
+		//Core["Test"]
+		//
+		//ComponentShell Health;
+		//Health.Name = "Health";
+		//Health.DataList.push_back(ComponentDataShell("Points", UEType::Uint32, 32));
+		//Health.DataList.push_back(ComponentDataShell("Regeneration", UEType::Uint32, 32));
+		//
+		//m_EntityManager = CreateRef<EntityManager>();
+		//
+		//Entity Player;
+		//m_EntityManager->CreateEntity(Player);
+		//
+		//UEUint32* Changer = (UEUint32*)Health.DataList[0].Data;
+		//Changer[Player] = 1000;
+		//
+		//Changer = (UEUint32*)Health.DataList[1].Data;
+		//Changer[Player] = 10;
+		//
+		//Changer = (UEUint32*)Health.DataList[0].Data;
+		//
+		//UE_CORE_INFO("Player Health: {0}", Changer[Player]);
+		//
+		//Changer = (UEUint32*)Health.DataList[1].Data;
+		//
+		//UE_CORE_INFO("Player Regeneration: {0}", Changer[Player]);
+
+		//UEUint32* changer = (UEUint32*)Health.DataList[0].Data;
+		//changer[0] = 32;
+
+		//UE_CORE_INFO(changer[0]);
+
+		ExposeCoreToLune(m_Lune);
+
 		//
 		//Luna.Dump();
 		//
-		//Luna.ExecuteFile("data/mods/test.lua");
+		m_Lune->ExecuteFile("data/mods/test.lua");
 		//Luna.ExecuteFile("data/core/lua/CoreFunctionality.lua");
+
 
 		m_Window->IsVSync();
 	}

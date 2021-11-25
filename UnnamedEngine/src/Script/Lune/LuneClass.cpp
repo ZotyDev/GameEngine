@@ -31,28 +31,29 @@ namespace UE
 		return *this;
 	}
 
-	void LuneClass::RegisterSelf(lua_State* L)
+	void LuneClass::Register(lua_State* L, UEUint32 index)
 	{
-		UE_LUA_TRACE("Dump from {0} start", Name);
-		LuneStack(L).Dump();
-		// Create new table current class
+		//UE_LUA_TRACE("Dump from {0} start", Name);
+		//LuneStack(L).Dump();
+
+		// Create new table for current class
 		lua_newtable(L);
 		UEUint32 ClassIndex = lua_gettop(L);
 		lua_pushvalue(L, ClassIndex);
-		lua_setfield(L, -3, Name.c_str());
+		lua_setfield(L, index - 1, Name.c_str());
 
 		// Register ctors
 		UEUint32 CtorCount = Ctors.size();
 		for (UEUint32 i = 0; i < CtorCount; i++)
 		{
-			Ctors[i].RegisterSelf(L, -2);
+			Ctors[i].Register(L, -2);
 		}
 
 		// Register class functions
 		UEUint32 FunctionCount = Functions.size();
 		for (UEUint32 i = 0; i < FunctionCount; i++)
 		{
-			Functions[i].RegisterSelf(L, -2);
+			Functions[i].Register(L, -2);
 		}
 
 		// Register dtor
@@ -66,24 +67,79 @@ namespace UE
 		}
 
 		// Register index
-		lua_pushfstring(L, "__index");
+		lua_pushstring(L, "__index");
 		lua_pushvalue(L, ClassIndex);
 		lua_settable(L, -3);
 
 		lua_remove(L, MetatableIndex);
-		
+
 		// Register other classes
 		UEUint32 ClassCount = Classes.size();
 		for (UEUint32 i = 0; i < ClassCount; i++)
 		{
-			Classes[i].RegisterSelf(L);
+			Classes[i].Register(L, -2);
 		}
 
 		lua_remove(L, ClassIndex);
 
-		UE_LUA_TRACE("Dump from {0} end", Name);
-		LuneStack(L).Dump();
-		// Register current class table
-		//lua_setfield(L, -2,Name.c_str());
+		//UE_LUA_TRACE("Dump from {0} end", Name);
+		//LuneStack(L).Dump();
+	}
+
+	void LuneClass::RegisterSelf(Ref<LuneStack> stack)
+	{
+		//UE_LUA_TRACE("Dump from {0} start", Name);
+		//LuneStack(L).Dump();
+
+		lua_State* L = stack->L;
+
+		// Create new table for current class
+		lua_newtable(L);
+		UEUint32 ClassIndex = lua_gettop(L);
+		lua_pushvalue(L, ClassIndex);
+		lua_setglobal(L, Name.c_str());
+
+		// Register ctors
+		UEUint32 CtorCount = Ctors.size();
+		for (UEUint32 i = 0; i < CtorCount; i++)
+		{
+			Ctors[i].Register(L, -2);
+		}
+
+		// Register class functions
+		UEUint32 FunctionCount = Functions.size();
+		for (UEUint32 i = 0; i < FunctionCount; i++)
+		{
+			Functions[i].Register(L, -2);
+		}
+
+		// Register dtor
+		UEUint32 MetatableIndex = lua_gettop(L);
+		luaL_newmetatable(L, (Name + "Metatable").c_str());
+		if (Dtor != nullptr)
+		{
+			lua_pushstring(L, "__gc");
+			lua_pushcfunction(L, Dtor);
+			lua_settable(L, -3);
+		}
+
+		// Register index
+		lua_pushstring(L, "__index");
+		lua_pushvalue(L, ClassIndex);
+		lua_settable(L, -3);
+
+		lua_remove(L, MetatableIndex);
+
+		// Register other classes
+		UEUint32 ClassCount = Classes.size();
+		for (UEUint32 i = 0; i < ClassCount; i++)
+		{
+			Classes[i].Register(L, -2);
+		}
+
+		lua_remove(L, ClassIndex);
+
+		//UE_LUA_TRACE("Dump from {0} end", Name);
+		//LuneStack(L).Dump();
 	}
 }

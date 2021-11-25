@@ -16,6 +16,7 @@ project "VoxelGame"
 
 	includedirs
 	{
+		"src",
 		"%{wks.location}/UnnamedEngine/src",
 		"%{wks.location}/UnnamedEngine/vendor",
 		"%{IncludeDir.GLM}",

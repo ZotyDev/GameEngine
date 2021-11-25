@@ -1,13 +1,14 @@
 #include "VoxelGameApp.h"
 
-VoxelGameApp::VoxelGameApp(UE::Ref<UE::Window> masterWindow, bool* running, bool* minimized)
-	: m_MasterWindow(masterWindow), m_Running(running), m_Minimized(minimized)
+VoxelGameApp::VoxelGameApp(UE::Ref<UE::Window> masterWindow, UE::Ref<UE::LuneStack> lune, bool* running, bool* minimized)
+	: m_MasterWindow(masterWindow), m_Lune(lune), m_Running(running), m_Minimized(minimized)
 {}
 
 UE::Ref<UE::Material> GrassMaterial = UE::CreateRef<UE::Material>();
 
 void VoxelGameApp::OnAttach()
 {
+
 	// Todo: 
 	// Implement 2D renderer (GUI, etc)
 	// Implement particles
@@ -31,10 +32,8 @@ void VoxelGameApp::OnAttach()
 
 	m_Quad = UE::CreateRef<UE::Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));
 
-	UE::LuneStack LStack;
-
 	// LoadShader LUA function register
-	UE::LuneFunction LoadShader("LoadShader", [](lua_State* L) -> int 
+	UE::LuneFunction LoadShader("LoadShader", [](lua_State* L) -> int
 		{
 			UE::ShaderLibrary* t_ShaderLibrary = (UE::ShaderLibrary*)lua_touserdata(L, lua_upvalueindex(1));
 
@@ -44,11 +43,11 @@ void VoxelGameApp::OnAttach()
 			UE_INFO("Loaded shader: {0}", t_FilePath);
 
 			return 1;
-		});
+		}, (void*)m_ShaderLibrary.get());
 
-	LoadShader.Register(LStack, (void*)m_ShaderLibrary.get());
+	LoadShader.RegisterSelf(m_Lune);
 	// Execute file that load the shaders
-	LStack.ExecuteFile("data/mods/shaders.lua");
+	m_Lune->ExecuteFile("data/mods/shaders.lua");
 	//UE::LuaAPI::ExecuteFile("data/mods/messages.lua");
 
 	m_Screen = UE::CreateRef<UE::Screen>(m_ShaderLibrary->Get("screen"), m_Framebuffer);
@@ -113,6 +112,16 @@ void VoxelGameApp::OnInputEvent(UE::Event& event)
 	dispatcher.Dispatch<UE::MouseScrolledEvent>(UE_BIND_EVENT_FN(OnMouseScrolled));
 	dispatcher.Dispatch<UE::GamepadButtonPressedEvent>(UE_BIND_EVENT_FN(OnGamepadButtonPressed));
 	dispatcher.Dispatch<UE::GamepadButtonReleasedEvent>(UE_BIND_EVENT_FN(OnGamepadButtonReleased));
+}
+
+void VoxelGameApp::RegisterWindowEvent(std::function<bool(UE::Event&)>& fn)
+{
+	m_WindowEventFns.push_back(fn);
+}
+
+void VoxelGameApp::RegisterInputEvent(std::function<bool(UE::Event&)>& fn)
+{
+	m_InputEventFns.push_back(fn);
 }
 
 bool VoxelGameApp::OnWindowResize(UE::WindowResizeEvent& event)

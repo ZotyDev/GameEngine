@@ -7,17 +7,15 @@ namespace UE
 	class LuneFunction
 	{
 	public:
-		LuneFunction(const UEString& name, lua_CFunction fn)
-			: Name(name), Function(fn)
+		LuneFunction(const UEString& name, lua_CFunction fn, void* userPtr = nullptr)
+			: Name(name), Function(fn), UserPtr(userPtr)
 		{}
 
-		void Register(LuneStack stack);
-		void Register(LuneStack stack, void* userPtr);
-
-		void RegisterSelf(lua_State* L, UEUint32 index);
+		void Register(lua_State* L, UEUint32 index);
+		void RegisterSelf(Ref<LuneStack> stack);
 
 		UEString Name;
 		lua_CFunction Function;
-		void* UserPtr = nullptr;
+		void* UserPtr;
 	};
 }

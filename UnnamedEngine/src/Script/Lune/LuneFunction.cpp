@@ -3,22 +3,43 @@
 
 namespace UE
 {
-	void LuneFunction::Register(LuneStack stack)
+	void LuneFunction::Register(lua_State* L, UEUint32 index)
 	{
-		lua_pushcfunction(stack.L, Function);
-		lua_setglobal(stack.L, Name.c_str());
+		if (UserPtr == nullptr)
+		{
+			lua_pushcfunction(L, Function);
+			lua_setfield(L, index, Name.c_str());
+			
+			return;
+		}
+		else
+		{
+			lua_pushlightuserdata(L, UserPtr);
+			lua_pushcclosure(L, Function, 1);
+			lua_setfield(L, index, Name.c_str());
+
+			return;
+		}
 	}
 
-	void LuneFunction::Register(LuneStack stack, void* userPtr)
+	void LuneFunction::RegisterSelf(Ref<LuneStack> stack)
 	{
-		lua_pushlightuserdata(stack.L, userPtr);
-		lua_pushcclosure(stack.L, Function, 1);
-		lua_setglobal(stack.L, Name.c_str());
-	}
+		lua_State* L = stack->L;
 
-	void LuneFunction::RegisterSelf(lua_State* L, UEUint32 index)
-	{
-		lua_pushcfunction(L, Function);
-		lua_setfield(L, index, Name.c_str());
+		if (UserPtr == nullptr)
+		{
+			lua_pushcfunction(L, Function);
+			lua_setglobal(L, Name.c_str());
+
+			return;
+		}
+		else
+		{
+			lua_pushlightuserdata(L, UserPtr);
+			lua_pushcclosure(L, Function, 1);
+			lua_setglobal(L, Name.c_str());
+
+			return;
+		}
 	}
 }

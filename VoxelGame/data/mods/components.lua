@@ -1,4 +1,4 @@
-local ECS = require("EntityComponentSystem")
+local ECS = Core.ECS
 
 local Position = {
     ["X"] = ECS.Type("float"),
@@ -57,20 +57,20 @@ ECS.RegisterComponent(Inventory)
 --]]
 
 local Experience = {
-    ["Level"] = "uint32",
-    ["Current"] = "uint32",
-    ["NextLevel"] = "uint32",
+    ["Level"] = ECS.Type("uint32"),
+    ["Current"] = ECS.Type("uint32"),
+    ["NextLevel"] = ECS.Type("uint32"),
 }
 ECS.RegisterComponent(Experience)
 
 local Hunger = {
-    ["Level"] = "uint32",
-    ["Required"] = "uint32",
+    ["Level"] = ECS.Type("uint32"),
+    ["Required"] = ECS.Type("uint32"),
 }
 ECS.RegisterComponent(Hunger)
 
 local Thirst = {
-    ["Level"] = "uint32",
-    ["Required"] = "uint32",
+    ["Level"] = ECS.Type("uint32"),
+    ["Required"] = ECS.Type("uint32"),
 }
 ECS.RegisterComponent(Thirst)

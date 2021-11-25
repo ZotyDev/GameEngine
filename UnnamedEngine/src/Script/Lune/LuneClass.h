@@ -17,7 +17,8 @@ namespace UE
 		LuneClass& AddCtor(const UEString& name, lua_CFunction ctor);
 		LuneClass& SetDtor(lua_CFunction dtor);
 
-		void RegisterSelf(lua_State* L);
+		void Register(lua_State* L, UEUint32 index);
+		void RegisterSelf(Ref<LuneStack> stack);
 
 		UEString Name;
 		std::vector<LuneFunction> Ctors;

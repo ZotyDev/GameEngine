@@ -24,12 +24,33 @@ extern "C"
 #define LUNE_TDTOR			10
 #define LUNE_TCLASS			11
 #define LUNE_TMODULE		12
+#define LUNE_TENUM			13
 
 #define UE_LUAF(function, ...) LuneErrorCheck(L, function(L ,__VA_ARGS__))
 
 namespace UE
 {
 	UEResult LuneErrorCheck(lua_State* L, int status);
+
+	enum class LuneType
+	{
+		None				= LUNE_NONE,
+
+		Nil					= LUNE_TNIL,
+		Boolean				= LUNE_TBOOLEAN,
+		LightUserdata		= LUNE_TLIGHUSERDATA,
+		Number				= LUNE_TNUMBER,
+		String				= LUNE_TSTRING,
+		Table				= LUNE_TTABLE,
+		Function			= LUNE_TFUNCTION,
+		Userdata			= LUNE_TUSERDATA,
+		Thread				= LUNE_TTHREAD,
+		Ctor				= LUNE_TCTOR,
+		Dtor				= LUNE_TDTOR,
+		Class				= LUNE_TCLASS,
+		Module				= LUNE_TMODULE,
+		Enum				= LUNE_TENUM
+	};
 
 	class LuneStack
 	{
@@ -50,7 +71,6 @@ namespace UE
 		void Dump();
 
 		UEResult ExecuteLine(const UEString& line);
-
 		UEResult ExecuteFile(const UEString& path);
 
 		lua_State* L;

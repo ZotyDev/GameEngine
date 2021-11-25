@@ -11,6 +11,8 @@
 
 #include "Time/Stopwatch.h"
 
+#include "Script/Lune/LuneAPI.h"
+
 #include "Timestep.h"
 #include "LayerStack.h"
 
@@ -38,6 +40,7 @@ namespace UE
 		void Run();
 	protected:
 		Ref<Window> m_Window;
+		Ref<UE::LuneStack> m_Lune;
 		bool m_Running = true;
 		bool m_Minimized = false;
 		float m_LastFrameTime = 0.0f;
