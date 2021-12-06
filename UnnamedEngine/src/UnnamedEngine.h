@@ -17,11 +17,12 @@
 
 /* Math */
 /*============================================================*/
-#include "Math/Random/Salt.h"
+#include "Math/Random/RNGStrong.h"
+#include "Math/Random/RNGFast.h"
 
 /* Time */
 /*============================================================*/
-#include "Time/localTime.h"
+#include "Time/SystemTime.h"
 #include "Time/Stopwatch.h"
 
 /* Event */

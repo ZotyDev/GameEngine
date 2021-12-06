@@ -12,6 +12,9 @@ int main(int argc, char** argv)
 	auto app = UE::CreateApplication();
 	app->Run();
 	delete app;
+
+	UE_CORE_INFO("Everything went ok! See you again :D");
+
 	return 0;
 }
 

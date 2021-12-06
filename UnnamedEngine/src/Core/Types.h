@@ -2,6 +2,23 @@
 
 #include <string>
 
+#define	UE_CHAR_MIN					-128
+#define UE_CHAR_MAX					 127
+
+#define UE_INT8_MIN					-128
+#define UE_INT8_MAX					 127
+#define UE_INT16_MIN				-32768
+#define UE_INT16_MAX				 32767
+#define UE_INT32_MIN				-2147483648
+#define UE_INT32_MAX				 2147483647
+#define UE_INT64_MIN				-9223372036854775808
+#define UE_INT64_MAX				 9223372036854775807
+
+#define UE_UINT8_MAX				0xff
+#define UE_UINT16_MAX				0xffff
+#define UE_UINT32_MAX				0xffffffff
+#define UE_UINT64_MAX				0xffffffffffffffff
+
 namespace UE
 {
 	typedef bool					UEBool;

@@ -8,7 +8,7 @@ class VoxelGame : public UE::Application
 public:
 	VoxelGame()
 	{
-		PushLayer(new VoxelGameApp(m_Window, m_Lune, &m_Running, &m_Minimized));
+		PushLayer(new VoxelGameApp(UE::CreateRef<UE::Application::SharedData>(m_Data)));
 	}
 
 	~VoxelGame()

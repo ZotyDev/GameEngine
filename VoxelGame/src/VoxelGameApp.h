@@ -5,7 +5,7 @@
 class VoxelGameApp : public UE::Layer
 {
 public:
-	VoxelGameApp(UE::Ref<UE::Window> masterWindow, UE::Ref<UE::LuneStack> lune, bool* running, bool* minimized);
+	VoxelGameApp(UE::Ref<UE::Application::SharedData> data);
 	virtual ~VoxelGameApp() = default;
 
 	virtual void OnAttach() override;
@@ -22,10 +22,7 @@ private:
 private:
 	UE::Ref<UE::Keyboard> m_Keyboard = UE::CreateRef<UE::Keyboard>();
 private:
-	UE::Ref<UE::Window> m_MasterWindow;
-	UE::Ref<UE::LuneStack> m_Lune;
-	bool* m_Running;
-	bool* m_Minimized;
+	UE::Ref<UE::Application::SharedData> m_Data;
 private:
 	UE::Ref<UE::ShaderLibrary> m_ShaderLibrary = UE::CreateRef<UE::ShaderLibrary>();
 

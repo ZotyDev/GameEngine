@@ -31,22 +31,26 @@ namespace UE
 
 		void PushLayer(Layer* layer);
 
-		Window& GetWindow() { return *m_Window; }
+		Window& GetWindow() { return *m_Data.m_Window; }
 
 		void Close();
 
 		static Application& Get() { return *s_Instance; }
 	private:
 		void Run();
-	protected:
-		Ref<Window> m_Window;
-		Ref<UE::LuneStack> m_Lune;
-		bool m_Running = true;
-		bool m_Minimized = false;
-		float m_LastFrameTime = 0.0f;
-		LayerStack m_LayerStack;
-		Stopwatch m_TimeMeasurer;
-		float m_SimulationSpeed = 1.0f;
+	public:
+		struct SharedData
+		{
+			Ref<Window> m_Window;
+			Ref<UE::LuneStack> m_Lune;
+			bool m_Running = true;
+			bool m_Minimized = false;
+			bool m_Fullscreen = false;
+			float m_LastFrameTime = 0.0f;
+			LayerStack m_LayerStack;
+			Stopwatch m_TimeMeasurer;
+			float m_SimulationSpeed = 1.0f;
+		} m_Data;
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);

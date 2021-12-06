@@ -12,6 +12,9 @@
 
 #include "Script/LuneExposer.h"
 
+#include "Math/Random/RNGStrong.h"
+#include "Math/Random/RNGFast.h"
+
 namespace UE
 {
 	Application* Application::s_Instance = nullptr;
@@ -20,66 +23,60 @@ namespace UE
 
 	Application::Application()
 	{
-		m_TimeMeasurer.Start();
+		m_Data.m_TimeMeasurer.Start();
 
 		UE_CORE_INFO("Platform is {0} endian", UE_IS_NATIVE_BIG_ENDIAN() ? "big" : "little");
 
 		UE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
-		m_Window = Window::Create(WindowProps("UnnamedProject"));
-		m_Window->SetWindowEventCallback(UE_BIND_EVENT_FN(Application::OnWindowEvent));
-		m_Window->SetInputEventCallback(UE_BIND_EVENT_FN(Application::OnInputEvent));
-		m_Window->SetVSync(true);
-		m_Window->SetIcon("res/icon.png");
+		m_Data.m_Window = Window::Create(WindowProps("UnnamedProject"));
+		m_Data.m_Window->SetWindowEventCallback(UE_BIND_EVENT_FN(Application::OnWindowEvent));
+		m_Data.m_Window->SetInputEventCallback(UE_BIND_EVENT_FN(Application::OnInputEvent));
+		m_Data.m_Window->SetVSync(true);
+		m_Data.m_Window->SetIcon("res/icon.png");
 
 		Renderer::Init();
 
-		m_Lune = CreateRef<LuneStack>();
+		Uint32RNGStrong Test(0, UE_UINT32_MAX);
 
-		//Game.Register(*m_Lune);
+		Stopwatch Timer;
+		Timer.Start();
+		for (UEUint32 i = 0; i < 1000; i++)
+		{
+			Test();
+		}
+		Timer.End();
+		UE_CORE_INFO("{0}", Timer.FormattedMilliseconds());
 
-		//LuneModule Core("Core");
-		//Core["Test"]
-		//
-		//ComponentShell Health;
-		//Health.Name = "Health";
-		//Health.DataList.push_back(ComponentDataShell("Points", UEType::Uint32, 32));
-		//Health.DataList.push_back(ComponentDataShell("Regeneration", UEType::Uint32, 32));
-		//
-		//m_EntityManager = CreateRef<EntityManager>();
-		//
-		//Entity Player;
-		//m_EntityManager->CreateEntity(Player);
-		//
-		//UEUint32* Changer = (UEUint32*)Health.DataList[0].Data;
-		//Changer[Player] = 1000;
-		//
-		//Changer = (UEUint32*)Health.DataList[1].Data;
-		//Changer[Player] = 10;
-		//
-		//Changer = (UEUint32*)Health.DataList[0].Data;
-		//
-		//UE_CORE_INFO("Player Health: {0}", Changer[Player]);
-		//
-		//Changer = (UEUint32*)Health.DataList[1].Data;
-		//
-		//UE_CORE_INFO("Player Regeneration: {0}", Changer[Player]);
+		Timer.Start();
+		for (UEUint32 i = 0; i < 1000; i++)
+		{
+			UEUint32 x = 123456789;
+			UEUint32 y = 362436069;
+			UEUint32 z = 521288629;
+			UEUint32 w = 88675123;
+			UEUint32 t = x ^ (x << 11);
+			x = y;
+			y = z;
+			z = w;
+			w = w ^ (w >> 19) ^ (t ^ (t >> 8));
+		}
 
-		//UEUint32* changer = (UEUint32*)Health.DataList[0].Data;
-		//changer[0] = 32;
+		Timer.End();
+		UE_CORE_INFO("{0}", Timer.FormattedMilliseconds());
 
-		//UE_CORE_INFO(changer[0]);
+		m_Data.m_Lune = CreateRef<LuneStack>();
 
-		ExposeCoreToLune(m_Lune);
+		ExposeCoreToLune(m_Data.m_Lune);
 
 		//
 		//Luna.Dump();
 		//
-		m_Lune->ExecuteFile("data/mods/test.lua");
+		m_Data.m_Lune->ExecuteFile("data/mods/test.lua");
 		//Luna.ExecuteFile("data/core/lua/CoreFunctionality.lua");
 
 
-		m_Window->IsVSync();
+		m_Data.m_Window->IsVSync();
 	}
 
 	Application::~Application()
@@ -91,35 +88,35 @@ namespace UE
 
 	void Application::PushLayer(Layer* layer)
 	{
-		m_LayerStack.PushLayer(layer);
+		m_Data.m_LayerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
 	void Application::Close()
 	{
-		m_Running = false;
+		m_Data.m_Running = false;
 	}
 
 	double last = 0;
 	void Application::Run()
 	{
-		while (m_Running)
+		while (m_Data.m_Running)
 		{
-			m_TimeMeasurer.End();
-			float time = m_TimeMeasurer.FormattedSeconds();
-			Timestep timestep = (time - m_LastFrameTime) * m_SimulationSpeed;
-			m_LastFrameTime = time;
+			m_Data.m_TimeMeasurer.End();
+			float time = m_Data.m_TimeMeasurer.FormattedSeconds();
+			Timestep timestep = (time - m_Data.m_LastFrameTime) * m_Data.m_SimulationSpeed;
+			m_Data.m_LastFrameTime = time;
 
-			if (!m_Minimized)
+			if (!m_Data.m_Minimized)
 			{
 				// Update layers
-				for (Layer* layer : m_LayerStack)
+				for (Layer* layer : m_Data.m_LayerStack)
 				{
 					layer->OnUpdate(timestep);
 				}
 			}
 
-			m_Window->OnUpdate();
+			m_Data.m_Window->OnUpdate();
 		}
 	};
 
@@ -129,7 +126,7 @@ namespace UE
 		dispatcher.Dispatch<WindowCloseEvent>(UE_BIND_EVENT_FN(OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
 
-		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
+		for (auto it = m_Data.m_LayerStack.rbegin(); it != m_Data.m_LayerStack.rend(); ++it)
 		{
 			if (event.m_Handled)
 			{
@@ -144,7 +141,7 @@ namespace UE
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
 
-		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); it++)
+		for (auto it = m_Data.m_LayerStack.rbegin(); it != m_Data.m_LayerStack.rend(); it++)
 		{
 			if (event.m_Handled)
 			{
@@ -156,18 +153,18 @@ namespace UE
 
 	bool Application::OnWindowClose(WindowCloseEvent& event)
 	{
-		m_Minimized = false;
-		m_Running = false;
+		m_Data.m_Minimized = false;
+		m_Data.m_Running = false;
 		return true;
 	}
 
 	bool Application::OnWindowResize(WindowResizeEvent& event)
 	{
-		m_Minimized = false;
+		m_Data.m_Minimized = false;
 
 		if (event.GetWidth() == 0 || event.GetHeight() == 0)
 		{
-			m_Minimized = true;
+			m_Data.m_Minimized = true;
 			return false;
 		}
 
@@ -181,7 +178,10 @@ namespace UE
 		switch (event.GetKeyCode())
 		{
 		case KeyCode::Escape:
-			m_Running = false;
+			m_Data.m_Running = false;
+			break;
+		case KeyCode::F11:
+			m_Data.m_Fullscreen != m_Data.m_Fullscreen;
 			break;
 		}
 		return false;

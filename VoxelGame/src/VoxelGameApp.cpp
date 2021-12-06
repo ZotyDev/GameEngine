@@ -1,7 +1,7 @@
 #include "VoxelGameApp.h"
 
-VoxelGameApp::VoxelGameApp(UE::Ref<UE::Window> masterWindow, UE::Ref<UE::LuneStack> lune, bool* running, bool* minimized)
-	: m_MasterWindow(masterWindow), m_Lune(lune), m_Running(running), m_Minimized(minimized)
+VoxelGameApp::VoxelGameApp(UE::Ref<UE::Application::SharedData> data)
+	: m_Data(data)
 {}
 
 UE::Ref<UE::Material> GrassMaterial = UE::CreateRef<UE::Material>();
@@ -45,9 +45,9 @@ void VoxelGameApp::OnAttach()
 			return 1;
 		}, (void*)m_ShaderLibrary.get());
 
-	LoadShader.RegisterSelf(m_Lune);
+	LoadShader.RegisterSelf(m_Data->m_Lune);
 	// Execute file that load the shaders
-	m_Lune->ExecuteFile("data/mods/shaders.lua");
+	m_Data->m_Lune->ExecuteFile("data/mods/shaders.lua");
 	//UE::LuaAPI::ExecuteFile("data/mods/messages.lua");
 
 	m_Screen = UE::CreateRef<UE::Screen>(m_ShaderLibrary->Get("screen"), m_Framebuffer);
@@ -137,13 +137,10 @@ bool VoxelGameApp::OnKeyPressed(UE::KeyPressedEvent& event)
 	case UE::KeyCode::LeftAlt:
 	{
 		bool CurrentState = m_Keyboard->GetState(UE::KeyCode::LeftAlt);
-		m_MasterWindow->SetCursorHidden(!CurrentState);
+		m_Data->m_Window->SetCursorHidden(!CurrentState);
 		m_Keyboard->SetState(UE::KeyCode::LeftAlt, !CurrentState);
 		break;
 	}
-	case UE::KeyCode::Escape:
-		m_Running = false;
-		break;
 	case UE::KeyCode::W:
 		m_CameraController->MoveForward();
 		break;
