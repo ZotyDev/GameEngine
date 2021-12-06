@@ -36,6 +36,7 @@ namespace UE
 
 		virtual void SetWindowEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void SetInputEventCallback(const EventCallbackFn& callback) = 0;
+		virtual void SetFullscreen(bool enabled) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
 

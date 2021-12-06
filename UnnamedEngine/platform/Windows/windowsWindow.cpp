@@ -70,6 +70,11 @@ namespace UE
 			}
 
 			m_Window = glfwCreateWindow((int)m_WindowData.Width, (int)m_WindowData.Height, m_WindowData.Title.c_str(), nullptr, nullptr);
+			int PosX = 0;
+			int PosY = 0;
+			glfwGetWindowPos(m_Window, &PosX, &PosY);
+			m_WindowData.PosX = PosX;
+			m_WindowData.PosY = PosY;
 			++s_GLFWWindowCount;
 		}
 
@@ -120,6 +125,8 @@ namespace UE
 			{
 				// GetWindowUserPointer being used to retrieve a pointer to m_WindowData inside the WindowsWindow class
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+				data.PosX = xpos;
+				data.PosY = ypos;
 				WindowMovedEvent event(xpos, ypos);
 				data.m_WindowEventCallbackFn(event);
 			});
@@ -211,6 +218,29 @@ namespace UE
 	{
 		glfwPollEvents();
 		m_Context->SwapBuffers();
+	}
+
+	void WindowsWindow::SetFullscreen(bool enabled)
+	{
+		GLFWmonitor* PrimaryMonitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* PrimaryMonitorVidMode = glfwGetVideoMode(PrimaryMonitor);
+
+		if (enabled)
+		{
+			m_WindowData.WindowedWidth = m_WindowData.Width;
+			m_WindowData.WindowedHeight = m_WindowData.Height;
+			m_WindowData.WindowedPosX = m_WindowData.PosX;
+			m_WindowData.WindowedPosY = m_WindowData.PosY;
+			glfwSetWindowMonitor(m_Window, PrimaryMonitor, 0, 0, PrimaryMonitorVidMode->width, PrimaryMonitorVidMode->height, PrimaryMonitorVidMode->refreshRate);
+		}
+		else
+		{
+			m_WindowData.Width = m_WindowData.WindowedWidth;
+			m_WindowData.Height = m_WindowData.WindowedHeight;
+			m_WindowData.PosX = m_WindowData.WindowedPosX;
+			m_WindowData.PosY = m_WindowData.WindowedPosY;
+			glfwSetWindowMonitor(m_Window, NULL, m_WindowData.PosX, m_WindowData.PosY, m_WindowData.Width, m_WindowData.Height, GLFW_DONT_CARE);
+		}
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)

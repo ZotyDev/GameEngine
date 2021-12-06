@@ -136,9 +136,8 @@ bool VoxelGameApp::OnKeyPressed(UE::KeyPressedEvent& event)
 	{
 	case UE::KeyCode::LeftAlt:
 	{
-		bool CurrentState = m_Keyboard->GetState(UE::KeyCode::LeftAlt);
-		m_Data->m_Window->SetCursorHidden(!CurrentState);
-		m_Keyboard->SetState(UE::KeyCode::LeftAlt, !CurrentState);
+		m_Data->m_Window->SetCursorHidden(false);
+		m_Keyboard->SetState(UE::KeyCode::LeftAlt, false);
 		break;
 	}
 	case UE::KeyCode::W:
@@ -168,6 +167,12 @@ bool VoxelGameApp::OnKeyReleased(UE::KeyReleasedEvent& event)
 {
 	switch (event.GetKeyCode())
 	{
+	case UE::KeyCode::LeftAlt:
+	{
+		m_Data->m_Window->SetCursorHidden(true);
+		m_Keyboard->SetState(UE::KeyCode::LeftAlt, true);
+		break;
+	}
 	case UE::KeyCode::W:
 		m_CameraController->StopForward();
 		break;
@@ -218,6 +223,7 @@ bool VoxelGameApp::OnMouseMoved(UE::MouseMovedEvent& event)
 
 	int DiffMouseX = CurrentMouseX - (int)LastMouseX;
 	int DiffMouseY = CurrentMouseY - (int)LastMouseY;
+
 	LastMouseX = CurrentMouseX;
 	LastMouseY = CurrentMouseY;
 

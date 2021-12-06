@@ -181,7 +181,8 @@ namespace UE
 			m_Data.m_Running = false;
 			break;
 		case KeyCode::F11:
-			m_Data.m_Fullscreen != m_Data.m_Fullscreen;
+			m_Data.m_Fullscreen = !m_Data.m_Fullscreen;
+			m_Data.m_Window->SetFullscreen(m_Data.m_Fullscreen);
 			break;
 		}
 		return false;

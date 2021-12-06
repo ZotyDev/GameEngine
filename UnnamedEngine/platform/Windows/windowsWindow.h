@@ -22,6 +22,7 @@ namespace UE
 
 		virtual void SetWindowEventCallback(const EventCallbackFn& callback) override { m_WindowData.m_WindowEventCallbackFn = callback; }
 		virtual void SetInputEventCallback(const EventCallbackFn& callback) override { m_WindowData.m_InputEventCallbackFn = callback; }
+		virtual void SetFullscreen(bool enabled) override;
 		virtual void SetVSync(bool enabled) override;
 		virtual bool IsVSync() const override;
 
@@ -39,6 +40,12 @@ namespace UE
 		{
 			uint32_t Width;
 			uint32_t Height;
+			UEUint32 PosX;
+			UEUint32 PosY;
+			UEUint32 WindowedWidth;
+			UEUint32 WindowedHeight;
+			UEUint32 WindowedPosX;
+			UEUint32 WindowedPosY;
 			std::string Title;
 			bool VSync;
 
