@@ -29,6 +29,8 @@ namespace UE
 		void MoveDown();
 		void StopUp();
 
+		void OnResize(float width, float height);
+
 		Ref<Camera> GetCamera() { return m_Camera; };
 
 	private:

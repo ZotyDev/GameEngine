@@ -9,17 +9,38 @@ namespace UE
 	{
 		switch (type)
 		{
+		case UE::ShaderDataType::Bool:		return GL_BOOL;
+		case UE::ShaderDataType::Int:		return GL_INT;
+		case UE::ShaderDataType::Uint:		return GL_UNSIGNED_INT;
 		case UE::ShaderDataType::Float:		return GL_FLOAT;
-		case UE::ShaderDataType::Float2:	return GL_FLOAT;
-		case UE::ShaderDataType::Float3:	return GL_FLOAT;
-		case UE::ShaderDataType::Float4:	return GL_FLOAT;
+		case UE::ShaderDataType::Double:	return GL_DOUBLE;
+		case UE::ShaderDataType::BVec2:		return GL_BOOL;
+		case UE::ShaderDataType::BVec3:		return GL_BOOL;
+		case UE::ShaderDataType::BVec4:		return GL_BOOL;
+		case UE::ShaderDataType::IVec2:		return GL_INT;
+		case UE::ShaderDataType::IVec3:		return GL_INT;
+		case UE::ShaderDataType::IVec4:		return GL_INT;
+		case UE::ShaderDataType::UVec2:		return GL_UNSIGNED_INT;
+		case UE::ShaderDataType::UVec3:		return GL_UNSIGNED_INT;
+		case UE::ShaderDataType::UVec4:		return GL_UNSIGNED_INT;
+		case UE::ShaderDataType::Vec2:		return GL_FLOAT;
+		case UE::ShaderDataType::Vec3:		return GL_FLOAT;
+		case UE::ShaderDataType::Vec4:		return GL_FLOAT;
+		case UE::ShaderDataType::DVec2:		return GL_DOUBLE;
+		case UE::ShaderDataType::DVec3:		return GL_DOUBLE;
+		case UE::ShaderDataType::DVec4:		return GL_DOUBLE;
+		case UE::ShaderDataType::Mat2:		return GL_FLOAT;
 		case UE::ShaderDataType::Mat3:		return GL_FLOAT;
 		case UE::ShaderDataType::Mat4:		return GL_FLOAT;
-		case UE::ShaderDataType::Int:		return GL_INT;
-		case UE::ShaderDataType::Int2:		return GL_INT;
-		case UE::ShaderDataType::Int3:		return GL_INT;
-		case UE::ShaderDataType::Int4:		return GL_INT;
-		case UE::ShaderDataType::Bool:		return GL_BOOL;
+		case UE::ShaderDataType::Mat2x2:	return GL_FLOAT;
+		case UE::ShaderDataType::Mat2x3:	return GL_FLOAT;
+		case UE::ShaderDataType::Mat2x4:	return GL_FLOAT;
+		case UE::ShaderDataType::Mat3x2:	return GL_FLOAT;
+		case UE::ShaderDataType::Mat3x3:	return GL_FLOAT;
+		case UE::ShaderDataType::Mat3x4:	return GL_FLOAT;
+		case UE::ShaderDataType::Mat4x2:	return GL_FLOAT;
+		case UE::ShaderDataType::Mat4x3:	return GL_FLOAT;
+		case UE::ShaderDataType::Mat4x4:	return GL_FLOAT;
 		}
 
 		UE_CORE_ERROR("Unknown ShaderDataType!");
@@ -57,9 +78,9 @@ namespace UE
 			switch (element.Type)
 			{
 			case ShaderDataType::Float:
-			case ShaderDataType::Float2:
-			case ShaderDataType::Float3:
-			case ShaderDataType::Float4:
+			case ShaderDataType::Vec2:
+			case ShaderDataType::Vec3:
+			case ShaderDataType::Vec4:
 			{
 				glEnableVertexAttribArray(m_VertexBufferIndex);
 				glVertexAttribPointer(m_VertexBufferIndex,
@@ -71,11 +92,32 @@ namespace UE
 				m_VertexBufferIndex++;
 				break;
 			}
+			case ShaderDataType::Double:
+			case ShaderDataType::DVec2:
+			case ShaderDataType::DVec3:
+			case ShaderDataType::DVec4:
+			{
+				glEnableVertexAttribArray(m_VertexBufferIndex);
+				glVertexAttribLPointer(m_VertexBufferIndex,
+					element.GetComponentCount(),
+					ShaderDataTypeToOpenGLBaseType(element.Type),
+					layout.GetStride(),
+					(const void*)element.Offset);
+				m_VertexBufferIndex++;
+				break;
+			}
 			case ShaderDataType::Int:
-			case ShaderDataType::Int2:
-			case ShaderDataType::Int3:
-			case ShaderDataType::Int4:
+			case ShaderDataType::IVec2:
+			case ShaderDataType::IVec3:
+			case ShaderDataType::IVec4:
+			case ShaderDataType::Uint:
+			case ShaderDataType::UVec2:
+			case ShaderDataType::UVec3:
+			case ShaderDataType::UVec4:
 			case ShaderDataType::Bool:
+			case ShaderDataType::BVec2:
+			case ShaderDataType::BVec3:
+			case ShaderDataType::BVec4:
 			{
 				glEnableVertexAttribArray(m_VertexBufferIndex);
 				glVertexAttribIPointer(m_VertexBufferIndex,
@@ -86,8 +128,18 @@ namespace UE
 				m_VertexBufferIndex++;
 				break;
 			}
+			case ShaderDataType::Mat2:
 			case ShaderDataType::Mat3:
 			case ShaderDataType::Mat4:
+			case ShaderDataType::Mat2x2:
+			case ShaderDataType::Mat2x3:
+			case ShaderDataType::Mat2x4:
+			case ShaderDataType::Mat3x2:
+			case ShaderDataType::Mat3x3:
+			case ShaderDataType::Mat3x4:
+			case ShaderDataType::Mat4x2:
+			case ShaderDataType::Mat4x3:
+			case ShaderDataType::Mat4x4:
 			{
 				uint8_t count = element.GetComponentCount();
 				for (uint8_t i = 0; i < count; i++)

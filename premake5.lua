@@ -9,16 +9,19 @@ IncludeDir = {}
 	IncludeDir["STB"] = "%{wks.location}/UnnamedEngine/vendor/STB"
 	IncludeDir["LUA"] = "%{wks.location}/UnnamedEngine/vendor/LUA"
 	IncludeDir["FreeType"] = "%{wks.location}/UnnamedEngine/vendor/FreeType/include"
+	IncludeDir["ImGui"] = "%{wks.location}/UnnamedEngine/vendor/imgui"
 	IncludeDir["Vulkan"] = "C:/VulkanSDK/1.2.189.2/Include"
 	IncludeDir["OpenAL"] = "%{wks.location}/UnnamedEngine/vendor/OpenAL-Soft/include"
+	IncludeDir["Emscripten"] = "C:/emsdk/upstream/emscripten/system/include"
 
 -- Library Directories
 LibDir = {}
 	LibDir["OpenAL"] = "%{wks.location}/UnnamedEngine/vendor/OpenAL-Soft/libs/Win64"
 	LibDir["Vulkan"] = "C:/VulkanSDK/1.2.189.2/Lib"
+	LibDir["Emscripten"] = "C:/emsdk/upstream/emscripten/system/lib"
 
 workspace "GameEngine"
-	startproject "VoxelGame"
+	startproject "UnnamedEditor"
 	
 	filter {"options:arch=x64"}
 		architecture "x64"
@@ -40,7 +43,9 @@ workspace "GameEngine"
 		include "UnnamedEngine/vendor/LUA"
 		include "UnnamedEngine/vendor/FreeType"
 		include "UnnamedEngine/vendor/GLFW"
+		include "UnnamedEngine/vendor/imgui"
 	group ""
 
 	include "UnnamedEngine"
+	include "UnnamedEditor"
 	include "VoxelGame"

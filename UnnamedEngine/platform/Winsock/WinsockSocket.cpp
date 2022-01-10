@@ -11,7 +11,7 @@ namespace UE
 
 	WinsockSocket::~WinsockSocket()
 	{
-
+		Shutdown();
 	}
 
 	int WinsockSocket::Init()

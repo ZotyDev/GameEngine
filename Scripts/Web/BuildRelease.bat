@@ -1,0 +1,1 @@
+UEWasm.bat build release

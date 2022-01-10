@@ -4,6 +4,11 @@
 /*============================================================*/
 #include "Core/PlatformDetection.h"
 
+/* Files */
+/*============================================================*/
+#include <filesystem>
+#include <fstream>
+
 /* Utils */
 /*============================================================*/
 #include <functional>
@@ -32,7 +37,6 @@
 /*============================================================*/
 #include <iostream>
 #include <sstream>
-#include <fstream>
 
 /* Data Types */
 /*============================================================*/
@@ -45,6 +49,8 @@
 #include <deque>
 #include <vector>
 #include <initializer_list>
+#include <unordered_map>
+#include <map>
 
 /* Engine Stuff */
 /*============================================================*/

@@ -11,7 +11,7 @@ namespace UE
 	{
 	#ifdef UE_PLATFORM_WINDOWS
 		Scope<Window> t_Window = CreateScope<WindowsWindow>();
-		if (t_Window->Init(props))
+		if (t_Window->Init(props) == UEResult::Error)
 		{
 			UE_CORE_ERROR("Failed to initialize Window!");
 			return nullptr;

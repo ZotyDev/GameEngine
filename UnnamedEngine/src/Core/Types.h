@@ -44,26 +44,26 @@ namespace UE
 
 	enum class UEType
 	{
-		Bool,
+		Bool		= 0,
 
-		Char,
+		Char		= 1,
 
-		Int8,
-		Int16,
-		Int32,
-		Int64,
+		Int8		= 2,
+		Int16		= 3,
+		Int32		= 4,
+		Int64		= 5,
 
-		Uint8,
-		Uint16,
-		Uint32,
-		Uint64,
+		Uint8		= 6,
+		Uint16		= 7,
+		Uint32		= 8,
+		Uint64		= 9,
 
-		Float,
-		Double,
+		Float		= 10,
+		Double		= 11,
 
-		String,
+		String		= 12,
 
-		Int = Int32
+		Int			= Int32
 	};
 
 	struct UEVDescriptor

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Core/Window.h"
-#include "Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
+
+#include "Renderer/GraphicsContext.h"
 
 namespace UE
 {
@@ -12,13 +13,13 @@ namespace UE
 	public:
 		~WindowsWindow();
 
-		virtual int Init(const WindowProps& props);
+		virtual UEResult Init(const WindowProps& props) override;
 
 		virtual void OnUpdate() override;
 
-		virtual uint32_t GetWidth() const override { return m_WindowData.Width; };
-		virtual uint32_t GetHeight() const override { return m_WindowData.Height; };
-		virtual std::string GetTitle() const override { return m_WindowData.Title; };
+		virtual UEUint32 GetWidth() const override { return m_WindowData.Width; }
+		virtual UEUint32 GetHeight() const override { return m_WindowData.Height; }
+		virtual UEString GetTitle() const override { return m_WindowData.Title; }
 
 		virtual void SetWindowEventCallback(const EventCallbackFn& callback) override { m_WindowData.m_WindowEventCallbackFn = callback; }
 		virtual void SetInputEventCallback(const EventCallbackFn& callback) override { m_WindowData.m_InputEventCallbackFn = callback; }
@@ -26,11 +27,11 @@ namespace UE
 		virtual void SetVSync(bool enabled) override;
 		virtual bool IsVSync() const override;
 
-		virtual UEResult SetIcon(const std::string& path) override;
+		virtual UEResult SetIcon(const UEString& path) override;
 
 		virtual void SetCursorHidden(bool hidden) override;
 
-		virtual void* GetNativeWindow() { return m_Window; };
+		virtual void* GetNativeWindow() override { return m_Window; }
 	private:
 		GLFWwindow* m_Window = nullptr;
 		Scope<GraphicsContext> m_Context;
@@ -38,15 +39,15 @@ namespace UE
 		// WindowData class that stores universal attributes
 		struct WindowData
 		{
-			uint32_t Width;
-			uint32_t Height;
+			UEUint32 Width;
+			UEUint32 Height;
 			UEUint32 PosX;
 			UEUint32 PosY;
 			UEUint32 WindowedWidth;
 			UEUint32 WindowedHeight;
 			UEUint32 WindowedPosX;
 			UEUint32 WindowedPosY;
-			std::string Title;
+			UEString Title;
 			bool VSync;
 
 			EventCallbackFn m_WindowEventCallbackFn;

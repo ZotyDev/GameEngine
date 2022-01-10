@@ -61,6 +61,11 @@ namespace UE
 		m_UpMovement = 0.0f;
 	}
 
+	void CameraController::OnResize(float width, float height)
+	{
+		m_Camera->SetViewportSize(width, height);
+	}
+
 	void CameraController::OnEvent(Event& event)
 	{
 		EventDispatcher dispatcher(event);

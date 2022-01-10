@@ -1,7 +1,7 @@
 #include "uepch.h"
 #include "Interface/Text/Font.h"
 
-#if defined(UE_PLATFORM_WINDOWS)
+#if defined(UE_PLATFORM_WINDOWS) or defined (UE_PLATFORM_WEB)
 	#include "FreeType/FreeTypeFont.h"
 #endif
 
@@ -15,7 +15,7 @@ namespace UE
 			UE_CORE_ASSERT(false, "TextAPI::None is currently not supported");
 			return nullptr;
 
-		#if defined(UE_PLATFORM_WINDOWS)
+		#if defined(UE_PLATFORM_WINDOWS) or defined (UE_PLATFORM_WEB)
 		case UE::TextAPI::API::FreeType:
 			return CreateRef<FreeTypeFont>();
 		#endif

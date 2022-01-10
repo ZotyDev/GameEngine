@@ -1,0 +1,7 @@
+local Material = {
+    ["v_Position"] = {15, 0},
+    ["v_Texture"] = {14, 0},
+    ["Texture"] = {14, 1},
+    ["FragColor"] = {16, 3},
+    ["u_Transform"] = {22, 4},
+}

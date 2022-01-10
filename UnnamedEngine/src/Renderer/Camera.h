@@ -19,6 +19,7 @@ namespace UE
 		{
 			m_ViewportWidth = width;
 			m_ViewportHeight = height;
+			Update();
 		}
 
 		void Update()

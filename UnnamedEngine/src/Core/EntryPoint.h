@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Base.h"
 
-#ifdef UE_PLATFORM_WINDOWS
+#if defined(UE_PLATFORM_WINDOWS)
 
 extern UE::Application* UE::CreateApplication();
 
@@ -20,7 +20,26 @@ int main(int argc, char** argv)
 
 #endif
 
-#ifdef UE_PLATFORM_ANDROID
+#if defined(UE_PLATFORM_WEB)
+
+extern UE::Application* UE::CreateApplication();
+
+int main(int argc, char** argv)
+{
+	UE::Log::Init();
+
+	auto app = UE::CreateApplication();
+	app->Run();
+	delete app;
+
+	UE_CORE_INFO("Everything wen ok! See you again :D");
+
+	return 0;
+}
+
+#endif
+
+#if defined(UE_PLATFORM_ANDROID)
 
 extern UE::Application* UE::CreateApplication();
 

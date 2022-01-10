@@ -1,257 +1,262 @@
 #include "VoxelGameApp.h"
 
-VoxelGameApp::VoxelGameApp(UE::Ref<UE::Application::SharedData> data)
-	: m_Data(data)
-{}
+#include <imgui/imgui.h>
 
-UE::Ref<UE::Material> GrassMaterial = UE::CreateRef<UE::Material>();
-
-void VoxelGameApp::OnAttach()
+namespace UE
 {
+	VoxelGameApp::VoxelGameApp(Ref<Application::SharedData> data)
+		: Layer("VoxelGameApp"), m_Data(data)
+	{}
 
-	// Todo: 
-	// Implement 2D renderer (GUI, etc)
-	// Implement particles
+	Ref<Material> GrassMaterial = CreateRef<Material>();
 
-	m_Texture2D = UE::Texture2D::Create();
-	const std::string TexturePath = "data/textures/grass.png";
-	if (m_Texture2D->LoadFromSource(TexturePath) == UE::UEResult::Error)
+	void VoxelGameApp::OnAttach()
 	{
-		UE_CORE_ERROR("Failed to load {0}: not found", TexturePath);
-	}
+		m_Data->m_Lune->ExecuteFile("assets/mods/test.lua");
 
-	m_Camera = UE::CreateRef<UE::Camera3D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
-	m_CameraController = UE::CreateRef<UE::CameraController>(m_Camera);
-
-	UE::FramebufferSpecification specs;
-	specs.Width = 1280;
-	specs.Height = 720;
-	specs.Attachments.Attachments.push_back(UE::FramebufferTextureSpecification(UE::FramebufferTextureFormat::Color));
-	specs.Attachments.Attachments.push_back(UE::FramebufferTextureSpecification(UE::FramebufferTextureFormat::Depth));
-	UE::Ref<UE::Framebuffer> m_Framebuffer = UE::Framebuffer::Create(specs);
-
-	m_Quad = UE::CreateRef<UE::Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));
-
-	// LoadShader LUA function register
-	UE::LuneFunction LoadShader("LoadShader", [](lua_State* L) -> int
+		m_Texture2D = Texture2D::Create();
+		const UEString TexturePath = "assets/textures/grass.png";
+		if (m_Texture2D->LoadFromSource(TexturePath) == UEResult::Error)
 		{
-			UE::ShaderLibrary* t_ShaderLibrary = (UE::ShaderLibrary*)lua_touserdata(L, lua_upvalueindex(1));
+			UE_CORE_ERROR("Failed to load {0}: not found", TexturePath);
+		}
 
-			const char* t_FilePath = (const char*)lua_tostring(L, -1);
+		m_Camera = CreateRef<Camera3D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
+		m_CameraController = CreateRef<CameraController>(m_Camera);
 
-			t_ShaderLibrary->Load(t_FilePath);
-			UE_INFO("Loaded shader: {0}", t_FilePath);
+		FramebufferSpecification specs;
+		specs.Width = 1280;
+		specs.Height = 720;
+		specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Color));
+		specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Depth));
+		Ref<Framebuffer> m_Framebuffer = Framebuffer::Create(specs);
 
-			return 1;
-		}, (void*)m_ShaderLibrary.get());
+		m_Quad = CreateRef<Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));
 
-	LoadShader.RegisterSelf(m_Data->m_Lune);
-	// Execute file that load the shaders
-	m_Data->m_Lune->ExecuteFile("data/mods/shaders.lua");
-	//UE::LuaAPI::ExecuteFile("data/mods/messages.lua");
+		// LoadShader LUA function register
+		UE::LuneFunction LoadShader("LoadShader", [](lua_State* L) -> int
+			{
+				UE::ShaderLibrary* t_ShaderLibrary = (ShaderLibrary*)lua_touserdata(L, lua_upvalueindex(1));
 
-	m_Screen = UE::CreateRef<UE::Screen>(m_ShaderLibrary->Get("screen"), m_Framebuffer);
+				const char* t_FilePath = (const char*)lua_tostring(L, -1);
 
-	UE::Renderer3D::Init(m_Screen);
-	//UE::Renderer2D::Init(m_ShaderLibrary->Get("screen"), m_Framebuffer, m_ShaderLibrary->Get("quad"));
+				t_ShaderLibrary->Load(t_FilePath);
+				UE_INFO("Loaded shader: {0}", t_FilePath);
 
-	// TEMPORARY MATERIAL
-	GrassMaterial->RegisterShader("Shader", m_ShaderLibrary->Get("default"));
-	GrassMaterial->RegisterShader("Shadow", m_ShaderLibrary->Get("shadow"));
-	GrassMaterial->RegisterTexture("Texture", m_Texture2D);
-}
+				return 1;
+			}, (void*)m_ShaderLibrary.get());
 
-void VoxelGameApp::OnDetach()
-{
-}
+		LoadShader.RegisterSelf(m_Data->m_Lune);
+		// Execute file that load the shaders
+		m_Data->m_Lune->ExecuteFile("assets/mods/shaders.lua");
 
-void VoxelGameApp::OnUpdate(UE::Timestep timestep)
-{
-	m_CameraController->OnUpdate(timestep);
+		m_Screen = CreateRef<UE::Screen>(m_ShaderLibrary->Get("screen"), m_Framebuffer);
 
-	Render();
-}
+		Renderer3D::Init(m_Screen);
 
-void VoxelGameApp::Render()
-{
-	UE::Renderer3D::BeginRender(m_CameraController->GetCamera());
-//	UE::Renderer2D::BeginRender(m_CameraController->GetCamera());
-	/*============================================================================*/
-
-	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
-	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 1.0f, 0.0f, 0.0f });
-	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 1.0f, 0.0f });
-	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 1.0f });
-	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { -1.0f, 0.0f, 0.0f });
-	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, -1.0f, 0.0f });
-	UE::Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, -1.0f });
-
-	/*============================================================================*/
-	UE::Renderer3D::EndRender();
-//	UE::Renderer2D::EndRender();
-}
-
-void VoxelGameApp::OnWindowEvent(UE::Event& event)
-{
-	m_CameraController->OnEvent(event);
-
-	UE::EventDispatcher dispatcher(event);
-	dispatcher.Dispatch<UE::WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
-}
-
-void VoxelGameApp::OnInputEvent(UE::Event& event)
-{
-	UE::EventDispatcher dispatcher(event);
-
-	dispatcher.Dispatch<UE::KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
-	dispatcher.Dispatch<UE::KeyReleasedEvent>(UE_BIND_EVENT_FN(OnKeyReleased));
-	dispatcher.Dispatch<UE::KeyTypedEvent>(UE_BIND_EVENT_FN(OnKeyTyped));
-	dispatcher.Dispatch<UE::MouseButtonPressedEvent>(UE_BIND_EVENT_FN(OnMousePressed));
-	dispatcher.Dispatch<UE::MouseButtonReleasedEvent>(UE_BIND_EVENT_FN(OnMouseReleased));
-	dispatcher.Dispatch<UE::MouseMovedEvent>(UE_BIND_EVENT_FN(OnMouseMoved));
-	dispatcher.Dispatch<UE::MouseScrolledEvent>(UE_BIND_EVENT_FN(OnMouseScrolled));
-	dispatcher.Dispatch<UE::GamepadButtonPressedEvent>(UE_BIND_EVENT_FN(OnGamepadButtonPressed));
-	dispatcher.Dispatch<UE::GamepadButtonReleasedEvent>(UE_BIND_EVENT_FN(OnGamepadButtonReleased));
-}
-
-void VoxelGameApp::RegisterWindowEvent(std::function<bool(UE::Event&)>& fn)
-{
-	m_WindowEventFns.push_back(fn);
-}
-
-void VoxelGameApp::RegisterInputEvent(std::function<bool(UE::Event&)>& fn)
-{
-	m_InputEventFns.push_back(fn);
-}
-
-bool VoxelGameApp::OnWindowResize(UE::WindowResizeEvent& event)
-{
-	UE::Renderer3D::OnWindowResize(event.GetWidth(), event.GetHeight());
-	return false;
-}
-
-bool VoxelGameApp::OnKeyPressed(UE::KeyPressedEvent& event)
-{
-	switch (event.GetKeyCode())
-	{
-	case UE::KeyCode::LeftAlt:
-	{
-		m_Data->m_Window->SetCursorHidden(false);
-		m_Keyboard->SetState(UE::KeyCode::LeftAlt, false);
-		break;
-	}
-	case UE::KeyCode::W:
-		m_CameraController->MoveForward();
-		break;
-	case UE::KeyCode::S:
-		m_CameraController->MoveBackward();
-		break;
-	case UE::KeyCode::A:
-		m_CameraController->MoveLeft();
-		break;
-	case UE::KeyCode::D:
-		m_CameraController->MoveRight();
-		break;
-	case UE::KeyCode::E:
-		m_CameraController->MoveUp();
-		break;
-	case UE::KeyCode::Q:
-		m_CameraController->MoveDown();
-		break;
+		// TEMPORARY MATERIAL
+		GrassMaterial->RegisterShader("Shader", m_ShaderLibrary->Get("default"));
+		GrassMaterial->RegisterShader("Shadow", m_ShaderLibrary->Get("shadow"));
+		GrassMaterial->RegisterTexture("Texture", m_Texture2D);
 	}
 
-	return false;
-}
-
-bool VoxelGameApp::OnKeyReleased(UE::KeyReleasedEvent& event)
-{
-	switch (event.GetKeyCode())
+	void VoxelGameApp::OnDetach()
 	{
-	case UE::KeyCode::LeftAlt:
-	{
-		m_Data->m_Window->SetCursorHidden(true);
-		m_Keyboard->SetState(UE::KeyCode::LeftAlt, true);
-		break;
-	}
-	case UE::KeyCode::W:
-		m_CameraController->StopForward();
-		break;
-	case UE::KeyCode::S:
-		m_CameraController->StopForward();
-		break;
-	case UE::KeyCode::A:
-		m_CameraController->StopRight();
-		break;
-	case UE::KeyCode::D:
-		m_CameraController->StopRight();
-		break;
-	case UE::KeyCode::E:
-		m_CameraController->StopUp();
-		break;
-	case UE::KeyCode::Q:
-		m_CameraController->StopUp();
-		break;
 	}
 
-	return false;
-}
-
-bool VoxelGameApp::OnKeyTyped(UE::KeyTypedEvent& event)
-{
-	return false;
-}
-
-bool VoxelGameApp::OnMousePressed(UE::MouseButtonPressedEvent& event)
-{
-	return false;
-}
-
-bool VoxelGameApp::OnMouseReleased(UE::MouseButtonReleasedEvent& event)
-{
-	return false;
-}
-
-float LastMouseX = 0;
-float LastMouseY = 0;
-
-bool VoxelGameApp::OnMouseMoved(UE::MouseMovedEvent& event)
-{
-	UE::Ref<UE::Camera> CurrentCamera = m_CameraController->GetCamera();
-
-	int CurrentMouseX = (int)event.GetX();
-	int CurrentMouseY = (int)event.GetY();
-
-	int DiffMouseX = CurrentMouseX - (int)LastMouseX;
-	int DiffMouseY = CurrentMouseY - (int)LastMouseY;
-
-	LastMouseX = CurrentMouseX;
-	LastMouseY = CurrentMouseY;
-
-	if (m_Keyboard->GetState(UE::KeyCode::LeftAlt))
+	void VoxelGameApp::OnUpdate(Timestep timestep)
 	{
-		float CurrentYaw = CurrentCamera->GetYaw();
-		float CurrentPitch = CurrentCamera->GetPitch();
+		m_CameraController->OnUpdate(timestep);
 
-		CurrentCamera->SetYaw(CurrentYaw + (DiffMouseX * 0.001f));
-		CurrentCamera->SetPitch(CurrentPitch + (DiffMouseY * 0.001f));
+		Render();
 	}
 
-	return false;
-}
+	void VoxelGameApp::OnImGuiRender()
+	{
+		//ImGui::Begin("Settings");
 
-bool VoxelGameApp::OnMouseScrolled(UE::MouseScrolledEvent& event)
-{
-	m_Camera->ZoomIn(event.GetXOffset() * 0.25f);
+		//ImGui::End();
+	}
 
-	return false;
-}
+	void VoxelGameApp::Render()
+	{
+		Renderer3D::BeginRender(m_CameraController->GetCamera());
+		/*============================================================================*/
 
-bool VoxelGameApp::OnGamepadButtonPressed(UE::GamepadButtonPressedEvent& event)
-{
-	return false;
-}
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 1.0f, 0.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 1.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 1.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { -1.0f, 0.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, -1.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, -1.0f });
 
-bool VoxelGameApp::OnGamepadButtonReleased(UE::GamepadButtonReleasedEvent& event)
-{
-	return false;
+		/*============================================================================*/
+		Renderer3D::EndRender();
+	}
+
+	void VoxelGameApp::OnWindowEvent(Event& event)
+	{
+		m_CameraController->OnEvent(event);
+
+		UE::EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
+	}
+
+	void VoxelGameApp::OnInputEvent(Event& event)
+	{
+		UE::EventDispatcher dispatcher(event);
+
+		dispatcher.Dispatch<KeyPressedEvent>(UE_BIND_EVENT_FN(OnKeyPressed));
+		dispatcher.Dispatch<KeyReleasedEvent>(UE_BIND_EVENT_FN(OnKeyReleased));
+		dispatcher.Dispatch<KeyTypedEvent>(UE_BIND_EVENT_FN(OnKeyTyped));
+		dispatcher.Dispatch<MouseButtonPressedEvent>(UE_BIND_EVENT_FN(OnMousePressed));
+		dispatcher.Dispatch<MouseButtonReleasedEvent>(UE_BIND_EVENT_FN(OnMouseReleased));
+		dispatcher.Dispatch<MouseMovedEvent>(UE_BIND_EVENT_FN(OnMouseMoved));
+		dispatcher.Dispatch<MouseScrolledEvent>(UE_BIND_EVENT_FN(OnMouseScrolled));
+		dispatcher.Dispatch<GamepadButtonPressedEvent>(UE_BIND_EVENT_FN(OnGamepadButtonPressed));
+		dispatcher.Dispatch<GamepadButtonReleasedEvent>(UE_BIND_EVENT_FN(OnGamepadButtonReleased));
+	}
+
+	void VoxelGameApp::RegisterWindowEvent(std::function<bool(Event&)>& fn)
+	{
+		m_WindowEventFns.push_back(fn);
+	}
+
+	void VoxelGameApp::RegisterInputEvent(std::function<bool(Event&)>& fn)
+	{
+		m_InputEventFns.push_back(fn);
+	}
+
+	bool VoxelGameApp::OnWindowResize(WindowResizeEvent& event)
+	{
+		UE::Renderer3D::OnWindowResize(event.GetWidth(), event.GetHeight());
+		return false;
+	}
+
+	bool VoxelGameApp::OnKeyPressed(KeyPressedEvent& event)
+	{
+		switch (event.GetKeyCode())
+		{
+		case UE::KeyCode::LeftAlt:
+		{
+			m_Data->m_Window->SetCursorHidden(false);
+			m_Keyboard->SetState(KeyCode::LeftAlt, false);
+			break;
+		}
+		case UE::KeyCode::W:
+			m_CameraController->MoveForward();
+			break;
+		case UE::KeyCode::S:
+			m_CameraController->MoveBackward();
+			break;
+		case UE::KeyCode::A:
+			m_CameraController->MoveLeft();
+			break;
+		case UE::KeyCode::D:
+			m_CameraController->MoveRight();
+			break;
+		case UE::KeyCode::E:
+			m_CameraController->MoveUp();
+			break;
+		case UE::KeyCode::Q:
+			m_CameraController->MoveDown();
+			break;
+		}
+
+		return false;
+	}
+
+	bool VoxelGameApp::OnKeyReleased(KeyReleasedEvent& event)
+	{
+		switch (event.GetKeyCode())
+		{
+		case UE::KeyCode::LeftAlt:
+		{
+			m_Data->m_Window->SetCursorHidden(true);
+			m_Keyboard->SetState(KeyCode::LeftAlt, true);
+			break;
+		}
+		case UE::KeyCode::W:
+			m_CameraController->StopForward();
+			break;
+		case UE::KeyCode::S:
+			m_CameraController->StopForward();
+			break;
+		case UE::KeyCode::A:
+			m_CameraController->StopRight();
+			break;
+		case UE::KeyCode::D:
+			m_CameraController->StopRight();
+			break;
+		case UE::KeyCode::E:
+			m_CameraController->StopUp();
+			break;
+		case UE::KeyCode::Q:
+			m_CameraController->StopUp();
+			break;
+		}
+
+		return false;
+	}
+
+	bool VoxelGameApp::OnKeyTyped(KeyTypedEvent& event)
+	{
+		return false;
+	}
+
+	bool VoxelGameApp::OnMousePressed(MouseButtonPressedEvent& event)
+	{
+		return false;
+	}
+
+	bool VoxelGameApp::OnMouseReleased(MouseButtonReleasedEvent& event)
+	{
+		return false;
+	}
+
+	float LastMouseX = 0;
+	float LastMouseY = 0;
+
+	bool VoxelGameApp::OnMouseMoved(MouseMovedEvent& event)
+	{
+		UE::Ref<UE::Camera> CurrentCamera = m_CameraController->GetCamera();
+
+		int CurrentMouseX = (int)event.GetX();
+		int CurrentMouseY = (int)event.GetY();
+
+		int DiffMouseX = CurrentMouseX - (int)LastMouseX;
+		int DiffMouseY = CurrentMouseY - (int)LastMouseY;
+
+		LastMouseX = CurrentMouseX;
+		LastMouseY = CurrentMouseY;
+
+		if (m_Keyboard->GetState(UE::KeyCode::LeftAlt))
+		{
+			float CurrentYaw = CurrentCamera->GetYaw();
+			float CurrentPitch = CurrentCamera->GetPitch();
+
+			CurrentCamera->SetYaw(CurrentYaw + (DiffMouseX * 0.001f));
+			CurrentCamera->SetPitch(CurrentPitch + (DiffMouseY * 0.001f));
+		}
+
+		return false;
+	}
+
+	bool VoxelGameApp::OnMouseScrolled(MouseScrolledEvent& event)
+	{
+		m_Camera->ZoomIn(event.GetXOffset() * 0.25f);
+
+		return false;
+	}
+
+	bool VoxelGameApp::OnGamepadButtonPressed(GamepadButtonPressedEvent& event)
+	{
+		return false;
+	}
+
+	bool VoxelGameApp::OnGamepadButtonReleased(GamepadButtonReleasedEvent& event)
+	{
+		return false;
+	}
 }

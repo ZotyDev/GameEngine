@@ -29,27 +29,8 @@ namespace UE
 		static void EndRender();
 		static void Flush();
 
-// 		static UEResult RegisterMaterial(const std::string& name, const Ref<Material>& material);
-// 		static UEResult GetMaterial(const std::string& name, Ref<Material>& material);
-
 		static UEResult DrawVAO(const Ref<VertexArray>& vao, const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
 		static UEResult DrawVAO(const Ref<VertexArray>& vao, const std::string& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
-
-		// 2D Primitives
-// 		static UEResult DrawTri(const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
-// 		static UEResult DrawTri(const std::string& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
-// 		static UEResult DrawQuad(const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
-// 		static UEResult DrawQuad(const std::string& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
-// 		static UEResult DrawCircle(const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f), const float complexity = 1.0f);
-// 		static UEResult DrawCircle(const std::string& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f), const float complexity = 1.0f);
-// 
-// 		// 3D Primitives
-// 		static UEResult DrawPyramid(const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f), const float complexity = 1.0f);
-// 		static UEResult DrawPyramid(const std::string& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f), const float complexity = 1.0f);
-// 		static UEResult DrawCube(const Ref<Material>& material, const glm::vec3 & position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
-// 		static UEResult DrawCube(const std::string& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
-// 		static UEResult DrawSphere(const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f), const float complexity = 1.0f);
-// 		static UEResult DrawSphere(const std::string& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f), const float complexity = 1.0f);
 
 		static UEResult Submit(const Ref<VertexArray>& vao, const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
 		static UEResult Submit(const Ref<VertexArray>& vao, const std::string& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));

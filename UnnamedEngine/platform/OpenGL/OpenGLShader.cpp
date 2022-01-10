@@ -166,6 +166,13 @@ namespace UE
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::Set(const UEString& vertSource, const UEString& fragSource)
+	{
+		m_VertexCode = vertSource;
+		m_FragmentCode = fragSource;
+		Compile();
+	}
+
 	void OpenGLShader::SetInt(const std::string& name, int value)
 	{
 		UploadUniformInt(name, value);

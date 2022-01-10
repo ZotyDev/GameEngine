@@ -24,6 +24,7 @@ project "UnnamedEngine"
 		"src",
 		"%{IncludeDir.GLM}",
 		"%{IncludeDir.LUA}",
+		"%{IncludeDir.ImGui}"
 	}
 
 	links
@@ -32,12 +33,49 @@ project "UnnamedEngine"
 	}
 
 	------------------------------------------------------------------------------------
+	-- Windows configuration
+	------------------------------------------------------------------------------------
+	filter {"system:windows"}
+		systemversion "latest"
+
+		pchheader "uepch.h"
+		pchsource "src/uepch.cpp"
+
+		files
+		{
+			"platform/Windows/**.h",
+			"platform/Windows/**.cpp",
+			"platform/FreeType/**.h",
+			"platform/FreeType/**.cpp",
+		}
+
+		includedirs
+		{
+			"vendor/spdlog/include",
+			"%{IncludeDir.GLFW}",
+			"%{IncludeDir.STB}",
+			"%{IncludeDir.FreeType}"
+		}
+
+		links
+		{
+			"GLFW",
+			"FreeType",
+			"ImGui"
+		}
+
+	------------------------------------------------------------------------------------
+	-- Web configuration
+	------------------------------------------------------------------------------------
+	filter {"system:linux"}
+	
+	------------------------------------------------------------------------------------
 	-- OpenGL configuration
 	------------------------------------------------------------------------------------
 	filter {"options:gfxapi=opengl"}
 		defines 
 		{
-			"UE_PLATFORM_OPENGL"
+			"UE_PLATFORM_OPENGL",
 		}
 
 		files
@@ -63,7 +101,7 @@ project "UnnamedEngine"
 	filter {"options:gfxapi=dx11"}
 		defines
 		{
-			"UE_PLATFORM_DIRECTX11"
+			"UE_PLATFORM_DIRECTX11",
 		}
 
 	------------------------------------------------------------------------------------
@@ -72,7 +110,7 @@ project "UnnamedEngine"
 	filter {"options:gfxapi=dx12"}
 		defines
 		{
-			"UE_PLATFORM_DIRECTX12"
+			"UE_PLATFORM_DIRECTX12",
 		}
 
 	------------------------------------------------------------------------------------
@@ -81,7 +119,7 @@ project "UnnamedEngine"
 	filter {"options:gfxapi=metal"}
 		defines
 		{
-			"UE_PLATFORM_METAL"
+			"UE_PLATFORM_METAL",
 		}
 
 	------------------------------------------------------------------------------------
@@ -90,7 +128,7 @@ project "UnnamedEngine"
 	filter {"options:gfxapi=vulkan"}
 		defines
 		{
-			"UE_PLATFORM_VULKAN"
+			"UE_PLATFORM_VULKAN",
 		}
 
 		files
@@ -167,47 +205,6 @@ project "UnnamedEngine"
 			"platform/Winsock/**.h",
 			"platform/Winsock/**.cpp",
 		}
-
-	------------------------------------------------------------------------------------
-	-- Windows-Only configuration
-	------------------------------------------------------------------------------------
-	filter "system:windows"
-		systemversion "latest"
-
-		pchheader "uepch.h"
-		pchsource "src/uepch.cpp"
-
-		defines
-		{
-			"GLFW_INCLUDE_NONE"
-		}
-
-		files
-		{
-			"platform/Windows/**.h",
-			"platform/Windows/**.cpp",
-			"platform/FreeType/**.h",
-			"platform/FreeType/**.cpp",
-		}
-
-		includedirs
-		{
-			"vendor/spdlog/include",
-			"%{IncludeDir.GLFW}",
-			"%{IncludeDir.STB}",
-			"%{IncludeDir.FreeType}"
-		}
-
-		links
-		{
-			"GLFW",
-			"FreeType"
-		}
-
-	------------------------------------------------------------------------------------
-	-- Linux-Only configuration
-	------------------------------------------------------------------------------------
-	filter "system:linux"
 
 	------------------------------------------------------------------------------------
 	-- Debug-Only configuration

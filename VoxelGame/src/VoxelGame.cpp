@@ -3,21 +3,24 @@
 
 #include "VoxelGameApp.h"
 
-class VoxelGame : public UE::Application
+namespace UE
 {
-public:
-	VoxelGame()
+	class VoxelGame : public Application
 	{
-		PushLayer(new VoxelGameApp(UE::CreateRef<UE::Application::SharedData>(m_Data)));
-	}
+	public:
+		VoxelGame()
+		{
+			PushLayer(new VoxelGameApp(CreateRef<Application::SharedData>(m_Data)));
+		}
 
-	~VoxelGame()
+		~VoxelGame()
+		{
+
+		}
+	};
+
+	Application* CreateApplication()
 	{
-
+		return new VoxelGame();
 	}
-};
-
-UE::Application* UE::CreateApplication()
-{
-	return new VoxelGame();
 }

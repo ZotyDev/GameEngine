@@ -45,8 +45,8 @@ namespace UE
 
 				BufferLayout layout =
 				{
-					{ShaderDataType::Float3, "a_Position"},
-					{ShaderDataType::Float2, "a_Texture"}
+					{ShaderDataType::Vec3, "v_Position"},
+					{ShaderDataType::Vec3, "v_Texture"},
 				};
 				t_VBuffer->SetLayout(layout);
 				VAO->AddVertexBuffer(t_VBuffer);

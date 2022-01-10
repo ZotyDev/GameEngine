@@ -1,11 +1,18 @@
 #include "uepch.h"
 #include "Log.h"
 
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/sinks/basic_file_sink.h>
+#if defined(UE_PLATFORM_WINDOWS)
+	#pragma warning(push 0)
+		#include <spdlog/sinks/stdout_color_sinks.h>
+		#include <spdlog/sinks/basic_file_sink.h>
+	#pragma warning(pop)
+#elif defined(UE_PLATFORM_WINDOWS)
+
+#endif
 
 namespace UE 
 {
+	#if defined(UE_PLATFORM_WINDOWS)
 	Ref<spdlog::logger> Log::s_CoreLogger;
 	Ref<spdlog::logger> Log::s_ClientLogger;
 	Ref<spdlog::logger> Log::s_LuaLogger;
@@ -31,7 +38,7 @@ namespace UE
 		s_ClientLogger->set_level(spdlog::level::trace);
 		s_ClientLogger->flush_on(spdlog::level::trace);
 
-		s_LuaLogger = CreateRef<spdlog::logger>("LUA", begin(logSinks), end(logSinks));
+		s_LuaLogger = CreateRef<spdlog::logger>("Lua", begin(logSinks), end(logSinks));
 		spdlog::register_logger(s_LuaLogger);
 		s_LuaLogger->set_level(spdlog::level::trace);
 		s_LuaLogger->flush_on(spdlog::level::trace);
@@ -74,4 +81,7 @@ namespace UE
 
 		return it->second;
 	}
+
+	#elif defined(UE_PLATFORM_WEB)
+	#endif
 }

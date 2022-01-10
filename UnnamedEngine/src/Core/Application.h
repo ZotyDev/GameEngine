@@ -16,6 +16,8 @@
 #include "Timestep.h"
 #include "LayerStack.h"
 
+#include "ImGui/ImGuiLayer.h"
+
 int main(int argc, char** argv);
 
 namespace UE
@@ -30,27 +32,32 @@ namespace UE
 		void OnInputEvent(Event& event);
 
 		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* overlay);
 
-		Window& GetWindow() { return *m_Data.m_Window; }
+		Window& GetWindow() { return *m_Data->m_Window; }
 
 		void Close();
 
 		static Application& Get() { return *s_Instance; }
 	private:
 		void Run();
+		bool MainLoop();
 	public:
+		LayerStack m_LayerStack;
 		struct SharedData
 		{
 			Ref<Window> m_Window;
-			Ref<UE::LuneStack> m_Lune;
+			Ref<LuneStack> m_Lune;
+			ImGuiLayer* m_ImGuiLayer;
 			bool m_Running = true;
 			bool m_Minimized = false;
 			bool m_Fullscreen = false;
 			float m_LastFrameTime = 0.0f;
-			LayerStack m_LayerStack;
 			Stopwatch m_TimeMeasurer;
 			float m_SimulationSpeed = 1.0f;
-		} m_Data;
+		};
+
+		Ref<SharedData> m_Data = CreateRef<SharedData>();
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);

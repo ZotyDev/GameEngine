@@ -32,6 +32,8 @@ project "VoxelGame"
 	-- Windows-Only configuration
 	------------------------------------------------------------------------------------
 	filter "system:windows"
+		systemversion "latest"
+
 		includedirs
 		{
 			"%{wks.location}/UnnamedEngine/vendor/spdlog/include",

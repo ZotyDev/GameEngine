@@ -9,7 +9,6 @@
 namespace UE
 {
 	// Todo:
-	// Send entire transform instead of position, rotation, size, etc..
 	// Make shadows more abstract
 	// Make material rendering better
 	//	Automatically send values that start with "u_" to the shader
@@ -65,6 +64,20 @@ namespace UE
 		
 		// Start of rendering
 		RenderCommand::CullBack();
+
+		// Render background layer
+
+		// Render opaque object layer
+
+		// Render opque particle layer
+
+		// Render transparent object layer
+
+		// Render transparent particle layer
+
+		// Render special effect layer
+
+		// Render overlay layer
 
 		for (auto& it : s_Data->MaterialIndexMap)
 		{

@@ -2,50 +2,54 @@
 
 #include "UnnamedEngine.h"
 
-class VoxelGameApp : public UE::Layer
+namespace UE
 {
-public:
-	VoxelGameApp(UE::Ref<UE::Application::SharedData> data);
-	virtual ~VoxelGameApp() = default;
+	class VoxelGameApp : public Layer
+	{
+	public:
+		VoxelGameApp(Ref<Application::SharedData> data);
+		virtual ~VoxelGameApp() = default;
 
-	virtual void OnAttach() override;
-	virtual void OnDetach() override;
+		virtual void OnAttach() override;
+		virtual void OnDetach() override;
 
-	virtual void OnUpdate(UE::Timestep ts) override;
-	virtual void OnWindowEvent(UE::Event& event) override;
-	virtual void OnInputEvent(UE::Event& event) override;
+		virtual void OnUpdate(Timestep ts) override;
+		virtual void OnImGuiRender() override;
+		virtual void OnWindowEvent(Event& event) override;
+		virtual void OnInputEvent(Event& event) override;
 
-	void RegisterWindowEvent(std::function<bool(UE::Event&)>& fn);
-	void RegisterInputEvent(std::function<bool(UE::Event&)>& fn);
-private:
-	void Render();
-private:
-	UE::Ref<UE::Keyboard> m_Keyboard = UE::CreateRef<UE::Keyboard>();
-private:
-	UE::Ref<UE::Application::SharedData> m_Data;
-private:
-	UE::Ref<UE::ShaderLibrary> m_ShaderLibrary = UE::CreateRef<UE::ShaderLibrary>();
+		void RegisterWindowEvent(std::function<bool(Event&)>& fn);
+		void RegisterInputEvent(std::function<bool(Event&)>& fn);
+	private:
+		void Render();
+	private:
+		Ref<Keyboard> m_Keyboard = CreateRef<UE::Keyboard>();
+	private:
+		Ref<Application::SharedData> m_Data;
+	private:
+		Ref<ShaderLibrary> m_ShaderLibrary = CreateRef<ShaderLibrary>();
 
-	UE::Ref<UE::Texture2D> m_Texture2D;
+		Ref<Texture2D> m_Texture2D;
 
-	UE::Ref<UE::Camera> m_Camera;
-	UE::Ref<UE::CameraController> m_CameraController;
+		Ref<Camera> m_Camera;
+		Ref<CameraController> m_CameraController;
 
-	UE::Ref<UE::Screen> m_Screen;
-	UE::Ref<UE::Primitives::Quad> m_Quad;
-private:
-	bool OnWindowResize(UE::WindowResizeEvent& event);
-private:
-	bool OnKeyPressed(UE::KeyPressedEvent& event);
-	bool OnKeyReleased(UE::KeyReleasedEvent& event);
-	bool OnKeyTyped(UE::KeyTypedEvent& event);
-	bool OnMousePressed(UE::MouseButtonPressedEvent& event);
-	bool OnMouseReleased(UE::MouseButtonReleasedEvent& event);
-	bool OnMouseMoved(UE::MouseMovedEvent& event);
-	bool OnMouseScrolled(UE::MouseScrolledEvent& event);
-	bool OnGamepadButtonPressed(UE::GamepadButtonPressedEvent& event);
-	bool OnGamepadButtonReleased(UE::GamepadButtonReleasedEvent& event);
-private:
-	std::vector<std::function<bool(UE::Event&)>> m_WindowEventFns;
-	std::vector<std::function<bool(UE::Event&)>> m_InputEventFns;
-};
+		Ref<Screen> m_Screen;
+		Ref<Primitives::Quad> m_Quad;
+	private:
+		bool OnWindowResize(WindowResizeEvent& event);
+	private:
+		bool OnKeyPressed(KeyPressedEvent& event);
+		bool OnKeyReleased(KeyReleasedEvent& event);
+		bool OnKeyTyped(KeyTypedEvent& event);
+		bool OnMousePressed(MouseButtonPressedEvent& event);
+		bool OnMouseReleased(MouseButtonReleasedEvent& event);
+		bool OnMouseMoved(MouseMovedEvent& event);
+		bool OnMouseScrolled(MouseScrolledEvent& event);
+		bool OnGamepadButtonPressed(GamepadButtonPressedEvent& event);
+		bool OnGamepadButtonReleased(GamepadButtonReleasedEvent& event);
+	private:
+		std::vector<std::function<bool(Event&)>> m_WindowEventFns;
+		std::vector<std::function<bool(Event&)>> m_InputEventFns;
+	};
+}

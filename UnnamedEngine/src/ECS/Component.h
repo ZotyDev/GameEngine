@@ -2,8 +2,6 @@
 
 #include "ECS/Entity.h"
 
-#define UE_COMPONENT_INCREMENT_SLICE 128
-
 namespace UE
 {
 	struct ComponentDataShell
@@ -15,51 +13,57 @@ namespace UE
 			switch (type)
 			{
 			case UE::UEType::Bool:
-				Data = new UEBool[size];
+				Data = new UEBool[size]();
 				break;
 			case UE::UEType::Char:
-				Data = new UEChar[size];
+				Data = new UEChar[size]();
 				break;
 			case UE::UEType::Int8:
-				Data = new UEInt8[size];
+				Data = new UEInt8[size]();
 				break;
 			case UE::UEType::Int16:
-				Data = new UEInt16[size];
+				Data = new UEInt16[size]();
 				break;
 			case UE::UEType::Int32:
-				Data = new UEInt32[size];
+				Data = new UEInt32[size]();
 				break;
 			case UE::UEType::Int64:
-				Data = new UEInt64[size];
+				Data = new UEInt64[size]();
 				break;
 			case UE::UEType::Uint8:
-				Data = new UEUint8[size];
+				Data = new UEUint8[size]();
 				break;
 			case UE::UEType::Uint16:
-				Data = new UEUint16[size];
+				Data = new UEUint16[size]();
 				break;
 			case UE::UEType::Uint32:
-				Data = new UEUint32[size];
+				Data = new UEUint32[size]();
 				break;
 			case UE::UEType::Uint64:
-				Data = new UEUint64[size];
+				Data = new UEUint64[size]();
 				break;
 			case UE::UEType::Float:
-				Data = new UEFloat[size];
+				Data = new UEFloat[size]();
 				break;
 			case UE::UEType::Double:
-				Data = new UEDouble[size];
+				Data = new UEDouble[size]();
 				break;
 			default:
 				break;
 			}
 		}
 
-		//template<typename T>
-		//T GetData()
-		//{
-		//	return *(T*)Data;
-		//}
+		template<typename T>
+		void SetData(UEUint32 pos, T data)
+		{
+			((T*)Data)[pos] = data;
+		}
+
+		template<typename T>
+		T GetData(UEUint32 pos)
+		{
+			return ((T*)Data)[pos];
+		}
 
 		void Delete()
 		{
@@ -71,6 +75,7 @@ namespace UE
 		UEType Type;
 		void* Data;
 	};
+
 
 	struct ComponentShell
 	{
@@ -86,11 +91,12 @@ namespace UE
 		std::vector<ComponentDataShell> DataList;
 	};
 
-	class ComponentLibrary
+	class ComponentManager
 	{
 	public:
 
-		UEResult RegisterComponent(Ref<ComponentShell> component);
+		UEResult Add(Ref<ComponentShell> component);
+		Ref<ComponentShell> Get(const UEString& name);
 
 	private:
 		std::unordered_map<UEString, Ref<ComponentShell>> m_Components;
@@ -110,11 +116,4 @@ namespace UE
 	* Hunger
 	* Thirst
 	*/
-
-	struct Component
-	{
-		float X[UE_MAX_ENTITIES];
-		float Y[UE_MAX_ENTITIES];
-		float Z[UE_MAX_ENTITIES];
-	};
 }

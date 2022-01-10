@@ -25,11 +25,11 @@ namespace UE
 				UE_CORE_ERROR("Failed to create Shader!");
 				return nullptr;
 			}
-			if (t_Shader->Compile())
-			{
-				UE_CORE_ERROR("Failed to create Shader!");
-				return nullptr;
-			}
+			//if (t_Shader->Compile())
+			//{
+			//	UE_CORE_ERROR("Failed to create Shader!");
+			//	return nullptr;
+			//}
 
 			return t_Shader;
 		#endif
@@ -55,11 +55,11 @@ namespace UE
 				UE_CORE_ERROR("Failed to create Shader!");
 				return nullptr;
 			}
-			if (t_Shader->Compile())
-			{
-				UE_CORE_ERROR("Failed to create Shader!");
-				return nullptr;
-			}
+			//if (t_Shader->Compile())
+			//{
+			//	UE_CORE_ERROR("Failed to create Shader!");
+			//	return nullptr;
+			//}
 
 			return t_Shader;
 		#endif

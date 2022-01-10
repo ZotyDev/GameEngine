@@ -16,6 +16,9 @@
 		#include <signal.h>
 		#define UE_DEBUG_BREAK() raise(SIGTRAP)
 
+	#elif defined(UE_PLATFORM_WEB)
+		#define UE_DEBUG_BREAK() emscripten_debugger()
+
 	#else
 		#error "Platform doesn't support debugbreak yet!"
 	#endif

@@ -31,7 +31,7 @@ namespace UE
 		}
 	};
 
-	int WindowsWindow::Init(const WindowProps& props)
+	UEResult WindowsWindow::Init(const WindowProps& props)
 	{
 		// Copy properties
 		m_WindowData.Title = props.Title;
@@ -76,6 +76,7 @@ namespace UE
 			m_WindowData.PosX = PosX;
 			m_WindowData.PosY = PosY;
 			++s_GLFWWindowCount;
+
 		}
 
 		m_Context = GraphicsContext::Create(m_Window);
@@ -211,7 +212,7 @@ namespace UE
 		// Set Viewport
 		RenderCommand::SetViewport(0, 0, m_WindowData.Width, m_WindowData.Height);
 
-		return 0;
+		return UEResult::Success;
 	};
 
 	void WindowsWindow::OnUpdate()
@@ -262,11 +263,12 @@ namespace UE
 		return m_WindowData.VSync;
 	}
 
-	UEResult WindowsWindow::SetIcon(const std::string& path)
+	UEResult WindowsWindow::SetIcon(const UEString& path)
 	{
 		GLFWimage IconImage;
 		IconImage.pixels = nullptr;
 
+		stbi_set_flip_vertically_on_load(0);
 		IconImage.pixels = stbi_load(path.c_str(), &IconImage.width, &IconImage.height, nullptr, 0);
 		if (!IconImage.pixels)
 		{

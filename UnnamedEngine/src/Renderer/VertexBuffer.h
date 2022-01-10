@@ -1,31 +1,45 @@
 #pragma once
 
+#include "Renderer/Shader/ShaderDataType.h"
+
 namespace UE
 {
-	enum class ShaderDataType
-	{
-		None = 0, 
-		Float, Float2, Float3, Float4,
-		Mat3, Mat4,
-		Int, Int2, Int3, Int4,
-		Bool
-	};
-
 	static uint32_t ShaderDataTypeSize(ShaderDataType type)
 	{
 		switch (type)
 		{
-			case ShaderDataType::Float:		return 4;
-			case ShaderDataType::Float2:	return 4 * 2;
-			case ShaderDataType::Float3:	return 4 * 3;
-			case ShaderDataType::Float4:	return 4 * 4;
-			case ShaderDataType::Mat3:		return 4 * 3 * 3;
-			case ShaderDataType::Mat4:		return 4 * 4 * 4;
-			case ShaderDataType::Int:		return 4;
-			case ShaderDataType::Int2:		return 4 * 2;
-			case ShaderDataType::Int3:		return 4 * 3;
-			case ShaderDataType::Int4:		return 4 * 4;
-			case ShaderDataType::Bool:		return 1;
+		case UE::ShaderDataType::Bool:		return 1;
+		case UE::ShaderDataType::Int:		return 4;
+		case UE::ShaderDataType::Uint:		return 4;
+		case UE::ShaderDataType::Float:		return 4;
+		case UE::ShaderDataType::Double:	return 8;
+		case UE::ShaderDataType::BVec2:		return 1 * 2;
+		case UE::ShaderDataType::BVec3:		return 1 * 3;
+		case UE::ShaderDataType::BVec4:		return 1 * 4;
+		case UE::ShaderDataType::IVec2:		return 4 * 2;
+		case UE::ShaderDataType::IVec3:		return 4 * 3;
+		case UE::ShaderDataType::IVec4:		return 4 * 4;
+		case UE::ShaderDataType::UVec2:		return 4 * 2;
+		case UE::ShaderDataType::UVec3:		return 4 * 3;
+		case UE::ShaderDataType::UVec4:		return 4 * 4;
+		case UE::ShaderDataType::Vec2:		return 4 * 2;
+		case UE::ShaderDataType::Vec3:		return 4 * 3;
+		case UE::ShaderDataType::Vec4:		return 4 * 4;
+		case UE::ShaderDataType::DVec2:		return 8 * 2;
+		case UE::ShaderDataType::DVec3:		return 8 * 3;
+		case UE::ShaderDataType::DVec4:		return 8 * 4;
+		case UE::ShaderDataType::Mat2:		return 4 * 2 * 2;
+		case UE::ShaderDataType::Mat3:		return 4 * 3 * 3;
+		case UE::ShaderDataType::Mat4:		return 4 * 4 * 4;
+		case UE::ShaderDataType::Mat2x2:	return 4 * 2 * 2;
+		case UE::ShaderDataType::Mat2x3:	return 4 * 2 * 3;
+		case UE::ShaderDataType::Mat2x4:	return 4 * 2 * 4;
+		case UE::ShaderDataType::Mat3x2:	return 4 * 3 * 2;
+		case UE::ShaderDataType::Mat3x3:	return 4 * 3 * 3;
+		case UE::ShaderDataType::Mat3x4:	return 4 * 3 * 4;
+		case UE::ShaderDataType::Mat4x2:	return 4 * 4 * 2;
+		case UE::ShaderDataType::Mat4x3:	return 4 * 4 * 3;
+		case UE::ShaderDataType::Mat4x4:	return 4 * 4 * 4;
 		}
 
 		UE_CORE_ERROR( "Uknown ShaderDataType");
@@ -50,17 +64,38 @@ namespace UE
 		{
 			switch (Type)
 			{
-			case ShaderDataType::Float:		return 1;
-			case ShaderDataType::Float2:	return 2;
-			case ShaderDataType::Float3:	return 3;
-			case ShaderDataType::Float4:	return 4;
-			case ShaderDataType::Mat3:		return 3 * 3;
-			case ShaderDataType::Mat4:		return 4 * 4;
-			case ShaderDataType::Int:		return 1;
-			case ShaderDataType::Int2:		return 2;
-			case ShaderDataType::Int3:		return 3;
-			case ShaderDataType::Int4:		return 4;
-			case ShaderDataType::Bool:		return 1;
+			case UE::ShaderDataType::Bool:		return 1;
+			case UE::ShaderDataType::Int:		return 1;
+			case UE::ShaderDataType::Uint:		return 1;
+			case UE::ShaderDataType::Float:		return 1;
+			case UE::ShaderDataType::Double:	return 1;
+			case UE::ShaderDataType::BVec2:		return 2;
+			case UE::ShaderDataType::BVec3:		return 3;
+			case UE::ShaderDataType::BVec4:		return 4;
+			case UE::ShaderDataType::IVec2:		return 2;
+			case UE::ShaderDataType::IVec3:		return 3;
+			case UE::ShaderDataType::IVec4:		return 4;
+			case UE::ShaderDataType::UVec2:		return 2;
+			case UE::ShaderDataType::UVec3:		return 3;
+			case UE::ShaderDataType::UVec4:		return 4;
+			case UE::ShaderDataType::Vec2:		return 2;
+			case UE::ShaderDataType::Vec3:		return 3;
+			case UE::ShaderDataType::Vec4:		return 4;
+			case UE::ShaderDataType::DVec2:		return 2;
+			case UE::ShaderDataType::DVec3:		return 3;
+			case UE::ShaderDataType::DVec4:		return 4;
+			case UE::ShaderDataType::Mat2:		return 2 * 2;
+			case UE::ShaderDataType::Mat3:		return 3 * 3;
+			case UE::ShaderDataType::Mat4:		return 4 * 4;
+			case UE::ShaderDataType::Mat2x2:	return 2 * 2;
+			case UE::ShaderDataType::Mat2x3:	return 2 * 3;
+			case UE::ShaderDataType::Mat2x4:	return 2 * 4;
+			case UE::ShaderDataType::Mat3x2:	return 3 * 2;
+			case UE::ShaderDataType::Mat3x3:	return 3 * 3;
+			case UE::ShaderDataType::Mat3x4:	return 3 * 4;
+			case UE::ShaderDataType::Mat4x2:	return 4 * 2;
+			case UE::ShaderDataType::Mat4x3:	return 4 * 3;
+			case UE::ShaderDataType::Mat4x4:	return 4 * 4;
 			}
 
 			UE_CORE_ERROR("Uknown ShaderDataType!");
