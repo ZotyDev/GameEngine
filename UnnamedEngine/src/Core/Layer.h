@@ -19,6 +19,8 @@ namespace UE
 		virtual void OnImGuiRender() {}
 		virtual void OnWindowEvent(Event& event) {}
 		virtual void OnInputEvent(Event& event) {}
+		//virtual void OnNetworkEvent(Event& event) {}
+		virtual void OnRendererEvent(Event& event) {}
 
 		const std::string& GetName() const { return m_Name; }
 	protected:

@@ -7,16 +7,16 @@ namespace UE
 	class OpenGLIndexBuffer : public IndexBuffer
 	{
 	public:
-		OpenGLIndexBuffer(uint32_t* indices, uint32_t count);
+		OpenGLIndexBuffer(UEUint32* indices, UEUint32 count);
 		virtual ~OpenGLIndexBuffer();
 
 		virtual void Bind() const;
 		virtual void Unbind() const;
 
-		virtual uint32_t GetCount() const { return mCount; };
+		virtual UEUint32 GetCount() const { return mCount; };
 
 	private:
 		unsigned int mID;
-		uint32_t mCount;
+		UEUint32 mCount;
 	};
 }

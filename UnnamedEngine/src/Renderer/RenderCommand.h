@@ -12,12 +12,12 @@ namespace UE
 			s_RendererAPI->Init();
 		}
 
-		static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+		static void SetViewport(UEUint32 x, UEUint32 y, UEUint32 width, UEUint32 height)
 		{
 			s_RendererAPI->SetViewport(x, y, width, height);
 		}
 
-		static void GetViewport(uint32_t& width, uint32_t& height)
+		static void GetViewport(UEUint32& width, UEUint32& height)
 		{
 			s_RendererAPI->GetViewport(width, height);
 		}
@@ -47,7 +47,7 @@ namespace UE
 			s_RendererAPI->CullBack();
 		}
 
-		static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
+		static void DrawIndexed(const Ref<VertexArray>& vertexArray, UEUint32 count = 0)
 		{
 			s_RendererAPI->DrawIndexed(vertexArray, count);
 		}

@@ -29,7 +29,7 @@ namespace UE
 		private:
 			void CreateVAO()
 			{
-				VAO.reset(VertexArray::Create());
+				VAO = VertexArray::Create();
 
 				Ref<VertexBuffer> t_VBuffer;
 				Ref<IndexBuffer> t_IBuffer;
@@ -41,18 +41,18 @@ namespace UE
 					C.x, C.y, C.z, 1.0f, 0.0f,
 					D.x, D.y, D.z, 1.0f, 1.0f
 				};
-				t_VBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
+				t_VBuffer = VertexBuffer::Create(vertices, sizeof(vertices));
 
 				BufferLayout layout =
 				{
-					{ShaderDataType::Vec3, "v_Position"},
-					{ShaderDataType::Vec3, "v_Texture"},
+					{ShaderDataType::Vec3, "vi_Position"},
+					{ShaderDataType::Vec2, "vi_Texture"},
 				};
 				t_VBuffer->SetLayout(layout);
 				VAO->AddVertexBuffer(t_VBuffer);
 				
-				uint32_t indices[] = { 0, 1, 3, 1, 2, 3 };
-				t_IBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+				UEUint32 indices[] = { 0, 1, 3, 1, 2, 3 };
+				t_IBuffer = IndexBuffer::Create(indices, sizeof(indices) / sizeof(UEUint32));
 				VAO->AddIndexBuffer(t_IBuffer);
 			}
 		};

@@ -8,7 +8,6 @@ namespace UE
 	class VertexArray
 	{
 	public:
-		static VertexArray* Create();
 		virtual ~VertexArray() {};
 
 		virtual void Bind() const = 0;
@@ -19,5 +18,7 @@ namespace UE
 
 		virtual const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const = 0;
 		virtual const Ref<IndexBuffer>& GetIndexBuffer() const = 0;
+
+		static Ref<VertexArray> Create();
 	};
 }

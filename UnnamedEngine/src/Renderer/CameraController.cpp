@@ -61,7 +61,7 @@ namespace UE
 		m_UpMovement = 0.0f;
 	}
 
-	void CameraController::OnResize(float width, float height)
+	void CameraController::OnResize(UEFloat width, UEFloat height)
 	{
 		m_Camera->SetViewportSize(width, height);
 	}
@@ -72,9 +72,9 @@ namespace UE
 		dispatcher.Dispatch<WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
 	}
 
-	bool CameraController::OnWindowResize(WindowResizeEvent& event)
+	UEBool CameraController::OnWindowResize(WindowResizeEvent& event)
 	{
-		m_Camera->SetViewportSize((float)event.GetWidth(), (float)event.GetHeight());
+		m_Camera->SetViewportSize((UEFloat)event.GetWidth(), (UEFloat)event.GetHeight());
 		return false;
 	}
 

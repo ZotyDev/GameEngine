@@ -18,6 +18,8 @@ namespace UE
 			VertUniform = 4,
 			FragUniform = 5,
 
+			FragSampler = 6,
+
 			Last
 		};
 
@@ -29,10 +31,10 @@ namespace UE
 		};
 
 	public:
-		ShaderHeaderConstructor(const UEString& filename);
+		ShaderHeaderConstructor(const UEPath& path);
 		~ShaderHeaderConstructor();
 
-		UEResult AddElement(Element element);
+		UEResult SetElements(const std::vector<Element>& elements);
 
 		UEResult Construct(UEString& vertSource, UEString& fragSource);
 	
@@ -45,13 +47,15 @@ namespace UE
 	private:
 		std::vector<Element> m_Elements;
 		UEUint32 m_VertInsertOffset = 19;
+		UEUint32 m_FragInsertOffset = 19;
+
 		UEUint8 m_VertInputCount = 0;
 		UEUint8 m_VertOutputCount = 0;
 		UEUint8 m_VertUniformCount = 0;
-
-		UEUint32 m_FragInsertOffset = 19;
+		
 		UEUint8 m_FragInputCount = 0;
 		UEUint8 m_FragOutputCount = 0;
-		UEUint8 m_FragUniformCount = 9;
+		UEUint8 m_FragUniformCount = 0;
+		UEUint8 m_FragSamplerCount = 0;
 	};
 }

@@ -5,15 +5,23 @@ namespace UE
 	class Texture
 	{
 	public:
-		virtual UEResult LoadFromSource(const std::string& filepath) = 0;
+		enum TextureFlags
+		{
+			NONE = 0,
+			FILTERING_NEAREST = BIT(0),
+			CLAMP_TO_EDGE = BIT(1),
+		};
+
+	public:
+		virtual UEResult LoadFromSource(const UEPath& path, TextureFlags flags = TextureFlags::NONE) = 0;
 
 		virtual ~Texture() = default;
 
-		virtual uint32_t GetWidth() const = 0;
-		virtual uint32_t GetHeight() const = 0;
-		virtual uint32_t GetID() const = 0;
+		virtual UEUint32 GetWidth() const = 0;
+		virtual UEUint32 GetHeight() const = 0;
+		virtual UEUint32 GetID() const = 0;
 
-		virtual void Bind(uint32_t slot = 0) const = 0;
+		virtual void Bind(UEUint32 slot = 0) const = 0;
 	};
 
 	class Texture2D : public Texture

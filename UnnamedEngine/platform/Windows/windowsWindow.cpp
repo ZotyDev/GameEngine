@@ -11,6 +11,8 @@
 
 #include "Renderer/GraphicsContext.h"
 
+#include "Core/GlobalConfig.h"
+
 namespace UE
 {
 	static uint8_t s_GLFWWindowCount = 0;
@@ -210,7 +212,7 @@ namespace UE
 			});
 
 		// Set Viewport
-		RenderCommand::SetViewport(0, 0, m_WindowData.Width, m_WindowData.Height);
+		RenderCommand::SetViewport(0, 0, GlobalConfig::Rendering::ScreenWidth, GlobalConfig::Rendering::ScreenHeight);
 
 		return UEResult::Success;
 	};
@@ -241,6 +243,18 @@ namespace UE
 			m_WindowData.PosX = m_WindowData.WindowedPosX;
 			m_WindowData.PosY = m_WindowData.WindowedPosY;
 			glfwSetWindowMonitor(m_Window, NULL, m_WindowData.PosX, m_WindowData.PosY, m_WindowData.Width, m_WindowData.Height, GLFW_DONT_CARE);
+		}
+	}
+
+	void WindowsWindow::SetHidden(bool enabled)
+	{
+		if (enabled)
+		{
+			glfwHideWindow(m_Window);
+		}
+		else
+		{
+			glfwShowWindow(m_Window);
 		}
 	}
 

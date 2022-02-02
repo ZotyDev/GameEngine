@@ -2,6 +2,9 @@
 #include "Renderer.h"
 
 #include "Renderer3D.h"
+#include "Renderer2D.h"
+
+#include "Core/GlobalConfig.h"
 
 namespace UE
 {
@@ -17,10 +20,19 @@ namespace UE
 		Renderer3D::Shutdown();
 	}
 
-	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
+	void Renderer::OnWindowResize()
 	{
-		RenderCommand::SetViewport(0, 0, width, height);
-		Renderer3D::OnWindowResize(width, height);
+		RenderCommand::SetViewport(0, 0, GlobalConfig::Rendering::ScreenWidth, GlobalConfig::Rendering::ScreenHeight);
+
+		if (Renderer2D::Initialized)
+		{
+			Renderer2D::OnWindowResize(GlobalConfig::Rendering::DesiredWidth, GlobalConfig::Rendering::DesiredHeight);
+		}
+		
+		if (Renderer3D::Initialized)
+		{
+			Renderer3D::OnWindowResize(GlobalConfig::Rendering::DesiredWidth, GlobalConfig::Rendering::DesiredHeight);
+		}
 	}
 
 	void Renderer::SetClearColor(glm::vec4 color)
@@ -33,15 +45,32 @@ namespace UE
 		RenderCommand::Clear();
 	}
 
-	void Renderer::BeginRender(Camera& camera)
+	void Renderer::BeginRender(Ref<Camera> camera)
 	{
 		SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Clear();
-		s_SceneData->ViewProjectionMatrix = camera.GetViewProjection();
+		s_SceneData->ViewProjectionMatrix = camera->GetViewProjection();
+
+		if (Renderer2D::Initialized)
+		{
+			Renderer2D::BeginRender(camera);
+		}
+		if (Renderer3D::Initialized)
+		{
+			Renderer3D::BeginRender(camera);
+		}
 	}
 
 	void Renderer::EndRender()
 	{
+		if (Renderer2D::Initialized)
+		{
+			Renderer2D::EndRender();
+		}
+		if (Renderer3D::Initialized)
+		{
+			Renderer3D::EndRender();
+		}
 	}
 
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray)

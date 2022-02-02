@@ -8,6 +8,7 @@
 #include "Events/GamepadEvent.h"
 #include "Events/KeyEvent.h"
 #include "Events/WindowEvent.h"
+#include "Events/RendererEvent.h"
 
 #include "Time/Stopwatch.h"
 
@@ -30,6 +31,8 @@ namespace UE
 
 		void OnWindowEvent(Event& event);
 		void OnInputEvent(Event& event);
+		//void OnNetworkEvent(Event& event);
+		void OnRendererEvent(Event& event);
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
@@ -61,6 +64,7 @@ namespace UE
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);
+		bool OnRendererScaleChange(RendererScaleChangeEvent& event);
 	private:
 		bool OnKeyPressed(KeyPressedEvent& event);
 	private:

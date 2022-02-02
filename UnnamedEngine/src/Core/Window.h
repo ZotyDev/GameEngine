@@ -3,6 +3,8 @@
 #include "Core/Base.h"
 #include "Events/Event.h"
 
+#include "Core/GlobalConfig.h"
+
 namespace UE
 {
 	struct WindowProps
@@ -12,11 +14,10 @@ namespace UE
 		UEUint32 Height;
 
 		WindowProps(const UEString& title = "UnnamedEngine",
-			UEUint32 width = 1280,
-			UEUint32 height = 720)
+			UEUint32 width = GlobalConfig::Application::Width,
+			UEUint32 height = GlobalConfig::Application::Height)
 			: Title(title), Width(width), Height(height)
-		{
-		}
+		{}
 	};
 
 	// Base Window class for DESKTOP ONLY version
@@ -37,6 +38,7 @@ namespace UE
 		virtual void SetWindowEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void SetInputEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void SetFullscreen(bool enabled) = 0;
+		virtual void SetHidden(bool enabled) = 0;
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
 

@@ -9,7 +9,7 @@
 
 namespace UE
 {
-	Ref<Shader> Shader::Create(const std::string& filepath)
+	Ref<Shader> Shader::Create(const UEPath& path)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -20,7 +20,7 @@ namespace UE
 		#if defined(UE_PLATFORM_OPENGL)
 		case RendererAPI::API::OpenGL: 
 			Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
-			if (t_Shader->LoadFromSource(filepath))
+			if (t_Shader->LoadFromSource(path) == UEResult::Error)
 			{
 				UE_CORE_ERROR("Failed to create Shader!");
 				return nullptr;
@@ -39,7 +39,7 @@ namespace UE
 		return nullptr;
 	}
 
-	Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
+	Ref<Shader> Shader::Create(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -50,7 +50,7 @@ namespace UE
 		#if defined(UE_PLATFORM_OPENGL)
 		case RendererAPI::API::OpenGL:
 			Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
-			if (t_Shader->LoadFromSource(name, vertexSrc, fragmentSrc))
+			if (t_Shader->LoadFromSource(name, vertexPath, fragmentPath) == UEResult::Error)
 			{
 				UE_CORE_ERROR("Failed to create Shader!");
 				return nullptr;
@@ -69,7 +69,9 @@ namespace UE
 		return nullptr;
 	}
 
-	void ShaderLibrary::Add(const std::string&name, const Ref<Shader>& shader)
+	std::unordered_map<UEString, Ref<Shader>> ShaderLibrary::m_Shaders = std::unordered_map<UEString, Ref<Shader>>();
+
+	void ShaderLibrary::Add(const UEString&name, const Ref<Shader>& shader)
 	{
 		if (Exists(name))
 		{
@@ -85,21 +87,21 @@ namespace UE
 		Add(name, shader);
 	}
 
-	Ref<Shader> ShaderLibrary::Load(const std::string& filepath)
+	Ref<Shader> ShaderLibrary::Load(const UEPath& path)
 	{
-		auto shader = Shader::Create(filepath);
+		auto shader = Shader::Create(path);
 		Add(shader);
 		return shader;
 	}
 
-	Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath)
+	Ref<Shader> ShaderLibrary::Load(const UEString& name, const UEPath& path)
 	{
-		auto shader = Shader::Create(filepath);
+		auto shader = Shader::Create(path);
 		Add(name, shader);
 		return shader;
 	}
 
-	Ref<Shader> ShaderLibrary::Get(const std::string& name)
+	Ref<Shader> ShaderLibrary::Get(const UEString& name)
 	{
 		if (!Exists(name))
 		{
@@ -109,7 +111,7 @@ namespace UE
 		return m_Shaders[name];
 	}
 
-	bool ShaderLibrary::Exists(const std::string& name) const
+	bool ShaderLibrary::Exists(const UEString& name)
 	{
 		return m_Shaders.find(name) != m_Shaders.end();
 	}

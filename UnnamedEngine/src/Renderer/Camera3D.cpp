@@ -6,7 +6,7 @@
 
 namespace UE
 {
-	Camera3D::Camera3D(float width, float height, glm::vec3 position, float nearClip, float farClip, float fov)
+	Camera3D::Camera3D(UEFloat width, UEFloat height, glm::vec3 position, UEFloat nearClip, UEFloat farClip, UEFloat fov)
 		: Camera(width, height, position, nearClip, farClip), m_FOV(fov)
 	{
 		Update();

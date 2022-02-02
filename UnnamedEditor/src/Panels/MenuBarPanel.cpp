@@ -3,12 +3,21 @@
 
 #include <imgui.h>
 
+#include "ProjectConfig.h"
+
 #include "Panels/PanelsConfig.h"
 
 namespace UE
 {
 	MenuBarPanel::MenuBarPanel()
 	{}
+
+	UEBool NewProjectPopupTemp = false;
+	UEBool OpenProjectPopupTemp = false;
+	UEBool ProjectInfoPopupTemp = false;
+
+	char ProjectNameBuffer[256] = "";
+	char ProjectLocationBuffer[256] = "";
 
 	void MenuBarPanel::OnImGuiRender(Ref<Application::SharedData> data)
 	{
@@ -18,12 +27,12 @@ namespace UE
 			{
 				if (ImGui::MenuItem("New", "Ctrl+N"))
 				{
-
+					NewProjectPopupTemp = true;
 				}
 
 				if (ImGui::MenuItem("Open..", "Ctrl+O"))
 				{
-
+					OpenProjectPopupTemp = true;
 				}
 
 				if (ImGui::MenuItem("Save", "Ctrl+S"))
@@ -34,6 +43,13 @@ namespace UE
 				if (ImGui::MenuItem("Save As..", "Ctrl+Shift+S"))
 				{
 
+				}
+
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("Project Info"))
+				{
+					ProjectInfoPopupTemp = true;
 				}
 
 				ImGui::Separator();
@@ -126,6 +142,103 @@ namespace UE
 			}
 
 			ImGui::EndMenuBar();
+		}
+
+		if (NewProjectPopupTemp == true)
+		{
+			ImGui::OpenPopup("New Project");
+			NewProjectPopupTemp = false;
+		}
+		
+		if (OpenProjectPopupTemp == true)
+		{
+			ImGui::OpenPopup("Open Project");
+			OpenProjectPopupTemp = false;
+		}
+
+		if (ProjectInfoPopupTemp == true)
+		{
+			ImGui::OpenPopup("Project Info");
+			ProjectInfoPopupTemp = false;
+		}
+
+
+		// Always center this window when appearing
+		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+		if (ImGui::BeginPopupModal("New Project", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Project Name:");
+			ImGui::InputText("##ProjectName", ProjectNameBuffer, 256);
+
+			ImGui::Text("Project Location:");
+			ImGui::InputText("##ProjectLocation", ProjectLocationBuffer, 256);
+			
+			if (ImGui::Button("Create", ImVec2(120, 0))) 
+			{
+				ProjectConfig::ProjectName = ProjectNameBuffer;
+				ProjectConfig::ProjectLocation = ProjectLocationBuffer;
+				ProjectConfig::AssetPath = ProjectConfig::ProjectLocation + "/assets";
+				ProjectConfig::CurrentDirectory = ProjectConfig::AssetPath;
+
+				ImGui::CloseCurrentPopup(); 
+			}
+			
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			
+			if (ImGui::Button("Cancel", ImVec2(120, 0))) 
+			{ 
+				ImGui::CloseCurrentPopup(); 
+			}
+
+			ImGui::EndPopup();
+		}
+
+		// Always center this window when appearing
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+		if (ImGui::BeginPopupModal("Open Project", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+
+			ImGui::Text("Project Location:");
+			ImGui::InputText("##ProjectLocation", ProjectLocationBuffer, 256);
+
+			if (ImGui::Button("Open", ImVec2(120, 0)))
+			{
+				ProjectConfig::ProjectLocation = ProjectLocationBuffer;
+				ProjectConfig::AssetPath = ProjectConfig::ProjectLocation + "/assets";
+				ProjectConfig::CurrentDirectory = ProjectConfig::AssetPath;
+
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+
+		// Always center this window when appearing
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+		if (ImGui::BeginPopupModal("Project Info", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text(ProjectConfig::ProjectName.c_str());
+			ImGui::Text(("Location: " + ProjectConfig::ProjectLocation).c_str());
+			ImGui::Text(("Version: " + ProjectConfig::ProjectVersion).c_str());
+
+			if (ImGui::Button("OK", ImVec2(120, 0))) 
+			{ 
+				ImGui::CloseCurrentPopup(); 
+			}
+
+			ImGui::EndPopup();
 		}
 	}
 }

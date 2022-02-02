@@ -38,11 +38,11 @@ namespace UE
 
 	struct FramebufferSpecification
 	{
-		uint32_t Width = 0;
-		uint32_t Height = 0;
+		UEUint32 Width = 0;
+		UEUint32 Height = 0;
 		FramebufferAttachmentSpecification Attachments;
-		uint32_t Samples = 1;
-		bool SwapChainTarget = false;
+		UEUint32 Samples = 1;
+		UEBool SwapChainTarget = false;
 	};
 
 	class Framebuffer
@@ -53,15 +53,18 @@ namespace UE
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 
-		virtual void BindColorAttachment(uint32_t index = 0) = 0;
+		virtual UEUint32 GetWidth() = 0;
+		virtual UEUint32 GetHeight() = 0;
 
-		virtual void BindDepthAttachment(uint32_t slot = 0) = 0;
+		virtual void BindColorAttachment(UEUint32 index = 0) = 0;
 
-		virtual void Resize(uint32_t width, uint32_t height) = 0;
+		virtual void BindDepthAttachment(UEUint32 slot = 0) = 0;
 
-		virtual void ClearAttachment(uint32_t attachmentIndex, int value) = 0;
+		virtual void Resize(UEUint32 width, UEUint32 height) = 0;
 
-		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
+		virtual void ClearAttachment(UEUint32 attachmentIndex, UEUint32 value) = 0;
+
+		virtual UEUint32 GetColorAttachmentRendererID(UEUint32 index = 0) const = 0;
 
 		virtual const FramebufferSpecification& GetSpecification() const = 0;
 

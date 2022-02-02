@@ -8,24 +8,23 @@
 
 namespace UE
 {
-	UEResult OpenGLTexture2D::LoadFromSource(const std::string& filepath)
+	UEResult OpenGLTexture2D::LoadFromSource(const UEPath& path, TextureFlags flags)
 	{
 		int width = 0;
 		int height = 0;
 		int channels = 0;
 		stbi_set_flip_vertically_on_load(1);
-		unsigned char* data = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
+		unsigned char* data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
 		if (!data)
 		{
-			UE_CORE_ERROR("Failed to load texture {0}: {1}", filepath, stbi_failure_reason());
+			UE_CORE_ERROR("Failed to load texture {0}: {1}", path, stbi_failure_reason());
 			UE_CORE_ERROR("Using fallback texture to prevent crash");
 			
 			UE_CORE_ASSERT(LoadFromSource("assets/core/textures/fallback.png") == UEResult::Success, "Failed to load fallback texture");
 
 			return UEResult::Error;
 		}
-
-		if (data)
+		else
 		{
 			m_Width = width;
 			m_Height = height;
@@ -50,7 +49,7 @@ namespace UE
 				internalFormat = GL_R16;
 				dataFormat = GL_RED;
 			default:
-				UE_CORE_ERROR("Failed to load texture \"{0}\": unknown format with {1} channels", filepath, channels);
+				UE_CORE_ERROR("Failed to load texture \"{0}\": unknown format with {1} channels", path, channels);
 				return UEResult::Error;
 			}
 
@@ -70,13 +69,30 @@ namespace UE
 				GLint SwizzleMask[] = { GL_RED, GL_RED, GL_RED, GL_GREEN };
 				glTextureParameteriv(m_ID, GL_TEXTURE_SWIZZLE_RGBA, SwizzleMask);
 			}
+			
+			if (flags | TextureFlags::FILTERING_NEAREST)
+			{
+				glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+				glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			}
+			else
+			{
+				glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			}
 
-			glTextureParameteri(m_ID, GL_TEXTURE_WRAP_R, GL_REPEAT);
-			glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-			glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			if (flags | TextureFlags::CLAMP_TO_EDGE)
+			{
+				glTextureParameteri(m_ID, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+				glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			}
+			else
+			{
+				glTextureParameteri(m_ID, GL_TEXTURE_WRAP_R, GL_REPEAT);
+				glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+				glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			}
 
 			glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 
@@ -84,7 +100,6 @@ namespace UE
 
 			return UEResult::Success;
 		}
-		return UEResult::Error;
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
@@ -92,7 +107,7 @@ namespace UE
 		glDeleteTextures(1, &m_ID);
 	}
 
-	void OpenGLTexture2D::Bind(uint32_t slot) const
+	void OpenGLTexture2D::Bind(UEUint32 slot) const
 	{
 		glBindTextureUnit(slot, m_ID);
 	}

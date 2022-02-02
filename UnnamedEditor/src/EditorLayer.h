@@ -33,10 +33,6 @@ namespace UE
 	private:
 		Ref<Keyboard> m_Keyboard = CreateRef<UE::Keyboard>();
 	private:
-		Ref<Framebuffer> m_Framebuffer;
-	private:
-		Ref<ShaderLibrary> m_ShaderLibrary = CreateRef<ShaderLibrary>();
-
 		Ref<Camera> m_Camera;
 		Ref<CameraController> m_CameraController;
 
@@ -44,9 +40,6 @@ namespace UE
 		
 		Ref<Screen> m_Screen;
 		Ref<Primitives::Quad> m_Quad;
-	private:
-		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
-		glm::vec2 m_ViewportBounds[2];
 	private:
 		MenuBarPanel m_MenuBarPanel;
 		ViewportPanel m_ViewportPanel;
@@ -65,6 +58,8 @@ namespace UE
 		bool OnMouseScrolled(MouseScrolledEvent& event);
 		bool OnGamepadButtonPressed(GamepadButtonPressedEvent& event);
 		bool OnGamepadButtonReleased(GamepadButtonReleasedEvent& event);
+	private:
+		bool OnRendererScaleChange(RendererScaleChangeEvent& event);
 	private:
 		std::vector<std::function<bool(Event&)>> m_WindowEventFns;
 		std::vector<std::function<bool(Event&)>> m_InputEventFns;

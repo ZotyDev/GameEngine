@@ -15,6 +15,8 @@
 
 #include "Core/Timestep.h"
 
+#include "Core/GlobalConfig.h"
+
 /* Math */
 /*============================================================*/
 #include "Math/Random/RNGStrong.h"
@@ -34,9 +36,6 @@
 
 /* ECS */
 /*============================================================*/
-#include "ECS/Entity.h"
-#include "ECS/Component.h"
-#include "ECS/System.h"
 
 /* Script */
 /*============================================================*/

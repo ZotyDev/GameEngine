@@ -17,6 +17,8 @@ namespace UE
 		virtual void OnImGuiRender() override;
 		virtual void OnWindowEvent(Event& event) override;
 		virtual void OnInputEvent(Event& event) override;
+		//virtual void OnNetworkEvent(Event& event) override;
+		virtual void OnRendererEvent(Event& event) override;
 
 		void RegisterWindowEvent(std::function<bool(Event&)>& fn);
 		void RegisterInputEvent(std::function<bool(Event&)>& fn);
@@ -27,8 +29,6 @@ namespace UE
 	private:
 		Ref<Application::SharedData> m_Data;
 	private:
-		Ref<ShaderLibrary> m_ShaderLibrary = CreateRef<ShaderLibrary>();
-
 		Ref<Texture2D> m_Texture2D;
 
 		Ref<Camera> m_Camera;
@@ -48,6 +48,8 @@ namespace UE
 		bool OnMouseScrolled(MouseScrolledEvent& event);
 		bool OnGamepadButtonPressed(GamepadButtonPressedEvent& event);
 		bool OnGamepadButtonReleased(GamepadButtonReleasedEvent& event);
+	private:
+		bool OnRendererScaleChange(RendererScaleChangeEvent& event);
 	private:
 		std::vector<std::function<bool(Event&)>> m_WindowEventFns;
 		std::vector<std::function<bool(Event&)>> m_InputEventFns;

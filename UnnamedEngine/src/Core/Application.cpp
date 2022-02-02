@@ -3,12 +3,9 @@
 
 #include "Renderer/Renderer.h"
 
-#include "ECS/System.h"
-
 // Todo: implement minify or iconify function inside OnWindowResize()
 
 #include "Script/Lune/LuneModule.h"
-#include "ECS/EntityLua.h"
 
 #include "Script/LuneExposer.h"
 
@@ -17,8 +14,6 @@
 namespace UE
 {
 	Application* Application::s_Instance = nullptr;
-
-	Ref<EntityManager> m_EntityManager;
 
 	struct PosXTest
 	{
@@ -53,10 +48,6 @@ namespace UE
 		// Initialize Lua
 		m_Data->m_Lune = CreateRef<LuneStack>();
 		ExposeCoreToLune(m_Data->m_Lune);
-
-		ComponentDataShell PosX("PositionX", UEType::Float, 512);
-		PosX.SetData<UEFloat>(1, 0.5f);
-		UE_CORE_INFO(PosX.GetData<UEFloat>(1));
 	}
 
 	Application::~Application()
@@ -159,6 +150,21 @@ namespace UE
 		}
 	}
 
+	void Application::OnRendererEvent(Event& event)
+	{
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<RendererScaleChangeEvent>(UE_BIND_EVENT_FN(OnRendererScaleChange));
+
+		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); it++)
+		{
+			if (event.m_Handled)
+			{
+				break;
+			}
+			(*it)->OnRendererEvent(event);
+		}
+	}
+
 	bool Application::OnWindowClose(WindowCloseEvent& event)
 	{
 		m_Data->m_Minimized = false;
@@ -176,7 +182,26 @@ namespace UE
 			return false;
 		}
 
-		RenderCommand::SetViewport(0, 0, event.GetWidth(), event.GetHeight());
+		// Update global configs
+		GlobalConfig::Application::Width = event.GetWidth();
+		GlobalConfig::Application::Height = event.GetHeight();
+		GlobalConfig::Rendering::ScreenWidth = GlobalConfig::Application::Width;
+		GlobalConfig::Rendering::ScreenHeight = GlobalConfig::Application::Height;
+		GlobalConfig::Rendering::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenWidth / GlobalConfig::Rendering::PixelSize);
+		GlobalConfig::Rendering::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenHeight / GlobalConfig::Rendering::PixelSize);
+
+		// Update renderer
+		Renderer::OnWindowResize();
+
+		return false;
+	}
+
+	bool Application::OnRendererScaleChange(RendererScaleChangeEvent& event)
+	{
+		GlobalConfig::Rendering::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenWidth / GlobalConfig::Rendering::PixelSize);
+		GlobalConfig::Rendering::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenHeight / GlobalConfig::Rendering::PixelSize);
+
+		Renderer::OnWindowResize();
 
 		return false;
 	}

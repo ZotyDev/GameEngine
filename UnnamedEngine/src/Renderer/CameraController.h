@@ -29,17 +29,17 @@ namespace UE
 		void MoveDown();
 		void StopUp();
 
-		void OnResize(float width, float height);
+		void OnResize(UEFloat width, UEFloat height);
 
 		Ref<Camera> GetCamera() { return m_Camera; };
 
 	private:
-		bool OnWindowResize(WindowResizeEvent& event);
+		UEBool OnWindowResize(WindowResizeEvent& event);
 	private:
-		float m_ForwardMovement;
-		float m_RightMovement;
-		float m_UpMovement;
-		float m_Velocity;
+		UEFloat m_ForwardMovement;
+		UEFloat m_RightMovement;
+		UEFloat m_UpMovement;
+		UEFloat m_Velocity;
 	private:
 		Ref<Camera> m_Camera;
 	};

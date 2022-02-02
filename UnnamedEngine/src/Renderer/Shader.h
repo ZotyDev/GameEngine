@@ -12,42 +12,76 @@ namespace UE
 	public:
 		virtual ~Shader() = default;
 
-		virtual int LoadFromSource(const std::string& filepath) = 0;
-		virtual int LoadFromSource(const std::string& name, const std::string& vertecSrc, const std::string& fragmentSrc) = 0;
+		virtual UEResult LoadFromSource(const UEPath& path) = 0;
+		virtual UEResult LoadFromSource(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath) = 0;
 
-		virtual int Compile() = 0;
+		virtual UEResult Compile() = 0;
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
 		virtual void Set(const UEString& vertSource, const UEString& fragSource) = 0;
 
-		virtual void SetInt(const std::string& name, int value) = 0;
-		virtual void SetIntArray(const std::string& name, int* values, uint32_t count) = 0;
-		virtual void SetFloat(const std::string& name, float value) = 0;
-		virtual void SetFloat2(const std::string& name, const glm::vec2& value) = 0;
-		virtual void SetFloat3(const std::string& name, const glm::vec3& value) = 0;
-		virtual void SetFloat4(const std::string& name, const glm::vec4& value) = 0;
-		virtual void SetMat4(const std::string& name, const glm::mat4& value) = 0;
+		virtual void SetBool(const UEString& name, UEBool value) = 0;
+		virtual void SetInt(const UEString& name, UEInt32 value) = 0;
+		virtual void SetUint(const UEString& name, UEUint32 value) = 0;
+		virtual void SetFloat(const UEString& name, UEFloat value) = 0;
+		virtual void SetDouble(const UEString& name, UEDouble value) = 0;
 
-		virtual const std::string& GetName() const = 0;
+		virtual void SetBVec2(const UEString& name, const glm::bvec2& value) = 0;
+		virtual void SetBVec3(const UEString& name, const glm::bvec3& value) = 0;
+		virtual void SetBVec4(const UEString& name, const glm::bvec4& value) = 0;
 
-		static Ref<Shader> Create(const std::string& filepath);
-		static Ref<Shader> Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
+		virtual void SetIVec2(const UEString& name, const glm::ivec2& value) = 0;
+		virtual void SetIVec3(const UEString& name, const glm::ivec3& value) = 0;
+		virtual void SetIVec4(const UEString& name, const glm::ivec4& value) = 0;
+
+		virtual void SetUVec2(const UEString& name, const glm::uvec2& value) = 0;
+		virtual void SetUVec3(const UEString& name, const glm::uvec3& value) = 0;
+		virtual void SetUVec4(const UEString& name, const glm::uvec4& value) = 0;
+
+		virtual void SetVec2(const UEString& name, const glm::vec2& value) = 0;
+		virtual void SetVec3(const UEString& name, const glm::vec3& value) = 0;
+		virtual void SetVec4(const UEString& name, const glm::vec4& value) = 0;
+
+		virtual void SetDVec2(const UEString& name, const glm::dvec2& value) = 0;
+		virtual void SetDVec3(const UEString& name, const glm::dvec3& vale) = 0;
+		virtual void SetDVec4(const UEString& name, const glm::dvec4& value) = 0;
+		
+		virtual void SetMat2(const UEString& name, const glm::mat2& value) = 0;
+		virtual void SetMat3(const UEString& name, const glm::mat3& value) = 0;
+		virtual void SetMat4(const UEString& name, const glm::mat4& value) = 0;
+
+		virtual void SetMat2x2(const UEString& name, const glm::mat2x2& value) = 0;
+		virtual void SetMat2x3(const UEString& name, const glm::mat2x3& value) = 0;
+		virtual void SetMat2x4(const UEString& name, const glm::mat2x4& value) = 0;
+
+		virtual void SetMat3x2(const UEString& name, const glm::mat3x2& value) = 0;
+		virtual void SetMat3x3(const UEString& name, const glm::mat3x3& value) = 0;
+		virtual void SetMat3x4(const UEString& name, const glm::mat3x4& value) = 0;
+
+		virtual void SetMat4x2(const UEString& name, const glm::mat4x2& value) = 0;
+		virtual void SetMat4x3(const UEString& name, const glm::mat4x3& value) = 0;
+		virtual void SetMat4x4(const UEString& name, const glm::mat4x4& value) = 0;
+
+		virtual const UEString& GetName() const = 0;
+
+		static Ref<Shader> Create(const UEPath& path);
+		static Ref<Shader> Create(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath);
 	};
 
 	class ShaderLibrary
 	{
 	public:
-		void Add(const std::string& name, const Ref<Shader>& shader);
-		void Add(const Ref<Shader>& shader);
-		Ref<Shader> Load(const std::string& filepath);
-		Ref<Shader> Load(const std::string& name, const std::string& filepath);
+		static void Add(const UEString& name, const Ref<Shader>& shader);
+		static void Add(const Ref<Shader>& shader);
+		static Ref<Shader> Load(const UEPath& path);
+		static Ref<Shader> Load(const UEString& name, const UEPath& path);
 
-		Ref<Shader> Get(const std::string& name);
+		static Ref<Shader> Get(const UEString& name);
 
-		bool Exists(const std::string& name) const;
+		static bool Exists(const UEString& name);
 	private:
-		std::unordered_map<std::string, Ref<Shader>> m_Shaders;
+		static std::unordered_map<UEString, Ref<Shader>> m_Shaders;
 	};
 }

@@ -9,7 +9,7 @@
 
 namespace UE
 {
-	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
+	Ref<VertexBuffer> VertexBuffer::Create(UEUint32 size)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -19,7 +19,25 @@ namespace UE
 
 		#if defined(UE_PLATFORM_OPENGL)
 		case RendererAPI::API::OpenGL:
-			return new OpenGLVertexBuffer(vertices, size);
+			return CreateRef<OpenGLVertexBuffer>(size);
+		#endif
+		}
+
+		UE_CORE_ASSERT(FALSE, "Unknown RendererAPI!");
+		return nullptr;
+	};
+
+	Ref<VertexBuffer> VertexBuffer::Create(UEFloat* vertices, UEUint32 size)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:
+			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+			return nullptr;
+
+		#if defined(UE_PLATFORM_OPENGL)
+		case RendererAPI::API::OpenGL:
+			return CreateRef<OpenGLVertexBuffer>(vertices, size);
 		#endif
 		}
 

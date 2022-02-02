@@ -6,91 +6,61 @@
 
 namespace UE
 {
-	int OpenGLShader::LoadFromSource(const std::string& filepath)
+	UEResult OpenGLShader::LoadFromSource(const UEPath& path)
 	{
 		// Extract name from filepath
-		auto lastSlash = filepath.find_last_of("/\\");
+		auto lastSlash = path.string().find_last_of("/\\");
 		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
-		auto lastDot = filepath.rfind('.');
-		auto count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
-		m_Name = filepath.substr(lastSlash, count);
+		auto lastDot = path.string().rfind('.');
+		auto count = lastDot == std::string::npos ? path.string().size() - lastSlash : lastDot - lastSlash;
+		UEString tName = path.string().substr(lastSlash, count);
 
-		std::ifstream vShaderFile;
-		std::ifstream fShaderFile;
+		// Read shader source from files
+		UEPath VertexPath = path;
+		VertexPath += ".vert";
 
-		// Open files
-		vShaderFile.open(filepath + ".vert");
-		if (!vShaderFile)
+		UEPath FragmentPath = path;
+		FragmentPath += ".frag";
+		
+		if (ReadToBuffer(VertexPath, m_VertexCode) == UEResult::Error)
 		{
-			UE_CORE_ERROR("Failed to open ", filepath + ".vert");
-			return -1;
+			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read vertex source at {1}", tName, VertexPath);
+			return UEResult::Error;
 		}
 
-		fShaderFile.open(filepath + ".frag");
-		if (!fShaderFile)
+		if (ReadToBuffer(FragmentPath, m_FragmentCode) == UEResult::Error)
 		{
-			UE_CORE_ERROR("Failed to open ", filepath + ".frag");
-			return -1;
+			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read fragment source at {1}", tName, FragmentPath);
+			return UEResult::Error;
 		}
 
-		// Read file's contents into streams
-		std::stringstream vShaderStream;
-		std::stringstream fShaderStream;
+		m_Name = tName;
 
-		vShaderStream << vShaderFile.rdbuf();
-		fShaderStream << fShaderFile.rdbuf();
-
-		// Close file handlers
-		vShaderFile.close();
-		fShaderFile.close();
-
-		// Convert stream into string
-		m_VertexCode = vShaderStream.str();
-		m_FragmentCode = fShaderStream.str();
-
-		return 0;
+		return UEResult::Success;
 	}
 
-	int OpenGLShader::LoadFromSource(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
+	UEResult OpenGLShader::LoadFromSource(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath)
 	{
+
+		// Read shader source from files
+		if (ReadToBuffer(vertexPath, m_VertexCode) == UEResult::Error)
+		{
+			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read vertex source at {1}", name, vertexPath);
+			return UEResult::Error;
+		}
+
+		if (ReadToBuffer(fragmentPath, m_FragmentCode) == UEResult::Error)
+		{
+			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read fragment source at {1}", name, fragmentPath);
+			return UEResult::Error;
+		}
+
 		m_Name = name;
-		std::ifstream vShaderFile;
-		std::ifstream fShaderFile;
 
-		// Open files
-		vShaderFile.open(vertexSrc);
-		if (!vShaderFile)
-		{
-			UE_CORE_ERROR("Failed to open ", vertexSrc);
-			return -1;
-		}
-
-		fShaderFile.open(fragmentSrc);
-		if (!fShaderFile)
-		{
-			UE_CORE_ERROR("Failed to open ", fragmentSrc);
-			return -1;
-		}
-
-		// Read file's contents into streams
-		std::stringstream vShaderStream;
-		std::stringstream fShaderStream;
-
-		vShaderStream << vShaderFile.rdbuf();
-		fShaderStream << fShaderFile.rdbuf();
-
-		// Close file handlers
-		vShaderFile.close();
-		fShaderFile.close();
-
-		// Convert stream into string
-		m_VertexCode = vShaderStream.str();
-		m_FragmentCode = fShaderStream.str();
-
-		return 0;
+		return UEResult::Success;
 	}
 
-	int OpenGLShader::Compile()
+	UEResult OpenGLShader::Compile()
 	{
 		unsigned int vertex;
 		unsigned int fragment;
@@ -109,7 +79,7 @@ namespace UE
 		{
 			glGetShaderInfoLog(vertex, 512, NULL, infoLog);
 			UE_CORE_ERROR("Failed to compile Vertex Shader:\n {0}", infoLog);
-			return -1;
+			return UEResult::Error;
 		}
 
 		// Fragmnet shader
@@ -125,7 +95,7 @@ namespace UE
 			glGetShaderInfoLog(fragment, 512, NULL, infoLog);
 			UE_CORE_ERROR("Failed to compile Fragment Shader:\n {0}", infoLog);
 			std::cout << infoLog << "\n";
-			return -1;
+			return UEResult::Error;
 		}
 
 		// Shader Program
@@ -141,14 +111,14 @@ namespace UE
 			glGetProgramInfoLog(m_ID, 512, NULL, infoLog);
 			UE_CORE_ERROR("Failed to link Shader Program:\n {0}", infoLog);
 			std::cout << infoLog << "\n";
-			return -1;
+			return UEResult::Error;
 		}
 
 		// Delete temporary shaders
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
 
-		return 0;
+		return UEResult::Success;
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -173,86 +143,168 @@ namespace UE
 		Compile();
 	}
 
-	void OpenGLShader::SetInt(const std::string& name, int value)
+	UEInt32 OpenGLShader::GetUniformLocation(const UEString& name)
 	{
-		UploadUniformInt(name, value);
+		return glGetUniformLocation(m_ID, name.c_str());
 	}
 
-	void OpenGLShader::SetIntArray(const std::string& name, int* values, uint32_t count)
+	void OpenGLShader::SetBool(const UEString& name, UEBool value)
 	{
-		UploadUniformIntArray(name, values, count);
+		glUniform1i(GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::SetFloat(const std::string& name, float value)
+	void OpenGLShader::SetInt(const UEString& name, UEInt32 value)
 	{
-		UploadUniformFloat(name, value);
+		glUniform1i(GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::SetFloat2(const std::string& name, const glm::vec2& value)
+	void OpenGLShader::SetUint(const UEString& name, UEUint32 value)
 	{
-		UploadUniformFloat2(name, value);
+		glUniform1ui(GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& value)
+	void OpenGLShader::SetFloat(const UEString& name, UEFloat value)
 	{
-		UploadUniformFloat3(name, value);
+		glUniform1f(GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& value)
+	void OpenGLShader::SetDouble(const UEString& name, UEDouble value)
 	{
-		UploadUniformFloat4(name, value);
+		glUniform1d(GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value)
+	void OpenGLShader::SetBVec2(const UEString& name, const glm::bvec2& value)
 	{
-		UploadUniformMat4(name, value);
+		glUniform2i(GetUniformLocation(name), value.x, value.y);
 	}
 
-	void OpenGLShader::UploadUniformInt(const std::string& name, int value)
+	void OpenGLShader::SetBVec3(const UEString& name, const glm::bvec3& value)
 	{
-		unsigned int location = glGetUniformLocation(m_ID, name.c_str());
-		glUniform1i(location, value);
+		glUniform3i(GetUniformLocation(name), value.x, value.y, value.z);
 	}
 
-	void OpenGLShader::UploadUniformIntArray(const std::string& name, int* values, uint32_t count)
+	void OpenGLShader::SetBVec4(const UEString& name, const glm::bvec4& value)
 	{
-		unsigned int location = glGetUniformLocation(m_ID, name.c_str());
-		glUniform1iv(location, count, values);
+		glUniform4i(GetUniformLocation(name), value.x, value.y, value.z, value.w);
 	}
 
-	void OpenGLShader::UploadUniformFloat(const std::string& name, float value)
+	void OpenGLShader::SetIVec2(const UEString& name, const glm::ivec2& value)
 	{
-		unsigned int location = glGetUniformLocation(m_ID, name.c_str());
-		glUniform1f(location, value);
+		glUniform2i(GetUniformLocation(name.c_str()), value.x, value.y);
 	}
 
-	void OpenGLShader::UploadUniformFloat2(const std::string& name, const glm::vec2& value)
+	void OpenGLShader::SetIVec3(const UEString& name, const glm::ivec3& value)
 	{
-		unsigned int location = glGetUniformLocation(m_ID, name.c_str());
-		glUniform2f(location, value.x, value.y);
+		glUniform3i(GetUniformLocation(name), value.x, value.y, value.z);
 	}
 
-	void OpenGLShader::UploadUniformFloat3(const std::string& name, const glm::vec3& value)
+	void OpenGLShader::SetIVec4(const UEString& name, const glm::ivec4& value)
 	{
-		unsigned int location = glGetUniformLocation(m_ID, name.c_str());
-		glUniform3f(location, value.x, value.y, value.z);
+		glUniform4i(GetUniformLocation(name), value.x, value.y, value.z, value.w);
 	}
 
-	void OpenGLShader::UploadUniformFloat4(const std::string& name, const glm::vec4& value)
+	void OpenGLShader::SetUVec2(const UEString& name, const glm::uvec2& value)
 	{
-		unsigned int location = glGetUniformLocation(m_ID, name.c_str());
-		glUniform4f(location, value.x, value.y, value.z, value.w);
+		glUniform2ui(GetUniformLocation(name), value.x, value.y);
 	}
 
-	void OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& matrix)
+	void OpenGLShader::SetUVec3(const UEString& name, const glm::uvec3& value)
 	{
-		unsigned int location = glGetUniformLocation(m_ID, name.c_str());
-		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+		glUniform3ui(GetUniformLocation(name), value.x, value.y, value.z);
 	}
 
-	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
+	void OpenGLShader::SetUVec4(const UEString& name, const glm::uvec4& value)
 	{
-		unsigned int location = glGetUniformLocation(m_ID, name.c_str());
-		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+		glUniform4ui(GetUniformLocation(name), value.x, value.y, value.z, value.w);
+	}
+
+	void OpenGLShader::SetVec2(const UEString& name, const glm::vec2& value)
+	{
+		glUniform2f(GetUniformLocation(name), value.x, value.y);
+	}
+
+	void OpenGLShader::SetVec3(const UEString& name, const glm::vec3& value)
+	{
+		glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
+	}
+
+	void OpenGLShader::SetVec4(const UEString& name, const glm::vec4& value)
+	{
+		glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w);
+	}
+
+	void OpenGLShader::SetDVec2(const UEString& name, const glm::dvec2& value)
+	{
+		glUniform2d(GetUniformLocation(name), value.x, value.y);
+	}
+
+	void OpenGLShader::SetDVec3(const UEString& name, const glm::dvec3& value)
+	{
+		glUniform3d(GetUniformLocation(name.c_str()), value.x, value.y, value.z);
+	}
+
+	void OpenGLShader::SetDVec4(const UEString& name, const glm::dvec4& value)
+	{
+		glUniform4d(GetUniformLocation(name), value.x, value.y, value.z, value.w);
+	}
+
+	void OpenGLShader::SetMat2(const UEString& name, const glm::mat2& value)
+	{
+		SetMat2x2(name, value);
+	}
+
+	void OpenGLShader::SetMat3(const UEString& name, const glm::mat3& value)
+	{
+		SetMat3x3(name, value);
+	}
+
+	void OpenGLShader::SetMat4(const UEString& name, const glm::mat4& value)
+	{
+		SetMat4x4(name, value);
+	}
+
+	void OpenGLShader::SetMat2x2(const UEString& name, const glm::mat2x2& value)
+	{
+		glUniformMatrix2fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void OpenGLShader::SetMat2x3(const UEString& name, const glm::mat2x3& value)
+	{
+		glUniformMatrix2x3fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void OpenGLShader::SetMat2x4(const UEString& name, const glm::mat2x4& value)
+	{
+		glUniformMatrix2x4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void OpenGLShader::SetMat3x2(const UEString& name, const glm::mat3x2& value)
+	{
+		glUniformMatrix3x2fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void OpenGLShader::SetMat3x3(const UEString& name, const glm::mat3x3& value)
+	{
+		glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void OpenGLShader::SetMat3x4(const UEString& name, const glm::mat3x4& value)
+	{
+		glUniformMatrix3x4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void OpenGLShader::SetMat4x2(const UEString& name, const glm::mat4x2& value)
+	{
+		glUniformMatrix4x2fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void OpenGLShader::SetMat4x3(const UEString& name, const glm::mat4x3& value)
+	{
+		glUniformMatrix4x3fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void OpenGLShader::SetMat4x4(const UEString& name, const glm::mat4x4& value)
+	{
+		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 	}
 }

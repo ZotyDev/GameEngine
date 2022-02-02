@@ -9,7 +9,7 @@
 
 namespace UE
 {
-	VertexArray* VertexArray::Create()
+	Ref<VertexArray> VertexArray::Create()
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -19,7 +19,7 @@ namespace UE
 
 		#if defined(UE_PLATFORM_OPENGL)
 		case RendererAPI::API::OpenGL: 
-			return new OpenGLVertexArray();
+			return CreateRef<OpenGLVertexArray>();
 		#endif
 		}
 

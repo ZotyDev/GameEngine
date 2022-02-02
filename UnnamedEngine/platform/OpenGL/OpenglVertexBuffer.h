@@ -7,7 +7,8 @@ namespace UE
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
-		OpenGLVertexBuffer(float* vertices, uint32_t size);
+		OpenGLVertexBuffer(UEUint32 size);
+		OpenGLVertexBuffer(UEFloat* vertices, UEUint32 size);
 		virtual ~OpenGLVertexBuffer();
 
 		virtual void Bind() const override;
@@ -17,7 +18,7 @@ namespace UE
 		virtual const BufferLayout& GetLayout() const override { return m_Layout; };
 
 	private:
-		unsigned int m_ID;
+		UEUint32 m_ID;
 		BufferLayout m_Layout;
 	};
 }

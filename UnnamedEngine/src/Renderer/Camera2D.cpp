@@ -6,7 +6,7 @@
 
 namespace UE
 {
-	Camera2D::Camera2D(float width, float height, glm::vec3 position, float nearClip, float farClip, float scale)
+	Camera2D::Camera2D(UEFloat width, UEFloat height, glm::vec3 position, UEFloat nearClip, UEFloat farClip, UEFloat scale)
 		: Camera(width, height, position, nearClip, farClip), m_Scale(scale)
 	{
 		Update();
@@ -21,7 +21,25 @@ namespace UE
 	void Camera2D::UpdateProjection()
 	{
 		m_AspectRatio = m_ViewportWidth / m_ViewportHeight;
-		//m_Projection = glm::ortho(0.0f, m_ViewportWidth, m_ViewportHeight, 0.0f, m_NearClip, m_FarClip);
-		m_Projection = glm::ortho(-m_AspectRatio / m_Scale, m_AspectRatio / m_Scale, -1.0f / m_Scale, 1.0f / m_Scale, m_NearClip, m_FarClip);
+		
+		glm::vec4 tProjection;
+		
+		// Should work
+		tProjection = {
+			0.0f,
+			m_ViewportWidth,
+			0.0f,
+			m_ViewportHeight
+		};
+
+		// Works
+		//tProjection = {
+		//	-m_AspectRatio / m_Scale,
+		//	m_AspectRatio / m_Scale,
+		//	-1.0f / m_Scale,
+		//	1.0f / m_Scale
+		//};
+
+		m_Projection = glm::ortho(tProjection.x, tProjection.y, tProjection.z, tProjection.w, m_NearClip, m_FarClip);
 	}
 }

@@ -13,12 +13,12 @@ namespace UE
 		static void Init();
 		static void Shutdown();
 
-		static void OnWindowResize(uint32_t width, uint32_t height);
+		static void OnWindowResize();
 
 		static void SetClearColor(glm::vec4 color);
 		static void Clear();
 
-		static void BeginRender(Camera& camera);
+		static void BeginRender(Ref<Camera> camera);
 		static void EndRender();
 
 		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray);

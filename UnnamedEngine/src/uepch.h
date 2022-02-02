@@ -51,6 +51,7 @@
 #include <initializer_list>
 #include <unordered_map>
 #include <map>
+#include <tuple>
 
 /* Engine Stuff */
 /*============================================================*/

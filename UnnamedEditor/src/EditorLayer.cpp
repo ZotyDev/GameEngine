@@ -18,8 +18,6 @@ namespace UE
 		// Set the icon for the game window
 		m_Data->m_Window->SetIcon("res/icon.png");
 
-		m_Data->m_Lune->ExecuteFile("assets/mods/test.lua");
-
 		m_Texture2D = Texture2D::Create();
 		const UEString TexturePath = "assets/textures/grass.png";
 		if (m_Texture2D->LoadFromSource(TexturePath) == UEResult::Error)
@@ -27,77 +25,91 @@ namespace UE
 			UE_CORE_ERROR("Failed to load {0}: not found", TexturePath);
 		}
 
-		m_Camera = CreateRef<Camera3D>(1280, 720, glm::vec3(0.0f, 0.0f, 1.5f));
+		m_Camera = CreateRef<Camera3D>(
+			GlobalConfig::Rendering::ScreenWidth, 
+			GlobalConfig::Rendering::ScreenHeight, 
+			glm::vec3(0.0f, 0.0f, 1.5f));
 		m_CameraController = CreateRef<CameraController>(m_Camera);
 
 		FramebufferSpecification specs;
-		specs.Width = 1280;
-		specs.Height = 720;
+		specs.Width = GlobalConfig::Rendering::DesiredWidth;
+		specs.Height = GlobalConfig::Rendering::DesiredHeight;
 		specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Color));
 		specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Depth));
-		m_Framebuffer = Framebuffer::Create(specs);
+		Ref<Framebuffer> tFramebuffer = Framebuffer::Create(specs);
 
 		m_Quad = CreateRef<Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));
 
 		// LoadShader LUA function register
 		LuneFunction LoadShader("LoadShader", [](lua_State* L) -> int
 			{
-				UE::ShaderLibrary* t_ShaderLibrary = (ShaderLibrary*)lua_touserdata(L, lua_upvalueindex(1));
+				ShaderLibrary* t_ShaderLibrary = (ShaderLibrary*)lua_touserdata(L, lua_upvalueindex(1));
 
 				const char* t_FilePath = (const char*)lua_tostring(L, -1);
 
-				t_ShaderLibrary->Load(t_FilePath);
+				ShaderLibrary::Load(t_FilePath);
 				UE_INFO("Loaded shader: {0}", t_FilePath);
 
 				return 1;
-			}, (void*)m_ShaderLibrary.get());
+			});
 
 		LoadShader.RegisterSelf(m_Data->m_Lune);
 		// Execute file that load the shaders
 		m_Data->m_Lune->ExecuteFile("assets/mods/shaders.lua");
 
-		m_ShaderLibrary->Get("screen")->Compile();
-		//m_ShaderLibrary->Get("default")->Compile();
-
-		m_Screen = CreateRef<UE::Screen>(m_ShaderLibrary->Get("screen"), m_Framebuffer);
+		ShaderLibrary::Get("screen")->Compile();
+		m_Screen = CreateRef<UE::Screen>(ShaderLibrary::Get("screen"), tFramebuffer);
 
 		Renderer3D::Init(m_Screen);
 
 		ShaderHeaderConstructor MyShaderHeaderConstructor("assets/shaders/default");
+		std::vector<ShaderHeaderConstructor::Element> tShaderElements;
 
-		MyShaderHeaderConstructor.AddElement({
-			"v_Position",
+		tShaderElements.push_back({
+			"Position",
 			ShaderDataType::Vec3,
 			ShaderHeaderConstructor::UseType::VertInput,
 			});
 
-		MyShaderHeaderConstructor.AddElement({
-			"v_Texture",
+		tShaderElements.push_back({
+			"Texture",
 			ShaderDataType::Vec2,
 			ShaderHeaderConstructor::UseType::VertInput,
 			});
 
-		MyShaderHeaderConstructor.AddElement({
+		tShaderElements.push_back({
 			"Texture",
 			ShaderDataType::Vec2,
 			ShaderHeaderConstructor::UseType::VertOutput,
 			});
-		MyShaderHeaderConstructor.AddElement({
+
+		tShaderElements.push_back({
 			"FragColor",
 			ShaderDataType::Vec4,
 			ShaderHeaderConstructor::UseType::FragOutput,
 			});
-		MyShaderHeaderConstructor.AddElement({
-			"u_Transform",
+
+		tShaderElements.push_back({
+			"Transform",
 			ShaderDataType::Mat4,
 			ShaderHeaderConstructor::UseType::VertUniform,
 			});
+
+		tShaderElements.push_back({
+			"Albedo",
+			ShaderDataType::Sampler2D,
+			ShaderHeaderConstructor::UseType::FragSampler,
+			});
+
+		MyShaderHeaderConstructor.SetElements(tShaderElements);
 
 		UEString NewVertSource;
 		UEString NewFragSource;
 		MyShaderHeaderConstructor.Construct(NewVertSource, NewFragSource);
 
-		m_ShaderLibrary->Get("default")->Set(NewVertSource, NewFragSource);
+		ShaderLibrary::Get("default")->Set(NewVertSource, NewFragSource);
+		GrassMaterial->RegisterShader("Shader", ShaderLibrary::Get("default"));
+		GrassMaterial->RegisterTexture("Texture", m_Texture2D);
 	}
 
 	void EditorLayer::OnDetach()
@@ -108,42 +120,28 @@ namespace UE
 	void EditorLayer::OnUpdate(Timestep timestep)
 	{
 		m_CameraController->OnUpdate(timestep);
-
+		
+		// Rendering
+		Renderer::BeginRender(m_CameraController->GetCamera());
 		Render();
+		Renderer::EndRender();
 	}
 
 	void EditorLayer::Render()
 	{
-		if 
-			(
-				FramebufferSpecification spec = m_Framebuffer->GetSpecification();
-				m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
-				(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y)
-			)
-		{
-			m_CameraController->OnResize(m_ViewportSize.x, m_ViewportSize.y);
-			Renderer::OnWindowResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		}
-
-		Renderer3D::BeginRender(m_CameraController->GetCamera());
-		/*============================================================================*/
-
-		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
-		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 1.0f, 0.0f, 0.0f });
-		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 1.0f, 0.0f });
-		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 1.0f });
-		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { -1.0f, 0.0f, 0.0f });
-		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, -1.0f, 0.0f });
-		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, -1.0f });
-
-		/*============================================================================*/
-		Renderer3D::EndRender();
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 1.0f, 0.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 1.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 1.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { -1.0f, 0.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, -1.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, -1.0f });
 	}
 
 	void EditorLayer::OnImGuiRender()
 	{
 		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-
+		
 		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
 		// because it would be confusing to have two docking targets within each others.
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
@@ -162,12 +160,12 @@ namespace UE
 		{
 			dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
 		}
-
+		
 		// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
 		// and handle the pass-thru hole, so we ask Begin() to not render a background.
 		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 			window_flags |= ImGuiWindowFlags_NoBackground;
-
+		
 		// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
 		// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
 		// all active windows docked into it will lose their parent and become undocked.
@@ -177,18 +175,18 @@ namespace UE
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		}
-
+		
 		ImGui::Begin("DockSpace Demo", &m_Data->m_Running, window_flags);
 		if (!PanelsConfig::OptPadding)
 		{
 			ImGui::PopStyleVar();
 		}
-
+		
 		if (PanelsConfig::OptFullscreen)
 		{
 			ImGui::PopStyleVar(2);
 		}
-
+		
 		// Submit the DockSpace
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
@@ -196,13 +194,35 @@ namespace UE
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
-
+		
 		m_MenuBarPanel.OnImGuiRender(m_Data);
-		m_ViewportPanel.OnImGuiRender(m_Data, m_ViewportBounds, &m_ViewportSize, m_Framebuffer);
+		m_ViewportPanel.OnImGuiRender(m_Data, m_Screen->m_ViewportBounds, &m_Screen->m_ViewportSize, m_Screen->m_Framebuffer);
 		m_ContentBrowserPanel.OnImGuiRender();
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_PropertiesPanel.OnImGuiRender();
-
+		
+		ImGui::End();
+		
+		auto Pos = m_Camera->GetPosition();
+		
+		ImGui::Begin("Debug");
+		
+		ImGui::Text("X: %f", Pos.x);
+		ImGui::Text("Y: %f", Pos.y);
+		ImGui::Text("Zoom: %f", m_Camera->GetZoom());
+		ImGui::Text("Width: %i", GlobalConfig::Application::Width);
+		ImGui::Text("Height: %i", GlobalConfig::Application::Height);
+		ImGui::Text("Rendering Screen Width: %i", GlobalConfig::Rendering::ScreenWidth);
+		ImGui::Text("Rendering Screen Height: %i", GlobalConfig::Rendering::ScreenHeight);
+		ImGui::Text("Pixel Size: %f", GlobalConfig::Rendering::PixelSize);
+		ImGui::Text("Rendering Width: %i", m_Screen->m_Framebuffer->GetWidth());
+		ImGui::Text("Rendering Height: %i", m_Screen->m_Framebuffer->GetHeight());
+		UEUint32 ViewportX = 0;
+		UEUint32 ViewportY = 0;
+		RenderCommand::GetViewport(ViewportX, ViewportY);
+		ImGui::Text("ViewportWidth: %i", ViewportX);
+		ImGui::Text("Viewportheight: %i", ViewportY);
+		
 		ImGui::End();
 
 		//ImGui::ShowDemoWindow();
@@ -242,8 +262,7 @@ namespace UE
 	}
 
 	bool EditorLayer::OnWindowResize(WindowResizeEvent& event)
-	{
-		UE::Renderer3D::OnWindowResize(event.GetWidth(), event.GetHeight());
+	{	
 		return false;
 	}
 
@@ -268,6 +287,14 @@ namespace UE
 			break;
 		case UE::KeyCode::Q:
 			m_CameraController->MoveDown();
+			break;
+		case UE::KeyCode::Up:
+			GlobalConfig::Rendering::PixelSize *= 2;
+			OnRendererScaleChange(RendererScaleChangeEvent());
+			break;
+		case UE::KeyCode::Down:
+			GlobalConfig::Rendering::PixelSize /= 2;
+			OnRendererScaleChange(RendererScaleChangeEvent());
 			break;
 		}
 
@@ -353,8 +380,8 @@ namespace UE
 			float CurrentYaw = CurrentCamera->GetYaw();
 			float CurrentPitch = CurrentCamera->GetPitch();
 
-			CurrentCamera->SetYaw(CurrentYaw + (DiffMouseX * 0.001f));
-			CurrentCamera->SetPitch(CurrentPitch + (DiffMouseY * 0.001f));
+			CurrentCamera->SetYaw(CurrentYaw + (DiffMouseX * 0.001f * GlobalConfig::Mouse::MovementSensibilityX));
+			CurrentCamera->SetPitch(CurrentPitch + (DiffMouseY * 0.001f * GlobalConfig::Mouse::MovementSensibilityY));
 		}
 
 		return false;
@@ -362,7 +389,7 @@ namespace UE
 
 	bool EditorLayer::OnMouseScrolled(MouseScrolledEvent& event)
 	{
-		m_Camera->ZoomIn(event.GetXOffset() * 0.25f);
+		m_Camera->ZoomIn(event.GetXOffset() * 0.25f * GlobalConfig::Mouse::ScrollSensibilityX);
 
 		return false;
 	}
@@ -374,6 +401,16 @@ namespace UE
 
 	bool EditorLayer::OnGamepadButtonReleased(GamepadButtonReleasedEvent& event)
 	{
+		return false;
+	}
+
+	bool EditorLayer::OnRendererScaleChange(RendererScaleChangeEvent& event)
+	{
+		GlobalConfig::Rendering::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenWidth / GlobalConfig::Rendering::PixelSize);
+		GlobalConfig::Rendering::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenHeight / GlobalConfig::Rendering::PixelSize);
+
+		Renderer::OnWindowResize();
+
 		return false;
 	}
 }

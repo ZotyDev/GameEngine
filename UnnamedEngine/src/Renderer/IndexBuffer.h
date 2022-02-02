@@ -5,13 +5,13 @@ namespace UE
 	class IndexBuffer
 	{
 	public:
-		static IndexBuffer* Create(uint32_t* indices, uint32_t count);
+		virtual ~IndexBuffer() {};
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
-		virtual uint32_t GetCount() const = 0;
-
-		virtual ~IndexBuffer() {};
+		virtual UEUint32 GetCount() const = 0;
+	
+		static Ref<IndexBuffer> Create(UEUint32* indices, UEUint32 count);
 	};
 }

@@ -9,7 +9,7 @@
 
 namespace UE
 {
-	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count)
+	Ref<IndexBuffer> IndexBuffer::Create(UEUint32* indices, UEUint32 count)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -19,7 +19,7 @@ namespace UE
 
 		#if defined(UE_PLATFORM_OPENGL)
 		case RendererAPI::API::OpenGL: 
-			return new OpenGLIndexBuffer(indices, count);
+			return CreateRef<OpenGLIndexBuffer>(indices, count);
 		#endif
 		}
 

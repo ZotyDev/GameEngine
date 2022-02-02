@@ -12,17 +12,17 @@ namespace UE
 			return multisampled ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
 		}
 
-		static void CreateTextures(bool multisampled, uint32_t* outID, uint32_t count)
+		static void CreateTextures(UEBool multisampled, UEUint32* outID, UEUint32 count)
 		{
 			glCreateTextures(TextureTarget(multisampled), count, outID);
 		}
 
-		static void BindTexture(bool multisampled, uint32_t id)
+		static void BindTexture(UEBool multisampled, UEUint32 id)
 		{
 			glBindTexture(TextureTarget(multisampled), id);
 		}
 
-		static void AttachColorTexture(uint32_t id, int samples, GLenum internalFormat, GLenum format, uint32_t width, uint32_t height, int index)
+		static void AttachColorTexture(UEUint32 id, UEUint32 samples, GLenum internalFormat, GLenum format, UEUint32 width, UEUint32 height, UEUint32 index)
 		{
 			bool multisampled = samples > 1;
 			if (multisampled)
@@ -33,8 +33,8 @@ namespace UE
 			{
 				glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr);
 
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -43,7 +43,7 @@ namespace UE
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + index, TextureTarget(multisampled), id, 0);
 		}
 
-		static void AttachDepthTexture(uint32_t id, int samples, GLenum format, GLenum attachmentType, uint32_t width, uint32_t height)
+		static void AttachDepthTexture(UEUint32 id, UEUint32 samples, GLenum format, GLenum attachmentType, UEUint32 width, UEUint32 height)
 		{
 			bool multisampled = samples > 1;
 			if (multisampled)
@@ -125,7 +125,7 @@ namespace UE
 		glCreateFramebuffers(1, &m_ID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
 
-		bool multisampled = m_Specification.Samples > 1;
+		UEBool multisampled = m_Specification.Samples > 1;
 
 		// Attachments
 		if (m_ColorAttachmentSpecifications.size())
@@ -133,7 +133,7 @@ namespace UE
 			m_ColorAttachments.resize(m_ColorAttachmentSpecifications.size());
 			Utils::CreateTextures(multisampled, m_ColorAttachments.data(), m_ColorAttachments.size());
 
-			for (size_t i = 0; i < m_ColorAttachments.size(); i++)
+			for (UEUint32 i = 0; i < m_ColorAttachments.size(); i++)
 			{
 				Utils::BindTexture(multisampled, m_ColorAttachments[i]);
 				switch (m_ColorAttachmentSpecifications[i].TextureFormat)
@@ -191,18 +191,28 @@ namespace UE
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void OpenGLFramebuffer::BindColorAttachment(uint32_t index)
+	UEUint32 OpenGLFramebuffer::GetWidth()
+	{
+		return m_Specification.Width;
+	}
+
+	UEUint32 OpenGLFramebuffer::GetHeight()
+	{
+		return m_Specification.Height;
+	}
+
+	void OpenGLFramebuffer::BindColorAttachment(UEUint32 index)
 	{
 		glBindTexture(GL_TEXTURE_2D, GetColorAttachmentRendererID(index));
 	}
 
-	void OpenGLFramebuffer::BindDepthAttachment(uint32_t slot)
+	void OpenGLFramebuffer::BindDepthAttachment(UEUint32 slot)
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
 	}
 
-	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
+	void OpenGLFramebuffer::Resize(UEUint32 width, UEUint32 height)
 	{
 		m_Specification.Width = width;
 		m_Specification.Height = height;
@@ -210,7 +220,7 @@ namespace UE
 		Invalidate();
 	}
 
-	void OpenGLFramebuffer::ClearAttachment(uint32_t attachmentIndex, int value)
+	void OpenGLFramebuffer::ClearAttachment(UEUint32 attachmentIndex, UEUint32 value)
 	{
 		if (attachmentIndex > m_ColorAttachments.size())
 		{
@@ -222,7 +232,7 @@ namespace UE
 		glClearTexImage(m_ColorAttachments[attachmentIndex], 0, Utils::ueFramebufferTextureFormatToGL(spec.TextureFormat), GL_INT, &value);
 	}
 
-	uint32_t OpenGLFramebuffer::GetColorAttachmentRendererID(uint32_t index) const
+	uint32_t OpenGLFramebuffer::GetColorAttachmentRendererID(UEUint32 index) const
 	{
 		if (index > m_ColorAttachments.size())
 		{

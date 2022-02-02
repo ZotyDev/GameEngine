@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Core/GlobalConfig.h"
+
 namespace UE
 {
 	// Todo:
@@ -16,23 +18,31 @@ namespace UE
 
 	Scope<Renderer3D::Renderer3DData> Renderer3D::s_Data = CreateScope<Renderer3D::Renderer3DData>();
 	Scope<MaterialLibrary> Renderer3D::s_MaterialLibrary = CreateScope<MaterialLibrary>();
+	
+	UEBool Renderer3D::Initialized = false;
 
 	void Renderer3D::Init(Ref<Screen> screen)
 	{
-		Ref<Material> DefaultMaterial = CreateRef<Material>();
-		DefaultMaterial->RegisterTexture("Texture", nullptr);
-		DefaultMaterial->RegisterShader("Shader", nullptr);
-		s_MaterialLibrary->Add("Default", DefaultMaterial);
-
 		s_Data->CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::CameraData), 0);
-
 		s_Data->Screen = screen;
+
+		//FramebufferSpecification specs;
+		//specs.Width = GlobalConfig::Rendering::Width;
+		//specs.Height = GlobalConfig::Rendering::Height;
+		//specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Color));
+		//specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Depth));
+		//Ref<Framebuffer> tFramebuffer = Framebuffer::Create(specs);
+		// 
+		//ShaderLibrary::Get("screen")->Compile();
+		//s_Data->Screen = CreateRef<Screen>(ShaderLibrary::Get("screen"), tFramebuffer);
+
+		Initialized = true;
 	}
 
 	void Renderer3D::Shutdown()
 	{}
 
-	void Renderer3D::OnWindowResize(uint32_t width, uint32_t height)
+	void Renderer3D::OnWindowResize(UEUint32 width, UEUint32 height)
 	{
 		if (width != 0 && height != 0)
 		{
@@ -42,6 +52,19 @@ namespace UE
 
 	void Renderer3D::BeginRender(Ref<Camera> camera)
 	{
+		Ref<Screen> CurrentScreen = s_Data->Screen;
+		{
+			FramebufferSpecification spec = CurrentScreen->m_Framebuffer->GetSpecification();
+			if (CurrentScreen->m_ViewportSize.x > 0.0f && CurrentScreen->m_ViewportSize.y > 0.0f && (spec.Width != CurrentScreen->m_ViewportSize.x || spec.Height != CurrentScreen->m_ViewportSize.y))
+			{
+				UEUint32 Width = (UEUint32)((UEFloat)CurrentScreen->m_ViewportSize.x / GlobalConfig::Rendering::PixelSize);
+				UEUint32 Height = (UEUint32)((UEFloat)CurrentScreen->m_ViewportSize.y / GlobalConfig::Rendering::PixelSize);
+				camera->SetViewportSize((UEFloat)Width, (UEFloat)Height);
+				RenderCommand::SetViewport(0, 0, Width, Height);
+				OnWindowResize(Width, Height);
+			}
+		}
+
 		s_Data->CameraBuffer.ViewProjectionMatrix = camera->GetViewProjection();
 		s_Data->CameraUniformBuffer->SetData(&s_Data->CameraBuffer, sizeof(Renderer3DData::CameraData));
 
@@ -59,7 +82,7 @@ namespace UE
 
 	void Renderer3D::Flush()
 	{
-		// Bind screen framebuffer
+		// Bind screen
 		s_Data->Screen->Bind();
 		
 		// Start of rendering
@@ -205,16 +228,6 @@ namespace UE
 
 		s_Data->Index++;
 
-		return UEResult::Success;
-	}
-
-	UEResult Renderer3D::Submit(Entity entity, const Ref<Material> material)
-	{
-		return UEResult::Success;
-	}
-
-	UEResult Renderer3D::Submit(Entity entity)
-	{
 		return UEResult::Success;
 	}
 }

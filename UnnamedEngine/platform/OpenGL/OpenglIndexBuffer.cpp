@@ -5,11 +5,11 @@
 
 namespace UE
 {
-	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count) : mCount(count)
+	OpenGLIndexBuffer::OpenGLIndexBuffer(UEUint32* indices, UEUint32 count) : mCount(count)
 	{
 		glGenBuffers(1, &mID);
 		glBindBuffer(GL_ARRAY_BUFFER, mID);
-		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, count * sizeof(UEUint32), indices, GL_STATIC_DRAW);
 	};
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()

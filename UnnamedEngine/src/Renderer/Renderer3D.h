@@ -13,8 +13,6 @@
 
 #include "Renderer/Material.h"
 
-#include "ECS/Entity.h"
-
 namespace UE
 {
 	class Renderer3D
@@ -23,7 +21,7 @@ namespace UE
 		static void Init(Ref<Screen> screen);
 		static void Shutdown();
 
-		static void OnWindowResize(uint32_t width, uint32_t height);
+		static void OnWindowResize(UEUint32 width, UEUint32 height);
 
 		static void BeginRender(Ref<Camera> camera);
 		static void EndRender();
@@ -34,9 +32,8 @@ namespace UE
 
 		static UEResult Submit(const Ref<VertexArray>& vao, const Ref<Material>& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
 		static UEResult Submit(const Ref<VertexArray>& vao, const std::string& material, const glm::vec3& position, const glm::vec3& size = glm::vec3(1.0f), const glm::vec3& rotation = glm::vec3(0.0f));
-		static UEResult Submit(Entity entity, const Ref<Material> material);
-		static UEResult Submit(Entity entity);
 
+		static UEBool Initialized;
 	private:
 		struct Renderer3DData
 		{
@@ -55,12 +52,11 @@ namespace UE
 			std::array<glm::vec3, 32> SizeArray;
 			std::array<glm::vec3, 32> RotationArray;
 			std::array<Ref<Material>, 32> MaterialArray;
-			uint32_t Index;
+			UEUint32 Index;
 
-			std::unordered_map<Ref<Material>, std::vector<uint32_t>> MaterialIndexMap;
+			std::unordered_map<Ref<Material>, std::vector<UEUint32>> MaterialIndexMap;
 
 			Ref<UniformBuffer> CameraUniformBuffer;
-			Ref<UniformBuffer> LightUniformBuffer;
 		};
 
 		static Scope<MaterialLibrary> s_MaterialLibrary;

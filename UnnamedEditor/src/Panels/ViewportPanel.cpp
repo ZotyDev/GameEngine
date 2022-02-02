@@ -14,7 +14,6 @@ namespace UE
 	{
 		if (PanelsShowConfig::ShowViewport)
 		{
-
 			ImGui::Begin("Viewport");
 			auto ViewportMinRegion = ImGui::GetWindowContentRegionMin();
 			auto ViewportMaxRegion = ImGui::GetWindowContentRegionMax();
@@ -28,6 +27,9 @@ namespace UE
 
 			ImVec2 ViewportPanelSize = ImGui::GetContentRegionAvail();
 			*viewportSize = { ViewportPanelSize.x, ViewportPanelSize.y };
+
+			GlobalConfig::Rendering::ScreenWidth = (UEUint32)ViewportPanelSize.x;
+			GlobalConfig::Rendering::ScreenHeight = (UEUint32)ViewportPanelSize.y;
 
 			UEUint64 TextureID = framebuffer->GetColorAttachmentRendererID();
 			ImGui::Image(reinterpret_cast<void*>(TextureID), ImVec2{ viewportSize->x, viewportSize->y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });

@@ -48,19 +48,17 @@ namespace UE
 
 	struct BufferElement
 	{
-		std::string Name;
+		UEString Name;
 		ShaderDataType Type;
-		uint32_t Offset;
-		uint32_t Size;
-		bool Normalized;
+		UEUint32 Offset;
+		UEUint32 Size;
+		UEBool Normalized;
 
-		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
+		BufferElement(ShaderDataType type, const UEString& name, UEBool normalized = false)
 			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized)
-		{
+		{};
 
-		};
-
-		uint32_t GetComponentCount() const
+		UEUint32 GetComponentCount() const
 		{
 			switch (Type)
 			{
@@ -115,7 +113,7 @@ namespace UE
 			CalculateOffsetAndStride();
 		};
 
-		uint32_t GetStride() const { return m_Stride; };
+		UEUint32 GetStride() const { return m_Stride; };
 		inline const std::vector<BufferElement>& GetElements() const { return m_Elements; };
 
 		std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
@@ -125,7 +123,7 @@ namespace UE
 	private:
 		void CalculateOffsetAndStride()
 		{
-			uint32_t offset = 0;
+			UEUint32 offset = 0;
 			m_Stride = 0;
 			for (auto& element : m_Elements)
 			{
@@ -137,14 +135,12 @@ namespace UE
 
 	private:
 		std::vector<BufferElement> m_Elements;
-		uint32_t m_Stride = 0;
+		UEUint32 m_Stride = 0;
 	};
 
 	class VertexBuffer
 	{
 	public:
-		static VertexBuffer* Create(float* vertices, uint32_t size);
-
 		virtual ~VertexBuffer() {};
 
 		virtual void Bind() const = 0;
@@ -152,5 +148,8 @@ namespace UE
 
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
+
+		static Ref<VertexBuffer> Create(UEUint32 size);
+		static Ref<VertexBuffer> Create(UEFloat* verticies, UEUint32 size);
 	};
 }

@@ -23,6 +23,7 @@ namespace UE
 
 		virtual void SetWindowEventCallback(const EventCallbackFn& callback) override { m_WindowData.m_WindowEventCallbackFn = callback; }
 		virtual void SetInputEventCallback(const EventCallbackFn& callback) override { m_WindowData.m_InputEventCallbackFn = callback; }
+		virtual void SetHidden(bool enabled) override;
 		virtual void SetFullscreen(bool enabled) override;
 		virtual void SetVSync(bool enabled) override;
 		virtual bool IsVSync() const override;

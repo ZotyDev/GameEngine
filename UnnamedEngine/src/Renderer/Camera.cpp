@@ -1,22 +1,27 @@
 #include "uepch.h"
 #include "Camera.h"
 
+#include "Core/GlobalConfig.h"
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
 namespace UE
 {
-	Camera::Camera(float width, float height, glm::vec3 position, float nearClip, float farClip)
+	Camera::Camera(UEFloat width, UEFloat height, glm::vec3 position, UEFloat nearClip, UEFloat farClip)
 		: m_ViewportWidth(width), m_ViewportHeight(height), m_Position(position), m_NearClip(nearClip), m_FarClip(farClip)
 	{}
 
 	Camera::Camera()
-	{}
+	{
+		m_ViewportWidth = GlobalConfig::Rendering::ScreenWidth;
+		m_ViewportHeight = GlobalConfig::Rendering::ScreenHeight;
+	}
 
 	void Camera::UpdateView()
 	{
 		glm::quat orientation = GetOrientation();
-		m_ViewMatrix = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
+		m_ViewMatrix = glm::translate(glm::mat4(1.0f), m_Position + m_PositionOffset) * glm::toMat4(orientation);
 		m_ViewMatrix = glm::inverse(m_ViewMatrix);
 	}
 

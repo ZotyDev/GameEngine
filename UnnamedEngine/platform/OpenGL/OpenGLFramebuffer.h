@@ -15,25 +15,28 @@ namespace UE
 		virtual void Bind() override;
 		virtual void Unbind() override;
 
-		virtual void BindColorAttachment(uint32_t index = 0) override;
+		virtual UEUint32 GetWidth() override;
+		virtual UEUint32 GetHeight() override;
 
-		virtual void BindDepthAttachment(uint32_t slot = 0) override;
+		virtual void BindColorAttachment(UEUint32 index = 0) override;
 
-		virtual void Resize(uint32_t width, uint32_t height) override;
+		virtual void BindDepthAttachment(UEUint32 slot = 0) override;
 
-		virtual void ClearAttachment(uint32_t attachmentIndex, int value) override;
+		virtual void Resize(UEUint32 width, UEUint32 height) override;
 
-		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const override;
+		virtual void ClearAttachment(UEUint32 attachmentIndex, UEUint32 value) override;
+
+		virtual UEUint32 GetColorAttachmentRendererID(UEUint32 index = 0) const override;
 
 		virtual const FramebufferSpecification& GetSpecification() const override { return m_Specification; }
 	private:
-		uint32_t m_ID;
+		UEUint32 m_ID;
 		FramebufferSpecification m_Specification;
 
 		std::vector<FramebufferTextureSpecification> m_ColorAttachmentSpecifications;
 		FramebufferTextureSpecification m_DepthAttachmentSpecification = FramebufferTextureFormat::None;
 
 		std::vector<uint32_t> m_ColorAttachments;
-		uint32_t m_DepthAttachment = 0;
+		UEUint32 m_DepthAttachment = 0;
 	};
 }

@@ -3,15 +3,13 @@
 
 #include <imgui.h>
 
+#include "ProjectConfig.h"
+
 #include "Panels/PanelsConfig.h"
 
 namespace UE
 {
-	// Temporary before projects
-	extern const std::filesystem::path g_AssetPath = "assets";
-
 	ContentBrowserPanel::ContentBrowserPanel()
-		: m_CurrentDirectory(g_AssetPath)
 	{
 		m_DirectoryIcon = Texture2D::Create();
 		m_DirectoryIcon->LoadFromSource("res/Editor/ContentBrowser/Directory.png");
@@ -54,11 +52,11 @@ namespace UE
 
 			ImGui::Begin("Content Browser");
 
-			if (m_CurrentDirectory != std::filesystem::path(g_AssetPath))
+			if (ProjectConfig::CurrentDirectory != ProjectConfig::AssetPath)
 			{
 				if (ImGui::Button("<-"))
 				{
-					m_CurrentDirectory = m_CurrentDirectory.parent_path();
+					ProjectConfig::CurrentDirectory = ProjectConfig::CurrentDirectory.parent_path();
 				}
 			}
 
@@ -75,11 +73,11 @@ namespace UE
 
 			ImGui::Columns(ColumnCount, 0, false);
 
-			for (auto& directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectory))
+			for (auto& directoryEntry : std::filesystem::directory_iterator(ProjectConfig::CurrentDirectory))
 			{
-				const auto& Path = directoryEntry.path();
-				auto RelativePath = std::filesystem::relative(Path, g_AssetPath);
-				std::string FilenameString = RelativePath.filename().string();
+				const UEPath& Path = directoryEntry.path();
+				UEPath RelativePath = std::filesystem::relative(Path, ProjectConfig::AssetPath);
+				UEString FilenameString = RelativePath.filename().string();
 
 				ImGui::PushID(FilenameString.c_str());
 				Ref<Texture2D> Icon;
@@ -144,7 +142,7 @@ namespace UE
 				{
 					if (directoryEntry.is_directory())
 					{
-						m_CurrentDirectory /= Path.filename();
+						ProjectConfig::CurrentDirectory /= Path.filename();
 					}
 				}
 				ImGui::TextWrapped(FilenameString.c_str());

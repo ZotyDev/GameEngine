@@ -67,3 +67,4 @@ namespace UE
 #include "Core/Log.h"
 #include "Core/Assert.h"
 #include "Core/PlatformUtilities.h"
+#include "Core/FileSystem.h"
