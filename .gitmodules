@@ -22,9 +22,15 @@
 [submodule "vendor/.bin/premake/premake-android"]
 	path = vendor/.bin/premake/premake-android
 	url = https://github.com/polymonster/premake-android-studio
-[submodule "UnnamedEngine\\vendor\\fmt"]
-	path = UnnamedEngine\\vendor\\fmt
+[submodule "UnnamedEngine/vendor/fmt"]
+	path = UnnamedEngine/vendor/fmt
 	url = https://github.com/ZotyDev/fmt
-[submodule "UnnamedEngine/vendor/imgui"]
-	path = UnnamedEngine/vendor/imgui
+[submodule "UnnamedEditor/vendor/ImGuizmo"]
+	path = UnnamedEditor/vendor/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo
+[submodule "UnnamedEngine/vendor/ImGuizmo"]
+	path = UnnamedEngine/vendor/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo
+[submodule "UnnamedEngine/vendor/ImGui"]
+	path = UnnamedEngine/vendor/ImGui
 	url = https://github.com/ZotyDev/imgui
