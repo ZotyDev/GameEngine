@@ -3,7 +3,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
-#include <Panels/PanelsConfig.h>
+#include "Panels/PanelsConfig.h"
 
 namespace UE
 {
@@ -12,6 +12,8 @@ namespace UE
 	{}
 
 	Ref<Material> GrassMaterial = CreateRef<Material>();
+
+	EntityManager m_EntityManager;
 
 	void EditorLayer::OnAttach()
 	{
@@ -194,7 +196,7 @@ namespace UE
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
-		
+
 		m_MenuBarPanel.OnImGuiRender(m_Data);
 		m_ViewportPanel.OnImGuiRender(m_Data, m_Screen->m_ViewportBounds, &m_Screen->m_ViewportSize, m_Screen->m_Framebuffer);
 		m_ContentBrowserPanel.OnImGuiRender();
@@ -202,7 +204,7 @@ namespace UE
 		m_PropertiesPanel.OnImGuiRender();
 		
 		ImGui::End();
-		
+
 		auto Pos = m_Camera->GetPosition();
 		
 		ImGui::Begin("Debug");

@@ -17,6 +17,10 @@
 
 #include "Core/GlobalConfig.h"
 
+/* Platform */
+/*============================================================*/
+#include "Platform/DynamicTree.h"
+
 /* Math */
 /*============================================================*/
 #include "Math/Random/RNGStrong.h"
@@ -36,6 +40,12 @@
 
 /* ECS */
 /*============================================================*/
+#include "Scene/EntityComponentSystem/Entity.h"
+#include "Scene/EntityComponentSystem/LowLevelComponent.h"
+
+/* Scene */
+/*============================================================*/
+#include "Scene/Scene.h"
 
 /* Script */
 /*============================================================*/

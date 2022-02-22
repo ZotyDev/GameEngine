@@ -4,6 +4,7 @@
 #include <imgui.h>
 
 #include "Panels/PanelsConfig.h"
+#include "Core/GlobalConfig.h"
 
 namespace UE
 {

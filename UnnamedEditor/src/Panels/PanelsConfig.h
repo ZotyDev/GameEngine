@@ -1,7 +1,5 @@
 #pragma once
 
-#include <UnnamedEngine.h>
-
 namespace UE
 {
 	struct PanelsConfig

@@ -9,10 +9,13 @@ IncludeDir = {}
 	IncludeDir["STB"] = "%{wks.location}/UnnamedEngine/vendor/STB"
 	IncludeDir["LUA"] = "%{wks.location}/UnnamedEngine/vendor/LUA"
 	IncludeDir["FreeType"] = "%{wks.location}/UnnamedEngine/vendor/FreeType/include"
-	IncludeDir["ImGui"] = "%{wks.location}/UnnamedEngine/vendor/imgui"
+	IncludeDir["ImGui"] = "%{wks.location}/UnnamedEngine/vendor/ImGui"
 	IncludeDir["Vulkan"] = "C:/VulkanSDK/1.2.189.2/Include"
 	IncludeDir["OpenAL"] = "%{wks.location}/UnnamedEngine/vendor/OpenAL-Soft/include"
 	IncludeDir["Emscripten"] = "C:/emsdk/upstream/emscripten/system/include"
+	IncludeDir["fmt"] = "%{wks.location}/UnnamedEngine/vendor/fmt/include"
+	
+	IncludeDir["ImGuizmo"] = "%{wks.location}/UnnamedEngine/vendor/ImGuizmo"
 
 -- Library Directories
 LibDir = {}

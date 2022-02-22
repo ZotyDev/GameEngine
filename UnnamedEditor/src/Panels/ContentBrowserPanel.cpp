@@ -134,6 +134,7 @@ namespace UE
 				{
 					const wchar_t* ItemPath = RelativePath.c_str();
 					ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", ItemPath, (wcslen(ItemPath) + 1) * sizeof(wchar_t));
+					ImGui::Text(FilenameString.c_str());
 					ImGui::EndDragDropSource();
 				}
 

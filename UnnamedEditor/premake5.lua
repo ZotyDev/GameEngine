@@ -20,7 +20,8 @@ project "UnnamedEditor"
         "%{wks.location}/UnnamedEngine/src",
         "%{IncludeDir.GLM}",
         "%{IncludeDir.LUA}",
-        "%{IncludeDir.ImGui}"
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.ImGuizmo}"
     }
 
     links

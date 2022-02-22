@@ -19,7 +19,7 @@ set FREETYPE_SRC=%FREETYPE_DIR%\src
 set FREETYPE_INCLUDES=                                 ^
     -I %FREETYPE_DIR%\include                          ^
     -I %FREETYPE_DIR%\subprojects\dlg\include          ^
-    -I %FREETYPE_DIR%\subprojects\dlg\src\dlg          ^
+    -I %FREETYPE_DIR%\subprojects\dlg\src\dlg          
 
 set FREETYPE_FILES=               ^
     "src/autofit/autofit.c"       ^
@@ -72,6 +72,38 @@ set FREETYPE_DEFINES=             ^
 :: GLFW folders
 
 :: Lua folders
+set LUA_DIR="..\..\UnnamedEngine\vendor\LUA"
+set LUA_SRC=%LUA_DIR%
+set LUA_INCLUDES=                 ^
+    -I %LUA_DIR%                  
+
+set LUA_FILES=        ^
+    "lapi.c"          ^
+    "luaxlib.c"       ^
+    "lbaselib.c"      ^
+    "lcode.c"         ^
+    "lcorolib.c"      ^
+    "lcype.c"         ^
+    "ldblib.c"        ^
+    "ldebug.c"        ^
+    "ldo.c"           ^
+    "ldump.c"         ^
+    "lfunc.c"         ^
+    "lgc.c"           ^
+    "linit.c"         ^
+    "liolib.c"        ^
+    "llex.c"          ^
+    "lmathlib.c"      ^
+    "lmem.c"          ^
+    "loadlib.c"       ^
+    "lmem.c"          ^
+    "lobject.c"       ^
+    "lopcodes.c"      ^
+    "loslib.c"        ^
+    "lparser.c"       ^
+    "lstate.c"        ^
+    ""
+
 
 :: Engine folders
 set ENGINEDIR="..\..\UnnamedEngine"
@@ -90,7 +122,7 @@ set INCLUDE_STB=%ENGINEDIR%\vendor\STB
 set INCLUDE_LUA=%ENGINEDIR%\vendor\LUA                       
 set INCLUDE_FREETYPE=%ENGINEDIR%\vendor\FreeType\include          
 set INCLUDE_OPENAL=%ENGINEDIR%\vendor\OpenAL-Soft\include    
-set INCLUDE_FMT=%ENGINEDIR%\vendor\fmt\include   
+set INCLUDE_FMT=%ENGINEDIR%\vendor\fmt\include
 set INCLUDE_VULKAN=C:\VulkanSDK\1.2.189.2\Include               
 set INCLUDE_EMSCRIPTEN=C:\emsdk\upstream\emscripten\system\include 
 

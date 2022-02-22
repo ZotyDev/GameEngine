@@ -10,7 +10,9 @@ project "UnnamedEngine"
 	files
 	{
 		"src/**.h",
-		"src/**.cpp"
+		"src/**.cpp",
+        "vendor/ImGuizmo/ImGuizmo.cpp",
+        "vendor/ImGuizmo/ImGuizmo.h"
 	}
 
 	defines
@@ -24,13 +26,18 @@ project "UnnamedEngine"
 		"src",
 		"%{IncludeDir.GLM}",
 		"%{IncludeDir.LUA}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+        "%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.fmt}"
 	}
 
 	links
 	{
 		"LUA"
 	}
+
+	filter "files:vendor/ImGuizmo/**.cpp"
+	flags { "NoPCH" }
 
 	------------------------------------------------------------------------------------
 	-- Windows configuration

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Core/PlatformDetection.h"
+#include "Platform/PlatformDetection.h"
 
 #ifdef UE_DEBUG
 	#if defined(UE_PLATFORM_WINDOWS)
@@ -63,7 +63,7 @@ namespace UE
 	};
 }
 
-#include "Core/Types.h"
+#include "Platform/Types.h"
 #include "Core/Log.h"
 #include "Core/Assert.h"
 #include "Core/PlatformUtilities.h"

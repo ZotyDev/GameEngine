@@ -75,19 +75,19 @@ namespace UE
 
 	struct UEVValue
 	{
-		UEVValue() = default;
-		UEVValue(UEBool value)		:Bool(value)	{}
-		UEVValue(UEChar value)		:Char(value)	{}
-		UEVValue(UEInt8 value)		:Uint8(value)	{}
-		UEVValue(UEInt16 value)		:Uint16(value)	{}
-		UEVValue(UEInt32 value)		:Uint32(value)	{}
-		UEVValue(UEInt64 value)		:Uint64(value)	{}
-		UEVValue(UEUint8 value)		:Uint8(value)	{}
-		UEVValue(UEUint16 value)	:Uint16(value)	{}
-		UEVValue(UEUint32 value)	:Uint32(value)	{}
-		UEVValue(UEUint64 value)	:Uint64(value)	{}
-		UEVValue(UEFloat value)		:Float(value)	{}
-		UEVValue(UEDouble value)	:Double(value)	{}
+		UEVValue()					: Uint64(0)		{}
+		UEVValue(UEBool value)		: Bool(value)	{}
+		UEVValue(UEChar value)		: Char(value)	{}
+		UEVValue(UEInt8 value)		: Uint8(value)	{}
+		UEVValue(UEInt16 value)		: Uint16(value)	{}
+		UEVValue(UEInt32 value)		: Uint32(value)	{}
+		UEVValue(UEInt64 value)		: Uint64(value)	{}
+		UEVValue(UEUint8 value)		: Uint8(value)	{}
+		UEVValue(UEUint16 value)	: Uint16(value)	{}
+		UEVValue(UEUint32 value)	: Uint32(value)	{}
+		UEVValue(UEUint64 value)	: Uint64(value)	{}
+		UEVValue(UEFloat value)		: Float(value)	{}
+		UEVValue(UEDouble value)	: Double(value)	{}
 
 		union
 		{

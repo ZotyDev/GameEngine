@@ -1,9 +1,5 @@
 #pragma once
 
-/* Platform Detection */
-/*============================================================*/
-#include "Core/PlatformDetection.h"
-
 /* Files */
 /*============================================================*/
 #include <filesystem>
@@ -23,7 +19,6 @@
 
 /* Multi-Threading */
 /*============================================================*/
-#include <thread>
 #include <condition_variable>
 #include <future>
 
