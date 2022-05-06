@@ -4,6 +4,7 @@
 #include <imgui_internal.h>
 
 #include "Panels/PanelsConfig.h"
+#include "ProjectConfig.h"
 
 namespace UE
 {
@@ -17,6 +18,14 @@ namespace UE
 
 	void EditorLayer::OnAttach()
 	{
+		PanelsConfig::LoadConfigs();
+		ProjectConfig::LoadConfigs();
+
+		UE_INFO("Current project:\n Name: {0}\n Location: {1}\n CurrentDirectory: {2}", 
+			ProjectConfig::ProjectName, 
+			ProjectConfig::ProjectLocation,
+			ProjectConfig::CurrentDirectory);
+
 		// Set the icon for the game window
 		m_Data->m_Window->SetIcon("res/icon.png");
 
@@ -24,7 +33,7 @@ namespace UE
 		const UEString TexturePath = "assets/textures/grass.png";
 		if (m_Texture2D->LoadFromSource(TexturePath) == UEResult::Error)
 		{
-			UE_CORE_ERROR("Failed to load {0}: not found", TexturePath);
+			UE_ERROR("Failed to load {0}: not found", TexturePath);
 		}
 
 		m_Camera = CreateRef<Camera3D>(
@@ -36,9 +45,15 @@ namespace UE
 		FramebufferSpecification specs;
 		specs.Width = GlobalConfig::Rendering::DesiredWidth;
 		specs.Height = GlobalConfig::Rendering::DesiredHeight;
-		specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Color));
-		specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Depth));
+		specs.Samples = 4;
+		specs.Attachments = { FramebufferTextureFormat::Color, FramebufferTextureFormat::Depth };
 		Ref<Framebuffer> tFramebuffer = Framebuffer::Create(specs);
+
+		specs.Width = GlobalConfig::Rendering::DesiredWidth;
+		specs.Height = GlobalConfig::Rendering::DesiredHeight;
+		specs.Samples = 1;
+		specs.Attachments = { FramebufferTextureFormat::Color };
+		Ref<Framebuffer> yFramebuffer = Framebuffer::Create(specs);
 
 		m_Quad = CreateRef<Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));
 
@@ -60,7 +75,7 @@ namespace UE
 		m_Data->m_Lune->ExecuteFile("assets/mods/shaders.lua");
 
 		ShaderLibrary::Get("screen")->Compile();
-		m_Screen = CreateRef<UE::Screen>(ShaderLibrary::Get("screen"), tFramebuffer);
+		m_Screen = CreateRef<UE::Screen>(ShaderLibrary::Get("screen"), tFramebuffer, yFramebuffer);
 
 		Renderer3D::Init(m_Screen);
 
@@ -198,7 +213,7 @@ namespace UE
 		}
 
 		m_MenuBarPanel.OnImGuiRender(m_Data);
-		m_ViewportPanel.OnImGuiRender(m_Data, m_Screen->m_ViewportBounds, &m_Screen->m_ViewportSize, m_Screen->m_Framebuffer);
+		m_ViewportPanel.OnImGuiRender(m_Data, m_Screen->m_ViewportBounds, &m_Screen->m_ViewportSize, m_Screen->m_IntFramebuffer);
 		m_ContentBrowserPanel.OnImGuiRender();
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_PropertiesPanel.OnImGuiRender();

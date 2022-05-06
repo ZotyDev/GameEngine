@@ -12,7 +12,7 @@ namespace UE
 			UpdateIterators(0);
 		}
 
-		DynamicTree(T element)
+		DynamicTree(const T& element)
 			: Element(element)
 		{
 			UpdateIterators(0);
@@ -61,32 +61,18 @@ namespace UE
 
 		void PushBack(const DynamicTree<T>& element)
 		{
-	
 			UEUint32 CurrentTraverseIndex = m_aux_traverse_iterator - m_aux_begin_iterator;
 			m_Branches.push_back(element);
-			
+
 			UpdateIterators(CurrentTraverseIndex);
 		}
 
 		void PushFront(const DynamicTree<T>& element)
 		{
 			UEUint32 CurrentTraverseIndex = m_aux_traverse_iterator - m_aux_begin_iterator;
-			m_Branches.insert(m_Branches.begin(), 6);
+			m_Branches.insert(m_Branches.begin(), element);
 
 			UpdateIterators(CurrentTraverseIndex);
-		}
-
-		void PopFront()
-		{
-			UEUint32 CurrentTraverseIndex = m_aux_traverse_iterator - m_aux_begin_iterator;
-			m_Branches.erase(m_Branches.begin());
-
-			UpdateIterators(CurrentTraverseIndex);
-
-			if (m_aux_traverse_iterator != m_aux_begin_iterator)
-			{
-				m_ShouldIncrement = false;
-			}
 		}
 
 		void PopBack()
@@ -95,21 +81,26 @@ namespace UE
 			m_Branches.pop_back();
 
 			UpdateIterators(CurrentTraverseIndex);
-
-			if (m_aux_traverse_iterator != m_aux_begin_iterator)
-			{
-				m_ShouldIncrement = false;
-			}
+			m_ShouldIncrement = false;
 		}
-		
-		const T& Front()
+
+		void PopFront()
 		{
-			return m_Branches.front();
+			UEUint32 CurrentTraverseIndex = m_aux_traverse_iterator - m_aux_begin_iterator;
+			m_Branches.erase(m_aux_begin_iterator);
+
+			UpdateIterators(CurrentTraverseIndex);
+			m_ShouldIncrement = false;
 		}
 
 		const T& Back()
 		{
 			return m_Branches.back();
+		}
+
+		const T& Front()
+		{
+			return m_Branches.front();
 		}
 
 		void Insert(const DynamicTree<T>& element, UEUint32 index)
@@ -126,7 +117,6 @@ namespace UE
 			m_Branches.erase(m_Branches.begin() + index);
 
 			UpdateIterators(CurrentTraverseIndex);
-
 			m_ShouldIncrement = false;
 		}
 
@@ -138,12 +128,12 @@ namespace UE
 		void OrderedSwap(UEUint32 firstElementIndex, UEUint32 secondElementIndex)
 		{
 			/* Hey, future reader
-			*  This is a WARNING!!!
-			*  Treat this piece of code as if it is the holy bible
-			*  Don't change it!!!
-			*  The inner workings of this are almost magical, Idk why but sometimes it works, sometimes don't
-			*  SO, you should approach this only if you know what you are doing (wich I don't)
-			*/
+				*  This is a WARNING!!!
+				*  Treat this piece of code as if it is the holy bible
+				*  Don't change it!!!
+				*  The inner workings of this are almost magical, Idk why but sometimes it works, sometimes don't
+				*  SO, you should approach this only if you know what you are doing (wich I don't)
+				*/
 			if (firstElementIndex != secondElementIndex)
 			{
 				if (firstElementIndex < secondElementIndex)
@@ -184,7 +174,7 @@ namespace UE
 		typename std::vector<DynamicTree<T>>::const_iterator end() const { return m_Branches.end(); }
 		typename std::vector<DynamicTree<T>>::const_reverse_iterator rbegin() const { return m_Branches.rbegin(); }
 		typename std::vector<DynamicTree<T>>::const_reverse_iterator rend() const { return m_Branches.rend(); }
-		
+
 	private:
 		void UpdateIterators(UEUint32 traverseIndex)
 		{

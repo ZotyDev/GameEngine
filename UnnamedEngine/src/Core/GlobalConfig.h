@@ -4,6 +4,8 @@ namespace UE
 {
 	struct GlobalConfig
 	{
+		static UEResult LoadConfigs();
+
 		struct Application
 		{
 			static UEUint32 Width;

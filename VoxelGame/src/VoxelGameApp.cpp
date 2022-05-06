@@ -10,12 +10,12 @@ namespace UE
 		: Layer("VoxelGameApp"), m_Data(data)
 	{}
 
-	UEFloat Velocity = 1.0f;
+	Ref<Material> GrassMaterial = CreateRef<Material>();
 
 	void VoxelGameApp::OnAttach()
 	{
 		m_Texture2D = Texture2D::Create();
-		const UEPath TexturePath = "assets/textures/character_placeholder.png";
+		const UEPath TexturePath = "assets/textures/grass.png";
 		if (m_Texture2D->LoadFromSource(TexturePath, (Texture::TextureFlags)(Texture::TextureFlags::FILTERING_NEAREST | Texture::TextureFlags::CLAMP_TO_EDGE)) == UEResult::Error)
 		{
 			UE_ERROR("Failed to load {0}: not found", TexturePath);
@@ -25,23 +25,28 @@ namespace UE
 		UEInt32 CameraX = (UEInt32)GlobalConfig::Rendering::DesiredWidth / -2;
 		UEInt32 CameraY = (UEInt32)GlobalConfig::Rendering::DesiredHeight / -2;
 
-		m_Camera = CreateRef<Camera2D>(
+		m_Camera = CreateRef<Camera3D>(
 			GlobalConfig::Rendering::ScreenWidth,
 			GlobalConfig::Rendering::ScreenHeight, 
 			glm::vec3(0.0f, 0.0f, 1.5f));
-		m_Camera->SetPositionOffset({ (UEFloat)CameraX, (UEFloat)CameraY, 0.0f });
+		//m_Camera->SetPositionOffset({ (UEFloat)CameraX, (UEFloat)CameraY, 0.0f });
 		m_CameraController = CreateRef<CameraController>(m_Camera);
 
 		FramebufferSpecification specs;
 		specs.Width = GlobalConfig::Rendering::DesiredWidth;
 		specs.Height = GlobalConfig::Rendering::DesiredHeight;
-		specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Color));
-		specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Depth));
+		specs.Samples = 1;
+		specs.Attachments = { FramebufferTextureFormat::Color, FramebufferTextureFormat::Depth };
 		Ref<Framebuffer> tFramebuffer = Framebuffer::Create(specs);
 
-		UEFloat TexX = (UEFloat)m_Texture2D->GetWidth();
-		UEFloat TexY = (UEFloat)m_Texture2D->GetHeight();
-		m_Quad = CreateRef<Primitives::Quad>(glm::vec2(0.0f, TexY), glm::vec2(TexX, 0.0f));
+		specs.Samples = 1;
+		specs.Attachments = { FramebufferTextureFormat::Color };
+		Ref<Framebuffer> yFramebuffer = Framebuffer::Create(specs);
+
+		//UEFloat TexX = (UEFloat)m_Texture2D->GetWidth();
+		//UEFloat TexY = (UEFloat)m_Texture2D->GetHeight();
+		//m_Quad = CreateRef<Primitives::Quad>(glm::vec2(0.0f, TexY), glm::vec2(TexX, 0.0f));
+		m_Quad = CreateRef<Primitives::Quad>(glm::vec2(-0.5f, 0.5f), glm::vec2(0.5f, -0.5f));
 
 		// LoadShader LUA function register
 		LuneFunction LoadShader("LoadShader", [](lua_State* L) -> int
@@ -59,10 +64,58 @@ namespace UE
 		m_Data->m_Lune->ExecuteFile("assets/mods/shaders.lua");
 
 		ShaderLibrary::Get("screen")->Compile();
+		m_Screen = CreateRef<UE::Screen>(ShaderLibrary::Get("screen"), tFramebuffer, yFramebuffer);
 
-		m_Screen = CreateRef<UE::Screen>(ShaderLibrary::Get("screen"), tFramebuffer);
+		Renderer3D::Init(m_Screen);
 
-		Renderer2D::Init(m_Screen);
+		ShaderHeaderConstructor MyShaderHeaderConstructor("assets/shaders/default");
+		std::vector<ShaderHeaderConstructor::Element> tShaderElements;
+
+		tShaderElements.push_back({
+			"Position",
+			ShaderDataType::Vec3,
+			ShaderHeaderConstructor::UseType::VertInput,
+			});
+
+		tShaderElements.push_back({
+			"Texture",
+			ShaderDataType::Vec2,
+			ShaderHeaderConstructor::UseType::VertInput,
+			});
+
+		tShaderElements.push_back({
+			"Texture",
+			ShaderDataType::Vec2,
+			ShaderHeaderConstructor::UseType::VertOutput,
+			});
+
+		tShaderElements.push_back({
+			"FragColor",
+			ShaderDataType::Vec4,
+			ShaderHeaderConstructor::UseType::FragOutput,
+			});
+
+		tShaderElements.push_back({
+			"Transform",
+			ShaderDataType::Mat4,
+			ShaderHeaderConstructor::UseType::VertUniform,
+			});
+
+		tShaderElements.push_back({
+			"Albedo",
+			ShaderDataType::Sampler2D,
+			ShaderHeaderConstructor::UseType::FragSampler,
+			});
+
+		MyShaderHeaderConstructor.SetElements(tShaderElements);
+
+		UEString NewVertSource;
+		UEString NewFragSource;
+		MyShaderHeaderConstructor.Construct(NewVertSource, NewFragSource);
+
+		ShaderLibrary::Get("default")->Set(NewVertSource, NewFragSource);
+		GrassMaterial->RegisterShader("Shader", ShaderLibrary::Get("default"));
+		GrassMaterial->RegisterTexture("Texture", m_Texture2D);
 	}
 
 	void VoxelGameApp::OnDetach()
@@ -81,29 +134,36 @@ namespace UE
 
 	void VoxelGameApp::Render()
 	{
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 1.0f, 0.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 1.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 1.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { -1.0f, 0.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, -1.0f, 0.0f });
+		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, -1.0f });
 	}
 
 	void VoxelGameApp::OnImGuiRender()
 	{
-		auto Pos = m_Camera->GetPosition();
-
-		ImGui::Begin("Debug");
-
-		ImGui::Text("X: %f", Pos.x);
-		ImGui::Text("Y: %f", Pos.y);
-		ImGui::Text("Zoom: %f", m_Camera->GetZoom());
-		ImGui::Text("Width: %i", GlobalConfig::Application::Width);
-		ImGui::Text("Height: %i", GlobalConfig::Application::Height);
-		ImGui::Text("Pixel Size: %f", GlobalConfig::Rendering::PixelSize);
-		ImGui::Text("Rendering Width: %i", m_Screen->m_Framebuffer->GetWidth());
-		ImGui::Text("Rendering Height: %i", m_Screen->m_Framebuffer->GetHeight());
-		UEUint32 ViewportX = 0;
-		UEUint32 ViewportY = 0;
-		RenderCommand::GetViewport(ViewportX, ViewportY);
-		ImGui::Text("ViewportWidth: %i", ViewportX);
-		ImGui::Text("Viewportheight: %i", ViewportY);
-
-		ImGui::End();
+		//auto Pos = m_Camera->GetPosition();
+		//
+		//ImGui::Begin("Debug");
+		//
+		//ImGui::Text("X: %f", Pos.x);
+		//ImGui::Text("Y: %f", Pos.y);
+		//ImGui::Text("Zoom: %f", m_Camera->GetZoom());
+		//ImGui::Text("Width: %i", GlobalConfig::Application::Width);
+		//ImGui::Text("Height: %i", GlobalConfig::Application::Height);
+		//ImGui::Text("Pixel Size: %f", GlobalConfig::Rendering::PixelSize);
+		//ImGui::Text("Rendering Width: %i", m_Screen->m_Framebuffer->GetWidth());
+		//ImGui::Text("Rendering Height: %i", m_Screen->m_Framebuffer->GetHeight());
+		//UEUint32 ViewportX = 0;
+		//UEUint32 ViewportY = 0;
+		//RenderCommand::GetViewport(ViewportX, ViewportY);
+		//ImGui::Text("ViewportWidth: %i", ViewportX);
+		//ImGui::Text("Viewportheight: %i", ViewportY);
+		//
+		//ImGui::End();
 	}
 
 	void VoxelGameApp::OnWindowEvent(Event& event)
@@ -149,9 +209,9 @@ namespace UE
 	bool VoxelGameApp::OnWindowResize(WindowResizeEvent& event)
 	{
 		// Make sure the camera is always centered on the same point
-		UEInt32 NewCameraX = (UEInt32)GlobalConfig::Rendering::DesiredWidth / -2;
-		UEInt32 NewCameraY = (UEInt32)GlobalConfig::Rendering::DesiredHeight / -2;
-		m_Camera->SetPositionOffset({ (UEFloat)NewCameraX, (UEFloat)NewCameraY, 1.5f });
+		//UEInt32 NewCameraX = (UEInt32)GlobalConfig::Rendering::DesiredWidth / -2;
+		//UEInt32 NewCameraY = (UEInt32)GlobalConfig::Rendering::DesiredHeight / -2;
+		//m_Camera->SetPositionOffset({ (UEFloat)NewCameraX, (UEFloat)NewCameraY, 1.5f });
 
 		return false;
 	}
@@ -160,19 +220,31 @@ namespace UE
 	{
 		switch (event.GetKeyCode())
 		{
-		case KeyCode::Right:
-			m_Camera->SetPosition({ m_Camera->GetPosition().x + Velocity, m_Camera->GetPosition().y, m_Camera->GetPosition().z });
+		case UE::KeyCode::W:
+			m_CameraController->MoveForward();
 			break;
-		case KeyCode::Left:
-			m_Camera->SetPosition({ m_Camera->GetPosition().x - Velocity, m_Camera->GetPosition().y, m_Camera->GetPosition().z });
+		case UE::KeyCode::S:
+			m_CameraController->MoveBackward();
 			break;
-		case KeyCode::Down:
-			m_Camera->SetPosition({ m_Camera->GetPosition().x, m_Camera->GetPosition().y - Velocity, m_Camera->GetPosition().z });
+		case UE::KeyCode::A:
+			m_CameraController->MoveLeft();
 			break;
-		case KeyCode::Up:
-			m_Camera->SetPosition({ m_Camera->GetPosition().x, m_Camera->GetPosition().y + Velocity, m_Camera->GetPosition().z });
+		case UE::KeyCode::D:
+			m_CameraController->MoveRight();
 			break;
-		default:
+		case UE::KeyCode::E:
+			m_CameraController->MoveUp();
+			break;
+		case UE::KeyCode::Q:
+			m_CameraController->MoveDown();
+			break;
+		case UE::KeyCode::Up:
+			GlobalConfig::Rendering::PixelSize *= 2;
+			OnRendererScaleChange(RendererScaleChangeEvent());
+			break;
+		case UE::KeyCode::Down:
+			GlobalConfig::Rendering::PixelSize /= 2;
+			OnRendererScaleChange(RendererScaleChangeEvent());
 			break;
 		}
 
@@ -183,7 +255,23 @@ namespace UE
 	{
 		switch (event.GetKeyCode())
 		{
-		default:
+		case UE::KeyCode::W:
+			m_CameraController->StopForward();
+			break;
+		case UE::KeyCode::S:
+			m_CameraController->StopForward();
+			break;
+		case UE::KeyCode::A:
+			m_CameraController->StopRight();
+			break;
+		case UE::KeyCode::D:
+			m_CameraController->StopRight();
+			break;
+		case UE::KeyCode::E:
+			m_CameraController->StopUp();
+			break;
+		case UE::KeyCode::Q:
+			m_CameraController->StopUp();
 			break;
 		}
 
@@ -195,47 +283,63 @@ namespace UE
 		return false;
 	}
 
+	bool MoveAround = false;
+
 	bool VoxelGameApp::OnMousePressed(MouseButtonPressedEvent& event)
 	{
+		switch (event.GetMouseButton())
+		{
+		case UE::MouseCode::Right:
+			MoveAround = true;
+			break;
+		}
+
 		return false;
 	}
 
 	bool VoxelGameApp::OnMouseReleased(MouseButtonReleasedEvent& event)
 	{
+		switch (event.GetMouseButton())
+		{
+		case UE::MouseCode::Right:
+			MoveAround = false;
+			break;
+		}
+
 		return false;
 	}
 
-	//float LastMouseX = 0;
-	//float LastMouseY = 0;
+	float LastMouseX = 0;
+	float LastMouseY = 0;
 
 	bool VoxelGameApp::OnMouseMoved(MouseMovedEvent& event)
 	{
-		//UE::Ref<UE::Camera> CurrentCamera = m_CameraController->GetCamera();
-		//
-		//int CurrentMouseX = (int)event.GetX();
-		//int CurrentMouseY = (int)event.GetY();
-		//
-		//int DiffMouseX = CurrentMouseX - (int)LastMouseX;
-		//int DiffMouseY = CurrentMouseY - (int)LastMouseY;
-		//
-		//LastMouseX = CurrentMouseX;
-		//LastMouseY = CurrentMouseY;
-		//
-		//if (m_Keyboard->GetState(UE::KeyCode::LeftAlt))
-		//{
-		//	float CurrentYaw = CurrentCamera->GetYaw();
-		//	float CurrentPitch = CurrentCamera->GetPitch();
-		//
-		//	CurrentCamera->SetYaw(CurrentYaw + (DiffMouseX * 0.001f * GlobalConfig::Mouse::MovementSensibilityX));
-		//	CurrentCamera->SetPitch(CurrentPitch + (DiffMouseY * 0.001f * GlobalConfig::Mouse::MovementSensibilityY));
-		//}
+		UE::Ref<UE::Camera> CurrentCamera = m_CameraController->GetCamera();
+		
+		int CurrentMouseX = (int)event.GetX();
+		int CurrentMouseY = (int)event.GetY();
+		
+		int DiffMouseX = CurrentMouseX - (int)LastMouseX;
+		int DiffMouseY = CurrentMouseY - (int)LastMouseY;
+		
+		LastMouseX = CurrentMouseX;
+		LastMouseY = CurrentMouseY;
+		
+		if (MoveAround)
+		{
+			float CurrentYaw = CurrentCamera->GetYaw();
+			float CurrentPitch = CurrentCamera->GetPitch();
+		
+			CurrentCamera->SetYaw(CurrentYaw + (DiffMouseX * 0.001f * GlobalConfig::Mouse::MovementSensibilityX));
+			CurrentCamera->SetPitch(CurrentPitch + (DiffMouseY * 0.001f * GlobalConfig::Mouse::MovementSensibilityY));
+		}
 
 		return false;
 	}
 
 	bool VoxelGameApp::OnMouseScrolled(MouseScrolledEvent& event)
 	{
-		m_Camera->ZoomIn(event.GetYOffset() * 0.25f * GlobalConfig::Zoom::SensibilityIn);
+		m_Camera->ZoomIn(event.GetXOffset() * 0.25f * GlobalConfig::Zoom::SensibilityIn);
 
 		return false;
 	}

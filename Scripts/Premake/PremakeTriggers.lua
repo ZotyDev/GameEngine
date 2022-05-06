@@ -62,3 +62,14 @@ newaction
             print("Done.")
     end
 }
+
+newaction
+{
+    trigger = "emcc",
+    shortname = "Emscripten",
+    description = "Build the project to web using Emscripten",
+
+    execute = function()
+        print("Building to web!")
+    end
+}

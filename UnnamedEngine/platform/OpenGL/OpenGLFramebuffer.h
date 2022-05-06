@@ -12,13 +12,15 @@ namespace UE
 
 		void Invalidate();
 
-		virtual void Bind() override;
+		virtual void Bind(FramebufferBindMode mode) override;
 		virtual void Unbind() override;
+
+		virtual void BlitInto(Ref<Framebuffer> target) override;
 
 		virtual UEUint32 GetWidth() override;
 		virtual UEUint32 GetHeight() override;
 
-		virtual void BindColorAttachment(UEUint32 index = 0) override;
+		virtual void BindColorAttachment(UEUint32 index = 0, UEUint32 slot = 0) override;
 
 		virtual void BindDepthAttachment(UEUint32 slot = 0) override;
 
@@ -36,7 +38,7 @@ namespace UE
 		std::vector<FramebufferTextureSpecification> m_ColorAttachmentSpecifications;
 		FramebufferTextureSpecification m_DepthAttachmentSpecification = FramebufferTextureFormat::None;
 
-		std::vector<uint32_t> m_ColorAttachments;
+		std::vector<UEUint32> m_ColorAttachments;
 		UEUint32 m_DepthAttachment = 0;
 	};
 }

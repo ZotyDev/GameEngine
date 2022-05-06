@@ -4,6 +4,8 @@
 
 #include "Core/Window.h"
 
+#include "PlatformIndependenceLayer/FileSystem.h"
+
 #include "Events/Event.h"
 #include "Events/GamepadEvent.h"
 #include "Events/KeyEvent.h"

@@ -6,8 +6,10 @@ namespace UE
 {
 	struct ProjectConfig
 	{
+		static UEResult LoadConfigs();
+
 		static UEString ProjectName;
-		static UEString ProjectLocation;
+		static UEPath ProjectLocation;
 		static UEString ProjectVersion;
 
 		static UEPath AssetPath;

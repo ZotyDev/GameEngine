@@ -181,14 +181,36 @@ namespace UE
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void OpenGLFramebuffer::Bind()
+	void OpenGLFramebuffer::Bind(FramebufferBindMode mode)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
+		switch (mode)
+		{
+		case UE::FramebufferBindMode::Read:
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, m_ID);
+			break;
+		case UE::FramebufferBindMode::Draw:
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_ID);
+			break;
+		case UE::FramebufferBindMode::Default:
+		default:
+			glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
+			break;
+		}
 	}
 
 	void OpenGLFramebuffer::Unbind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void OpenGLFramebuffer::BlitInto(Ref<Framebuffer> target)
+	{
+		Bind(FramebufferBindMode::Read);
+		target->Bind(FramebufferBindMode::Draw);
+		glBlitFramebuffer(
+			0, 0, m_Specification.Width, m_Specification.Height,
+			0, 0, m_Specification.Width, m_Specification.Height,
+			GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	UEUint32 OpenGLFramebuffer::GetWidth()
@@ -201,15 +223,16 @@ namespace UE
 		return m_Specification.Height;
 	}
 
-	void OpenGLFramebuffer::BindColorAttachment(UEUint32 index)
+	void OpenGLFramebuffer::BindColorAttachment(UEUint32 index, UEUint32 slot)
 	{
-		glBindTexture(GL_TEXTURE_2D, GetColorAttachmentRendererID(index));
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(Utils::TextureTarget(m_Specification.Samples > 1), GetColorAttachmentRendererID(index));
 	}
 
 	void OpenGLFramebuffer::BindDepthAttachment(UEUint32 slot)
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
+		glBindTexture(Utils::TextureTarget(m_Specification.Samples > 1), m_DepthAttachment);
 	}
 
 	void OpenGLFramebuffer::Resize(UEUint32 width, UEUint32 height)
@@ -232,7 +255,7 @@ namespace UE
 		glClearTexImage(m_ColorAttachments[attachmentIndex], 0, Utils::ueFramebufferTextureFormatToGL(spec.TextureFormat), GL_INT, &value);
 	}
 
-	uint32_t OpenGLFramebuffer::GetColorAttachmentRendererID(UEUint32 index) const
+	UEUint32 OpenGLFramebuffer::GetColorAttachmentRendererID(UEUint32 index) const
 	{
 		if (index > m_ColorAttachments.size())
 		{

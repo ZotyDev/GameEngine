@@ -10,15 +10,14 @@ namespace UE
 	SceneHierarchyPanel::SceneHierarchyPanel()
 	{
 		m_Scene = CreateRef<Scene>();
-		m_Test = DynamicTree<Entity>(0);
 
 		for (UEUint32 i = 0; i < 2; i++)
 		{
 			DynamicTree<Entity> NewNode(m_Scene->CreateEntity());
-			m_Test.PushBack(NewNode);
+			m_EntityHierarchyAbstraction.PushBack(NewNode);
 		}
 
-		m_Test.SetEachFn(std::bind(&SceneHierarchyPanel::DrawEntityNode, this, std::placeholders::_1, std::placeholders::_2));
+		m_EntityHierarchyAbstraction.SetEachFn(std::bind(&SceneHierarchyPanel::DrawEntityNode, this, std::placeholders::_1, std::placeholders::_2));
 	}
 
 	void SceneHierarchyPanel::OnImGuiRender()
@@ -27,15 +26,7 @@ namespace UE
 		{
 			ImGui::Begin("Scene Hierarchy");
 
-			m_aux_begin_iterator = m_EntityList.begin();
-			m_aux_end_iterator = m_EntityList.end();
-			m_aux_traverse_iterator = m_aux_begin_iterator;
-			//while (m_aux_traverse_iterator != m_aux_end_iterator)
-			//{
-			//	DrawEntityNode();
-			//}
-
-			m_Test.Each();
+			m_EntityHierarchyAbstraction.Each();
 
 			// Left-click on blank space
 			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
@@ -51,8 +42,7 @@ namespace UE
 					if (ImGui::MenuItem("Empty Entity"))
 					{
 						Entity CreatedEntity = m_Scene->CreateEntity();
-						//m_EntityList.push_back(CreatedEntity);
-						m_Test.PushBack(DynamicTree<Entity>(CreatedEntity));
+						m_EntityHierarchyAbstraction.PushBack(DynamicTree<Entity>(CreatedEntity));
 					} // Empty Entity
 
 					if (ImGui::MenuItem("Camera"))

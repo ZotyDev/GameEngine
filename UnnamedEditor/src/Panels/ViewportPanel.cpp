@@ -32,11 +32,11 @@ namespace UE
 			GlobalConfig::Rendering::ScreenWidth = (UEUint32)ViewportPanelSize.x;
 			GlobalConfig::Rendering::ScreenHeight = (UEUint32)ViewportPanelSize.y;
 
+			// Todo:zoty the framebuffer should be rendered, and only after that used here
 			UEUint64 TextureID = framebuffer->GetColorAttachmentRendererID();
 			ImGui::Image(reinterpret_cast<void*>(TextureID), ImVec2{ viewportSize->x, viewportSize->y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 			ImGui::End();
-
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace UE
 			glfwGetGamepadState(m_Joystick, &m_State);
 
 			// Button event dispatcher
-			for (int i = 0; i <= (int)GamepadCode::ButtonLast; i++)
+			for (int i = 0; i <= (int)GamepadCode::LastButton; i++)
 			{
 				if (m_LastState.buttons[i] != m_State.buttons[i])
 				{
@@ -63,32 +63,32 @@ namespace UE
 
 		const float GetLeftXAxisValue()
 		{
-			return m_State.axes[static_cast<int>(GamepadCode::AxisLeftX)];
+			return m_State.axes[static_cast<int>(GamepadCode::LeftX)];
 		};
 
 		const float GetRightXAxisValue()
 		{
-			return m_State.axes[static_cast<int>(GamepadCode::AxisRightX)];
+			return m_State.axes[static_cast<int>(GamepadCode::RightX)];
 		};
 
 		const float GetLeftYAxisValue()
 		{
-			return m_State.axes[static_cast<int>(GamepadCode::AxisLeftY)];
+			return m_State.axes[static_cast<int>(GamepadCode::LeftY)];
 		};
 
 		const float GetRightYAxisValue()
 		{
-			return m_State.axes[static_cast<int>(GamepadCode::AxisRightY)];
+			return m_State.axes[static_cast<int>(GamepadCode::RightY)];
 		};
 
 		const float GetLeftTriggerValue()
 		{
-			return m_State.axes[static_cast<int>(GamepadCode::AxisLeftTrigger)];
+			return m_State.axes[static_cast<int>(GamepadCode::LeftTrigger)];
 		};
 
 		const float GetRightTriggerValue()
 		{
-			return m_State.axes[static_cast<int>(GamepadCode::AxisRightTrigger)];
+			return m_State.axes[static_cast<int>(GamepadCode::RightTrigger)];
 		};
 
 	private:

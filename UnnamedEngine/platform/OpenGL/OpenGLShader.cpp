@@ -4,6 +4,8 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "PlatformIndependenceLayer/FileSystem.h"
+
 namespace UE
 {
 	UEResult OpenGLShader::LoadFromSource(const UEPath& path)
@@ -22,13 +24,13 @@ namespace UE
 		UEPath FragmentPath = path;
 		FragmentPath += ".frag";
 		
-		if (ReadToBuffer(VertexPath, m_VertexCode) == UEResult::Error)
+		if (FileSystem::ReadToBuffer(VertexPath, m_VertexCode) == UEResult::Error)
 		{
 			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read vertex source at {1}", tName, VertexPath);
 			return UEResult::Error;
 		}
 
-		if (ReadToBuffer(FragmentPath, m_FragmentCode) == UEResult::Error)
+		if (FileSystem::ReadToBuffer(FragmentPath, m_FragmentCode) == UEResult::Error)
 		{
 			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read fragment source at {1}", tName, FragmentPath);
 			return UEResult::Error;
@@ -43,13 +45,13 @@ namespace UE
 	{
 
 		// Read shader source from files
-		if (ReadToBuffer(vertexPath, m_VertexCode) == UEResult::Error)
+		if (FileSystem::ReadToBuffer(vertexPath, m_VertexCode) == UEResult::Error)
 		{
 			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read vertex source at {1}", name, vertexPath);
 			return UEResult::Error;
 		}
 
-		if (ReadToBuffer(fragmentPath, m_FragmentCode) == UEResult::Error)
+		if (FileSystem::ReadToBuffer(fragmentPath, m_FragmentCode) == UEResult::Error)
 		{
 			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read fragment source at {1}", name, fragmentPath);
 			return UEResult::Error;

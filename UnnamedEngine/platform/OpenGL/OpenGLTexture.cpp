@@ -48,6 +48,7 @@ namespace UE
 			case 1:
 				internalFormat = GL_R16;
 				dataFormat = GL_RED;
+				break;
 			default:
 				UE_CORE_ERROR("Failed to load texture \"{0}\": unknown format with {1} channels", path, channels);
 				return UEResult::Error;

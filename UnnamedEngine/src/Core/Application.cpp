@@ -11,17 +11,17 @@
 
 #include "Renderer/Shader/ShaderHeaderConstructor.h"
 
+#include "Core/ConfigManager.h"
+
 namespace UE
 {
 	Application* Application::s_Instance = nullptr;
 
-	struct PosXTest
-	{
-		float X;
-	};
-
 	Application::Application()
 	{
+		// Load global configurations
+		GlobalConfig::LoadConfigs();
+
 		// Start the clock that provides the time
 		m_Data->m_TimeMeasurer.Start();
 
@@ -31,6 +31,9 @@ namespace UE
 		// Check if another instance is already running
 		UE_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
+
+		// Initialize File System
+		FileSystem::Init();
 
 		// Create basic window and set engine event response
 		m_Data->m_Window = Window::Create(WindowProps("UnnamedProject"));
@@ -48,6 +51,9 @@ namespace UE
 		// Initialize Lua
 		m_Data->m_Lune = CreateRef<LuneStack>();
 		ExposeCoreToLune(m_Data->m_Lune);
+
+		ConfigManager tConfigManager;
+		tConfigManager.LoadConfigFile("D:/Documentos/Unnamed Engine/GlobalConfig.lua");
 	}
 
 	Application::~Application()
@@ -198,6 +204,7 @@ namespace UE
 
 	bool Application::OnRendererScaleChange(RendererScaleChangeEvent& event)
 	{
+		// Update global configs
 		GlobalConfig::Rendering::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenWidth / GlobalConfig::Rendering::PixelSize);
 		GlobalConfig::Rendering::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenHeight / GlobalConfig::Rendering::PixelSize);
 

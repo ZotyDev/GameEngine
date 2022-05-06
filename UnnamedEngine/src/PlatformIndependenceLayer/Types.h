@@ -42,6 +42,8 @@ namespace UE
 	typedef char*					UECString;
 	typedef std::string				UEString;
 
+	typedef std::filesystem::path	UEPath;
+
 	enum class UEType
 	{
 		Bool		= 0,

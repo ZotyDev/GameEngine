@@ -4,22 +4,24 @@
 /*============================================================*/
 #include <uepch.h>
 
-/* Essential */
+/* Core */
 /*============================================================*/
 #include "Core/Base.h"
 #include "Core/Application.h"
 #include "Core/Layer.h"
 #include "Core/Log.h"
-
 #include "Core/Assert.h"
-
 #include "Core/Timestep.h"
-
 #include "Core/GlobalConfig.h"
+#include "Core/PlatformUtilities.h"
+#include "Core/Window.h"
 
-/* Platform */
+/* Platform Independence Layer*/
 /*============================================================*/
-#include "Platform/DynamicTree.h"
+#include "PlatformIndependenceLayer/PlatformDetection.h"
+#include "PlatformIndependenceLayer/Types.h"
+#include "PlatformIndependenceLayer/DynamicTree.h"
+#include "PlatformIndependenceLayer/FileSystem.h"
 
 /* Math */
 /*============================================================*/
@@ -79,6 +81,9 @@
 #include "Renderer/CameraController.h"
 
 #include "Renderer/Primitives.h"
+
+#include "Renderer/Shader/ShaderDataType.h"
+#include "Renderer/Shader/ShaderHeaderConstructor.h"
 
 // Editor Interface
 #include "ImGui/ImGuiLayer.h"

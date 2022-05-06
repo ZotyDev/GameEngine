@@ -2,7 +2,7 @@
 
 #include "Scene/Scene.h"
 
-#include "Platform/DynamicTree.h"
+#include "PlatformIndependenceLayer/DynamicTree.h"
 
 namespace UE
 {
@@ -21,12 +21,7 @@ namespace UE
 	private:
 		Entity m_SelectionContext;
 		Ref<Scene> m_Scene;
-		std::vector<Entity> m_EntityList;
-		std::vector<Entity>::iterator m_aux_begin_iterator;
-		std::vector<Entity>::iterator m_aux_traverse_iterator;
-		std::vector<Entity>::iterator m_aux_end_iterator;
-		std::vector<Entity>::iterator m_aux_moved_iterator;
 
-		DynamicTree<Entity> m_Test;
+		DynamicTree<Entity> m_EntityHierarchyAbstraction;
 	};
 }

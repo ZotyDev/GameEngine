@@ -9,7 +9,9 @@ namespace UE
 		{
 			NONE = 0,
 			FILTERING_NEAREST = BIT(0),
+			FILTERING_LINEAR = 0,
 			CLAMP_TO_EDGE = BIT(1),
+			REPEAT = 0,
 		};
 
 	public:

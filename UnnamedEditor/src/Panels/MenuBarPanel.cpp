@@ -173,13 +173,22 @@ namespace UE
 			ImGui::InputText("##ProjectName", ProjectNameBuffer, 256);
 
 			ImGui::Text("Project Location:");
+			if (ImGui::Button("Browse"))
+			{
+				UEPath TempPathHolder;
+				if (FileSystem::FileSelectorDialog(TempPathHolder, true))
+				{
+					std::strcpy(ProjectLocationBuffer, TempPathHolder.string().c_str());
+				}
+			}
+			ImGui::SameLine();
 			ImGui::InputText("##ProjectLocation", ProjectLocationBuffer, 256);
-			
+
 			if (ImGui::Button("Create", ImVec2(120, 0))) 
 			{
 				ProjectConfig::ProjectName = ProjectNameBuffer;
 				ProjectConfig::ProjectLocation = ProjectLocationBuffer;
-				ProjectConfig::AssetPath = ProjectConfig::ProjectLocation + "/assets";
+				ProjectConfig::AssetPath = ProjectConfig::ProjectLocation.string() + "/assets";
 				ProjectConfig::CurrentDirectory = ProjectConfig::AssetPath;
 
 				ImGui::CloseCurrentPopup(); 
@@ -207,7 +216,7 @@ namespace UE
 			if (ImGui::Button("Open", ImVec2(120, 0)))
 			{
 				ProjectConfig::ProjectLocation = ProjectLocationBuffer;
-				ProjectConfig::AssetPath = ProjectConfig::ProjectLocation + "/assets";
+				ProjectConfig::AssetPath = ProjectConfig::ProjectLocation.string() + "/assets";
 				ProjectConfig::CurrentDirectory = ProjectConfig::AssetPath;
 
 				ImGui::CloseCurrentPopup();
@@ -230,7 +239,7 @@ namespace UE
 		if (ImGui::BeginPopupModal("Project Info", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::Text(ProjectConfig::ProjectName.c_str());
-			ImGui::Text(("Location: " + ProjectConfig::ProjectLocation).c_str());
+			ImGui::Text(("Location: " + ProjectConfig::ProjectLocation.string()).c_str());
 			ImGui::Text(("Version: " + ProjectConfig::ProjectVersion).c_str());
 
 			if (ImGui::Button("OK", ImVec2(120, 0))) 

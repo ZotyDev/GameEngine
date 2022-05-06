@@ -5,8 +5,8 @@
 
 namespace UE
 {
-	Screen::Screen(Ref<Shader> shader, Ref<Framebuffer> framebuffer)
-		: m_Shader(shader), m_Framebuffer(framebuffer)
+	Screen::Screen(Ref<Shader> shader, Ref<Framebuffer> framebuffer, Ref<Framebuffer> intFramebuffer)
+		: m_Shader(shader), m_Framebuffer(framebuffer), m_IntFramebuffer(intFramebuffer)
 	{
 		m_Mesh = CreateRef<Primitives::Quad>(Primitives::Quad(glm::vec2(-1.0f, 1.0f), glm::vec2(1.0f, -1.0f)));
 	}
@@ -17,6 +17,7 @@ namespace UE
 	void Screen::Resize(UEUint32 width, UEUint32 height)
 	{
 		m_Framebuffer->Resize(width, height);
+		m_IntFramebuffer->Resize(width, height);
 	}
 
 	void Screen::Bind()
@@ -37,12 +38,16 @@ namespace UE
 
 	void Screen::RenderScreen()
 	{
+		// Resolve framebuffer
+		m_Framebuffer->BlitInto(m_IntFramebuffer);
+		m_Framebuffer->Unbind();
+
 		// Clear target frambuffer
 		RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1.0f });
 		RenderCommand::Clear();
 
 		// Bind framebuffer info
-		m_Framebuffer->BindColorAttachment();
+		m_IntFramebuffer->BindColorAttachment();
 		m_Shader->Bind();
 		m_Mesh->VAO->Bind();
 

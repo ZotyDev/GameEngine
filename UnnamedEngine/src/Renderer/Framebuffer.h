@@ -19,6 +19,13 @@ namespace UE
 		Depth = DEPTH24STENCIL8
 	};
 
+	enum class FramebufferBindMode
+	{
+		Default = 0,
+		Read = 1,
+		Draw = 2,
+	};
+
 	struct FramebufferTextureSpecification
 	{
 		FramebufferTextureSpecification() = default;
@@ -50,13 +57,15 @@ namespace UE
 	public:
 		virtual ~Framebuffer() = default;
 
-		virtual void Bind() = 0;
+		virtual void Bind(FramebufferBindMode mode = FramebufferBindMode::Default) = 0;
 		virtual void Unbind() = 0;
+
+		virtual void BlitInto(Ref<Framebuffer> target) = 0;
 
 		virtual UEUint32 GetWidth() = 0;
 		virtual UEUint32 GetHeight() = 0;
 
-		virtual void BindColorAttachment(UEUint32 index = 0) = 0;
+		virtual void BindColorAttachment(UEUint32 index = 0, UEUint32 slot = 0) = 0;
 
 		virtual void BindDepthAttachment(UEUint32 slot = 0) = 0;
 

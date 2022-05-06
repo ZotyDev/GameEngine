@@ -12,7 +12,7 @@ namespace UE
 	ContentBrowserPanel::ContentBrowserPanel()
 	{
 		m_DirectoryIcon = Texture2D::Create();
-		m_DirectoryIcon->LoadFromSource("res/Editor/ContentBrowser/Directory.png");
+		m_DirectoryIcon->LoadFromSource("res/Editor/ContentBrowser/NewDirectory.png");
 
 		m_FileIcon = Texture2D::Create();
 		m_FileIcon->LoadFromSource("res/Editor/ContentBrowser/File.png");
@@ -49,7 +49,6 @@ namespace UE
 	{
 		if (PanelsShowConfig::ShowContentBrowser && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning))
 		{
-
 			ImGui::Begin("Content Browser");
 
 			if (ProjectConfig::CurrentDirectory != ProjectConfig::AssetPath)
@@ -82,6 +81,7 @@ namespace UE
 				ImGui::PushID(FilenameString.c_str());
 				Ref<Texture2D> Icon;
 				UEString FilenameExtension = FilenameString.substr(FilenameString.find_last_of(".") + 1);
+				// todo:zoty make this faster and smarter
 				if (directoryEntry.is_directory())
 				{
 					Icon = m_DirectoryIcon;
@@ -144,6 +144,13 @@ namespace UE
 					if (directoryEntry.is_directory())
 					{
 						ProjectConfig::CurrentDirectory /= Path.filename();
+					}
+					else if (FilenameExtension == "lua")
+					{
+						UEString CommandString = "code ";
+						CommandString += (ProjectConfig::CurrentDirectory / Path.filename()).string();
+						// Todo:zoty find a better way of doing this
+						system(CommandString.c_str());
 					}
 				}
 				ImGui::TextWrapped(FilenameString.c_str());

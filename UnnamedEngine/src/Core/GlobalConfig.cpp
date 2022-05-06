@@ -1,8 +1,67 @@
 #include "uepch.h"
 #include "Core/GlobalConfig.h"
 
+#include "Core/ConfigManager.h"
+
 namespace UE
 {
+	UEResult GlobalConfig::LoadConfigs()
+	{
+		ConfigManager g;
+		UEDouble gd;
+		UEUint32 gu;
+		g.LoadConfigFile("D:/Documentos/Unnamed Engine/GlobalConfig.lua");
+
+		// Window
+		if (g.GetNumberConfig(gd, { "Window", "Width" }) == UEResult::Success)
+		{
+			Application::Width = (UEFloat)gd;
+		}
+		if (g.GetNumberConfig(gd, { "Window", "Height" }) == UEResult::Success)
+		{
+			Application::Height = (UEFloat)gd;
+		}
+		// Renderer
+		if (g.GetNumberConfig(gd, { "Renderer", "PixelSize"}) == UEResult::Success)
+		{
+			Rendering::PixelSize = (UEFloat)gd;
+		}
+		Rendering::ScreenWidth = Application::Width;
+		Rendering::ScreenHeight = Application::Height;
+		Rendering::DesiredWidth = (UEUint32)((UEFloat)Rendering::ScreenWidth / Rendering::PixelSize);
+		Rendering::DesiredHeight = (UEUint32)((UEFloat)Rendering::ScreenHeight / Rendering::PixelSize);
+
+		// Mouse
+		if (g.GetNumberConfig(gd, { "Mouse", "XMovementSensibility" }) == UEResult::Success)
+		{
+			Mouse::MovementSensibilityX = (UEFloat)gd;
+		}
+		if (g.GetNumberConfig(gd, { "Mouse", "YMovementSensibility" }) == UEResult::Success)
+		{
+			Mouse::MovementSensibilityY = (UEFloat)gd;
+		}
+		if (g.GetNumberConfig(gd, { "Mouse", "XScrollSensibility" }) == UEResult::Success)
+		{
+			Mouse::ScrollSensibilityX = (UEFloat)gd;
+		}
+		if (g.GetNumberConfig(gd, { "Mouse", "YScrollSensibility" }) == UEResult::Success)
+		{
+			Mouse::ScrollSensibilityY = (UEFloat)gd;
+		}
+
+		// Camera
+		if (g.GetNumberConfig(gd, { "Camera", "ZoomInSensibility" }) == UEResult::Success)
+		{
+			Zoom::SensibilityIn = (UEFloat)gd;
+		}
+		if (g.GetNumberConfig(gd, { "Camera", "ZoomOutSensibility" }) == UEResult::Success)
+		{
+			Zoom::SensibilityOut = (UEFloat)gd;
+		}
+
+		return UEResult::Success;
+	}
+
 	UEUint32 GlobalConfig::Application::Width = 1280;
 	UEUint32 GlobalConfig::Application::Height = 720;
 	

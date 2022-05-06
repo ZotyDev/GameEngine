@@ -3,6 +3,8 @@
 
 #include <fmt/core.h>
 
+#include "PlatformIndependenceLayer/FileSystem.h"
+
 namespace UE
 {
 	std::array<UEString, (UEUint32)ShaderDataType::Last> ShaderHeaderConstructor::s_DataTypeStringIndex =
@@ -44,8 +46,8 @@ namespace UE
 		UEPath FragmentPath = path;
 		FragmentPath += ".frag";
 
-		ReadToBuffer(VertexPath, m_VertexSource);
-		ReadToBuffer(FragmentPath, m_FragmentSource);
+		FileSystem::ReadToBuffer(VertexPath, m_VertexSource);
+		FileSystem::ReadToBuffer(FragmentPath, m_FragmentSource);
 	}
 
 	ShaderHeaderConstructor::~ShaderHeaderConstructor()
