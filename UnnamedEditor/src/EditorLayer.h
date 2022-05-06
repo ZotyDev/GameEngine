@@ -7,6 +7,7 @@
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/PropertiesPanel.h"
+#include "Panels/ProfilerPanel.h"
 
 namespace UE
 {
@@ -46,6 +47,7 @@ namespace UE
 		ContentBrowserPanel m_ContentBrowserPanel;
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		PropertiesPanel m_PropertiesPanel;
+		ProfilerPanel m_ProfilerPanel;
 	private:
 		bool OnWindowResize(WindowResizeEvent& event);
 	private:

@@ -13,6 +13,8 @@
 
 #include "Core/ConfigManager.h"
 
+#include "Debug/Instrumentator.h"
+
 namespace UE
 {
 	Application* Application::s_Instance = nullptr;
@@ -94,6 +96,8 @@ namespace UE
 
 	bool Application::MainLoop()
 	{
+		UE_PROFILE_FUNCTION();
+
 		m_Data->m_TimeMeasurer.End();
 		float time = m_Data->m_TimeMeasurer.FormattedSeconds();
 		Timestep timestep = (time - m_Data->m_LastFrameTime) * m_Data->m_SimulationSpeed;

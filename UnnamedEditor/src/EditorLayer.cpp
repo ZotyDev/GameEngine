@@ -6,6 +6,8 @@
 #include "Panels/PanelsConfig.h"
 #include "ProjectConfig.h"
 
+#include "Debug/Instrumentator.h"
+
 namespace UE
 {
 	EditorLayer::EditorLayer(Ref<Application::SharedData> data)
@@ -128,7 +130,7 @@ namespace UE
 		GrassMaterial->RegisterShader("Shader", ShaderLibrary::Get("default"));
 		GrassMaterial->RegisterTexture("Texture", m_Texture2D);
 	}
-
+	
 	void EditorLayer::OnDetach()
 	{
 		
@@ -136,6 +138,8 @@ namespace UE
 
 	void EditorLayer::OnUpdate(Timestep timestep)
 	{
+		UE_PROFILE_FUNCTION();
+
 		m_CameraController->OnUpdate(timestep);
 		
 		// Rendering
@@ -146,6 +150,8 @@ namespace UE
 
 	void EditorLayer::Render()
 	{
+		UE_PROFILE_FUNCTION();
+
 		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
 		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 1.0f, 0.0f, 0.0f });
 		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 1.0f, 0.0f });
@@ -157,6 +163,8 @@ namespace UE
 
 	void EditorLayer::OnImGuiRender()
 	{
+		UE_PROFILE_FUNCTION();
+
 		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 		
 		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
@@ -217,6 +225,7 @@ namespace UE
 		m_ContentBrowserPanel.OnImGuiRender();
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_PropertiesPanel.OnImGuiRender();
+		m_ProfilerPanel.OnImGuiRender();
 		
 		ImGui::End();
 
