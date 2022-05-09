@@ -12,7 +12,8 @@ project "UnnamedEngine"
 		"src/**.h",
 		"src/**.cpp",
         "vendor/ImGuizmo/ImGuizmo.cpp",
-        "vendor/ImGuizmo/ImGuizmo.h"
+        "vendor/ImGuizmo/ImGuizmo.h",
+		"vendor/ImPlot/implot.cpp",
 	}
 
 	defines

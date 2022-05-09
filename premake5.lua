@@ -15,6 +15,7 @@ IncludeDir = {}
 	IncludeDir["Emscripten"] = "C:/emsdk/upstream/emscripten/system/include"
 	IncludeDir["fmt"] = "%{wks.location}/UnnamedEngine/vendor/fmt/include"
 	
+	IncludeDir["ImPlot"] = "%{wks.location}/UnnamedEngine/vendor/ImPlot"
 	IncludeDir["ImGuizmo"] = "%{wks.location}/UnnamedEngine/vendor/ImGuizmo"
 
 -- Library Directories

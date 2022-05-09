@@ -21,6 +21,7 @@ project "UnnamedEditor"
         "%{IncludeDir.GLM}",
         "%{IncludeDir.LUA}",
         "%{IncludeDir.ImGui}",
+        "%{IncludeDir.ImPlot}",
         "%{IncludeDir.ImGuizmo}"
     }
 
