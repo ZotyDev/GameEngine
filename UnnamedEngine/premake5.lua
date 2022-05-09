@@ -13,7 +13,6 @@ project "UnnamedEngine"
 		"src/**.cpp",
         "vendor/ImGuizmo/ImGuizmo.cpp",
         "vendor/ImGuizmo/ImGuizmo.h",
-		"vendor/ImPlot/implot.cpp",
 	}
 
 	defines
@@ -28,7 +27,7 @@ project "UnnamedEngine"
 		"%{IncludeDir.GLM}",
 		"%{IncludeDir.LUA}",
 		"%{IncludeDir.ImGui}",
-        "%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.ImPlot}",
 		"%{IncludeDir.fmt}"
 	}
 
@@ -69,7 +68,8 @@ project "UnnamedEngine"
 		{
 			"GLFW",
 			"FreeType",
-			"ImGui"
+			"ImGui",
+			"ImPlot"
 		}
 
 	------------------------------------------------------------------------------------

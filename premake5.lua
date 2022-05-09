@@ -48,6 +48,7 @@ workspace "GameEngine"
 		include "UnnamedEngine/vendor/FreeType"
 		include "UnnamedEngine/vendor/GLFW"
 		include "UnnamedEngine/vendor/imgui"
+		include "UnnamedEngine/vendor/ImPlot"
 	group ""
 
 	include "UnnamedEngine"

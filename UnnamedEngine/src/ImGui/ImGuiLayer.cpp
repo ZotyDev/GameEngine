@@ -4,7 +4,8 @@
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
-#include <ImGuizmo.h>
+
+#include <implot.h>
 
 #include "Core/Application.h"
 
@@ -23,6 +24,7 @@ namespace UE
 		// Setúp dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
+		ImPlot::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -57,6 +59,7 @@ namespace UE
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		//ImGui_ImplGlfw_Shutdown(); // useless since main app glfw gets destroyed before, it just throw errors
+		ImPlot::DestroyContext();
 		ImGui::DestroyContext();
 	}
 
@@ -79,7 +82,7 @@ namespace UE
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		ImGuizmo::BeginFrame();
+		//ImGuizmo::BeginFrame();
 	}
 
 	void ImGuiLayer::End()

@@ -138,20 +138,22 @@ namespace UE
 
 	void EditorLayer::OnUpdate(Timestep timestep)
 	{
-		UE_PROFILE_FUNCTION();
-
-		m_CameraController->OnUpdate(timestep);
+		{
+			UE_PROFILE_SCOPE("EditorLayer Update");
+			m_CameraController->OnUpdate(timestep);
+		}
 		
 		// Rendering
-		Renderer::BeginRender(m_CameraController->GetCamera());
-		Render();
-		Renderer::EndRender();
+		{
+			UE_PROFILE_SCOPE("Rendering");
+			Renderer::BeginRender(m_CameraController->GetCamera());
+			Render();
+			Renderer::EndRender();
+		}
 	}
 
 	void EditorLayer::Render()
 	{
-		UE_PROFILE_FUNCTION();
-
 		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
 		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 1.0f, 0.0f, 0.0f });
 		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 1.0f, 0.0f });
@@ -163,8 +165,7 @@ namespace UE
 
 	void EditorLayer::OnImGuiRender()
 	{
-		UE_PROFILE_FUNCTION();
-
+		UE_PROFILE_SCOPE("ImGui Rendering");
 		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 		
 		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
@@ -250,8 +251,6 @@ namespace UE
 		ImGui::Text("Viewportheight: %i", ViewportY);
 		
 		ImGui::End();
-
-		//ImGui::ShowDemoWindow();
 	}
 
 	void EditorLayer::OnWindowEvent(Event& event)

@@ -34,3 +34,6 @@
 [submodule "UnnamedEngine/vendor/ImGui"]
 	path = UnnamedEngine/vendor/ImGui
 	url = https://github.com/ZotyDev/imgui
+[submodule "UnnamedEngine/vendor/ImPlot"]
+	path = UnnamedEngine/vendor/ImPlot
+	url = https://github.com/ZotyDev/implot
