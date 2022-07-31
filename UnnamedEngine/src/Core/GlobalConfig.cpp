@@ -3,6 +3,8 @@
 
 #include "Core/ConfigManager.h"
 
+#include "PlatformIndependenceLayer/FileSystem.h"
+
 namespace UE
 {
 	UEResult GlobalConfig::LoadConfigs()
@@ -10,7 +12,13 @@ namespace UE
 		ConfigManager g;
 		UEDouble gd;
 		UEUint32 gu;
-		g.LoadConfigFile("D:/Documentos/Unnamed Engine/GlobalConfig.lua");
+		UEPath UserDataFolder;
+		if (FileSystem::GetUserDataFolder(UserDataFolder) == UEResult::Error)
+		{
+			UE_CORE_ERROR("Failed to load Global Configs: could not find user data folder");
+			return UEResult::Error;
+		}
+		g.LoadConfigFile(UserDataFolder.string() + "/UnnamedEngine/GlobalConfig.lua", "assets/configs/default/DEFAULT_GlobalConfig.lua");
 
 		// Window
 		if (g.GetNumberConfig(gd, { "Window", "Width" }) == UEResult::Success)

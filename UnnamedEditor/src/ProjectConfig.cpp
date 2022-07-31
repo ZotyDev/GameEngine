@@ -2,6 +2,7 @@
 #include "ProjectConfig.h"
 
 #include "Core/ConfigManager.h"
+#include "PlatformIndependenceLayer/FileSystem.h"
 
 namespace UE
 {
@@ -9,8 +10,13 @@ namespace UE
 	{
 		ConfigManager g;
 		UEString gs;
-
-		g.LoadConfigFile("D:/Documentos/Unnamed Engine/ProjectsConfig.lua");
+		UEPath UserDataFolder;
+		if (FileSystem::GetUserDataFolder(UserDataFolder) == UEResult::Error)
+		{
+			UE_CORE_ERROR("Could not read Projcts Config: could not find user data folder");
+			return UEResult::Error;
+		}
+		g.LoadConfigFile(UserDataFolder.string() + "/UnnamedEngine/ProjectsConfig.lua", "assets/configs/default/DEFAULT_ProjectsConfig.lua");
 
 		if (g.GetStringConfig(gs, { "LastOpened" }) == UEResult::Success)
 		{
@@ -21,7 +27,7 @@ namespace UE
 
 			ConfigManager l;
 
-			l.LoadConfigFile(ProjectConfig::ProjectLocation.append("ProjectConfig.lua"));
+			l.LoadConfigFile(ProjectConfig::ProjectLocation.append("ProjectConfig.lua"), "assets/configs/default/DEFAULT_ProjectConfig.lua");
 
 			if (l.GetStringConfig(gs, { "Name" }) == UEResult::Success)
 			{

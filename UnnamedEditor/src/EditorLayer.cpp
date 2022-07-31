@@ -249,8 +249,10 @@ namespace UE
 		RenderCommand::GetViewport(ViewportX, ViewportY);
 		ImGui::Text("ViewportWidth: %i", ViewportX);
 		ImGui::Text("Viewportheight: %i", ViewportY);
-		
+
 		ImGui::End();
+
+		//ImGui::ShowDemoWindow();
 	}
 
 	void EditorLayer::OnWindowEvent(Event& event)

@@ -16,12 +16,12 @@ namespace UE
 	public:
 		ConfigManager();
 
-		UEResult LoadConfigFile(const UEPath& path);
+		UEResult LoadConfigFile(const UEPath& path, const UEPath& defaultPath);
 
 		UEResult GetNumberConfig(UEDouble& value, const std::vector<UEString>& description);
 		UEResult GetStringConfig(UEString& value, const std::vector<UEString>& description);
 		UEResult GetBoolConfig(UEBool& value, const std::vector<UEString>& description);
 	private:
-		Ref<ConfigGroup> m_ConfigGroup;  
+		Ref<ConfigGroup> m_ConfigGroup;
 	};
 }

@@ -17,11 +17,16 @@ namespace UE
 
 		virtual void Init() = 0;
 
-		virtual UEBool FileSelectorDialog(UEPath& receivedPath, UEBool folderOnly) = 0;
-		virtual UEBool FileSelectorDialog(UEPath& receivedPath, const std::vector<std::pair<UEString, UEString>>& filters) = 0;
+		virtual UEResult FileSelectorDialog(UEPath& receivedPath, const std::vector<std::pair<UEString, UEString>>& filters, UEBool folderOnly) = 0;
+		//virtual UEResult FileSelectorDialog(UEPath& receivedPath, const std::vector<std::pair<UEString, UEString>>& filters) = 0;
 
-		virtual UEBool DoesFileExists(const UEPath& path) = 0;
+		virtual UEBool Exists(const UEPath& path) = 0;
 		virtual UEResult ReadToBuffer(const UEPath& path, UEString& buffer) = 0;
+
+		virtual UEResult MakeSureFolder(const UEPath& path) = 0;
+		virtual UEResult MakeSureFile(const UEPath& path) = 0;
+
+		virtual UEResult GetUserDataFolder(UEPath& path) = 0;
 
 		static Platform GetPlatform() { return s_Platform; }
 		static Scope<FileSystemPlatform> Create();

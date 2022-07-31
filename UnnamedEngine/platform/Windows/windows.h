@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/PlatformDetection.h"
+#include "PlatformIndependenceLayer/PlatformDetection.h"
 
 #ifdef UE_PLATFORM_WINDOWS
 	#ifndef WIN32_LEAN_AND_MEAN

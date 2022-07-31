@@ -19,7 +19,7 @@ namespace UE
 			UEString ConfigName = lua_tostring(L, -1);
 			// Remove the copy of the key from the stack
 			lua_remove(L, -1);
-			
+
 			// Store the config based on type
 			UEUint32 Type = lua_type(L, -1);
 			switch (Type)
@@ -83,13 +83,13 @@ namespace UE
 		m_ConfigGroup = CreateRef<ConfigGroup>();
 	}
 
-	UEResult ConfigManager::LoadConfigFile(const UEPath& path)
+	UEResult ConfigManager::LoadConfigFile(const UEPath& path, const UEPath& defaultPath)
 	{
 		LuneStack Lune;
 		Lune.ExecuteFile(path.string());
 
-		lua_State* L= Lune.L;
-		
+		lua_State* L = Lune.L;
+
 		ReadTable(L, m_ConfigGroup);
 
 		return UEResult::Success;
@@ -173,7 +173,7 @@ namespace UE
 	}
 
 	UEResult ConfigManager::GetNumberConfig(UEDouble& value, const std::vector<UEString>& description)
-	{	
+	{
 		UEResult Result = SearchNumberConfig(value, description, m_ConfigGroup);
 		if (Result == UEResult::Error)
 		{

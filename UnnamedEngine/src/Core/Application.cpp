@@ -55,7 +55,15 @@ namespace UE
 		ExposeCoreToLune(m_Data->m_Lune);
 
 		ConfigManager tConfigManager;
-		tConfigManager.LoadConfigFile("D:/Documentos/Unnamed Engine/GlobalConfig.lua");
+		UEPath EngineConfigFolder;
+		FileSystem::GetUserDataFolder(EngineConfigFolder);
+		EngineConfigFolder.append("UnnamedEngine/");
+		UEPath GlobalConfigPath = EngineConfigFolder.string() + "GlobalConfig.lua";
+		FileSystem::MakeSureFolder(EngineConfigFolder);
+
+		tConfigManager.LoadConfigFile(GlobalConfigPath, "assets/configs/default/DEFAULT_GlobalConfig.lua");
+
+		m_Data->m_Lune->ExecuteFile("init.lua");
 	}
 
 	Application::~Application()

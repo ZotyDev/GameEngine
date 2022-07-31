@@ -34,7 +34,7 @@ namespace UE
 
 			static bool normalize = true;
 			ImPlot::PushColormap(ImPlotColormap_Viridis);
-			if (ImPlot::BeginPlot("##Pie1", ImVec2(350, 350), ImPlotFlags_Equal | ImPlotFlags_NoMouseText | ImPlotFlags_NoFrame | ImPlotFlags_NoMenus))
+			if (ImPlot::BeginPlot("##ProfilerPieChart", ImVec2(350, 350), ImPlotFlags_Equal | ImPlotFlags_NoMouseText | ImPlotFlags_NoFrame | ImPlotFlags_NoMenus))
 			{
 				ImPlotAxisFlags PieFlags = ImPlotAxisFlags_NoMenus | ImPlotAxisFlags_Lock | ImPlotAxisFlags_NoDecorations;
 				ImPlotLocation LegendLocation = ImPlotLocation_South;

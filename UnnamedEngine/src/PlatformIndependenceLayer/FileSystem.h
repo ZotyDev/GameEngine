@@ -12,24 +12,34 @@ namespace UE
 			s_FileSystemPlatform->Init();
 		}
 
-		static UEBool FileSelectorDialog(UEPath& receivedPath, UEBool folderOnly = false)
+		static UEResult FileSelectorDialog(UEPath& receivedPath, const std::vector<std::pair<UEString, UEString>>& filters, UEBool folderOnly = false)
 		{
-			return s_FileSystemPlatform->FileSelectorDialog(receivedPath, folderOnly);
-		}
-
-		static UEBool FileSelectorDialog(UEPath& receivedPath, const std::vector<std::pair<UEString, UEString>>& filters)
-		{
-			return s_FileSystemPlatform->FileSelectorDialog(receivedPath, filters);
+			return s_FileSystemPlatform->FileSelectorDialog(receivedPath, filters, folderOnly);
 		}
 
 		static UEBool DoesFileExists(const UEPath& path)
 		{
-			return s_FileSystemPlatform->DoesFileExists(path);
+			return s_FileSystemPlatform->Exists(path);
 		}
 
 		static UEResult ReadToBuffer(const UEPath& path, UEString& buffer)
 		{
 			return s_FileSystemPlatform->ReadToBuffer(path, buffer);
+		}
+
+		static UEResult MakeSureFolder(const UEPath& path)
+		{
+			return s_FileSystemPlatform->MakeSureFolder(path);
+		}
+
+		static UEResult MakeSureFile(const UEPath& path)
+		{
+			return s_FileSystemPlatform->MakeSureFile(path);
+		}
+
+		static UEResult GetUserDataFolder(UEPath& path)
+		{
+			return s_FileSystemPlatform->GetUserDataFolder(path);
 		}
 
 	private:

@@ -173,16 +173,17 @@ namespace UE
 			ImGui::InputText("##ProjectName", ProjectNameBuffer, 256);
 
 			ImGui::Text("Project Location:");
+			
+			ImGui::InputText("##ProjectLocation", ProjectLocationBuffer, 256);
+			ImGui::SameLine();
 			if (ImGui::Button("Browse"))
 			{
 				UEPath TempPathHolder;
-				if (FileSystem::FileSelectorDialog(TempPathHolder, true))
+				if (FileSystem::FileSelectorDialog(TempPathHolder, {}, false) == UEResult::Success)
 				{
 					std::strcpy(ProjectLocationBuffer, TempPathHolder.string().c_str());
 				}
 			}
-			ImGui::SameLine();
-			ImGui::InputText("##ProjectLocation", ProjectLocationBuffer, 256);
 
 			if (ImGui::Button("Create", ImVec2(120, 0))) 
 			{

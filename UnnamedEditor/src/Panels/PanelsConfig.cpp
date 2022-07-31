@@ -2,6 +2,7 @@
 #include "Panels/PanelsConfig.h"
 
 #include "Core/ConfigManager.h"
+#include "PlatformIndependenceLayer/FileSystem.h"
 
 namespace UE
 {
@@ -9,8 +10,13 @@ namespace UE
 	{
 		ConfigManager g;
 		UEBool gb;
-
-		g.LoadConfigFile("D:/Documentos/Unnamed Engine/EditorConfig.lua");
+		UEPath UserDataFolder;
+		if (FileSystem::GetUserDataFolder(UserDataFolder) == UEResult::Error)
+		{
+			UE_CORE_ERROR("Failed to load Editor Config: could not find user data folder");
+			return UEResult::Error;
+		}
+		g.LoadConfigFile(UserDataFolder.string() + "/UnnamedEngine/EditorConfig.lua", "assets/configs/default/DEFAULT_EditorConfig.lua");
 
 		// PanelsConfig
 		if (g.GetBoolConfig(gb, { "PanelsConfig", "FullScreen" }) == UEResult::Success)

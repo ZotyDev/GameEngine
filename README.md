@@ -1,5 +1,6 @@
-# UnnamedEngine
-![Logo Image](/Resource/Branding/unnamed_engine.png?raw=true "Unnamed Engine")
+<p align="center">
+    <img src="Resource/Branding/unnamed_engine.png?raw=true" alt="Unnamed Engine">
+</p>
 
 This Engine is the base of all ZotyDev games.
 Its main goal is performance, allowing me to create crazy and complex stuff without restrictions.
@@ -7,7 +8,6 @@ Its main goal is performance, allowing me to create crazy and complex stuff with
 
 ## Supported Platforms:
 - Windows 10/11
-
 
 ## Current Features:
 - Async Logger 
@@ -32,11 +32,6 @@ Its main goal is performance, allowing me to create crazy and complex stuff with
 
 # Compiling:
 Go to `Scripts/` and select the target platform.
-
-## Compiling Notes:
-### Web:
-The folder `YourGame/assets/` is where all data that is going to be used should be. At compilation, this folder will be compiled into a `.data` file that is basically a virtual folder.
-
 # License
 
 This project includes or depends on these following projects:
