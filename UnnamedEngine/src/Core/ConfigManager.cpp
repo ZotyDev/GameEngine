@@ -34,6 +34,8 @@ namespace UE
 				UEString ConfigValue = lua_tostring(L, -1);
 				configGroup->StringConfigs.insert({ ConfigName, ConfigValue });
 
+				configGroup->String.Register(ConfigName, ConfigValue);
+
 				//UE_CORE_INFO("{0} = {1}", ConfigName, ConfigValue);
 				break;
 			}
@@ -42,6 +44,8 @@ namespace UE
 				UEBool ConfigValue = lua_toboolean(L, -1);
 				configGroup->BoolConfigs.insert({ ConfigName, ConfigValue });
 
+				configGroup->Bool.Register(ConfigName, ConfigValue);
+
 				//UE_CORE_INFO("{0} = {1}", ConfigName, ConfigValue);
 				break;
 			}
@@ -49,6 +53,8 @@ namespace UE
 			{
 				UEDouble ConfigValue = lua_tonumber(L, -1);
 				configGroup->NumberConfigs.insert({ ConfigName, ConfigValue });
+
+				configGroup->Number.Register(ConfigName, ConfigValue);
 
 				//UE_CORE_INFO("{0} = {1}", ConfigName, ConfigValue);
 				break;
@@ -64,6 +70,9 @@ namespace UE
 
 				Ref<ConfigGroup> NewConfigGroup = CreateRef<ConfigGroup>();
 				configGroup->MyGroups.insert({ ConfigName, NewConfigGroup });
+
+				configGroup->Groups.Register(ConfigName, NewConfigGroup);
+
 				ReadTable(L, NewConfigGroup);
 				break;
 			}

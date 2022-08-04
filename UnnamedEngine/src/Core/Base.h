@@ -37,6 +37,8 @@
 #define UE_VALUE_ERROR -1
 #define UE_VALUE_SUCCESS 0
 
+#include "PlatformIndependenceLayer/Types.h"
+
 namespace UE
 {
 	template<typename T>
@@ -55,16 +57,27 @@ namespace UE
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 
-	enum class UEResult
+	class UEResult
 	{
-		Error = -1,
-		Success = 0,
-		Warn = 1
+	public:
+		static UEInt8 Error;
+		static UEInt8 Success;
+		static UEInt8 Warn;
+		static UEInt8 Undefined;
+
+	public:
+		UEResult();
+		UEResult(UEInt8 result);
+
+		operator UEBool() const;
+
+		UEResult& operator = (UEInt8 result);
+
+	private:
+		UEInt8 m_Result;
 	};
 }
 
 #include "Core/Log.h"
 #include "Core/Assert.h"
 #include "Core/PlatformUtilities.h"
-
-#include "PlatformIndependenceLayer/Types.h"
