@@ -8,15 +8,15 @@ namespace UE
 		FT_Done_FreeType(FreeType);
 	}
 
-	UEResult FreeTypeTextAPI::Init()
+	UEResult<> FreeTypeTextAPI::Init()
 	{
 		if (FT_Init_FreeType(&FreeType))
 		{
 			UE_CORE_ERROR("Could not initialize FreeType");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
 	void* FreeTypeTextAPI::GetRawLibrary()

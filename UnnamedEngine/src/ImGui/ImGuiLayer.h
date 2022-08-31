@@ -14,18 +14,20 @@ namespace UE
 		ImGuiLayer();
 		~ImGuiLayer() = default;
 
-		virtual void OnAttach() override;
-		virtual void OnDetach() override;
-		virtual void OnWindowEvent(Event& event) override;
-		virtual void OnInputEvent(Event& event) override;
+		virtual void OnAttach() = 0;
+		virtual void OnDetach() = 0;
+		virtual void OnWindowEvent(Event& event) = 0;
+		virtual void OnInputEvent(Event& event) = 0;
 
-		void Begin();
-		void End();
+		virtual void Begin() = 0;
+		virtual void End() = 0;
 
 		void BlockEvents(bool block) { m_BlockingEvents = block; }
 		
 		void SetDarkThemeColors();
-	private:
+
+		static Ref<ImGuiLayer> Create();
+	protected:
 		bool m_BlockingEvents = true;
 	};
 }

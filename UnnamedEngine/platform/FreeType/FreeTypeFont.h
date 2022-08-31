@@ -11,7 +11,7 @@ namespace UE
 	public:
 		virtual ~FreeTypeFont() override;
 
-		virtual UEResult LoadFromFile(const std::string& filename) override;
+		virtual UEResult<> LoadFromFile(const std::string& filename) override;
 	private:
 		FT_Face FontFace;
 	};

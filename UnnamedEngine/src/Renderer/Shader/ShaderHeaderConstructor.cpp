@@ -53,14 +53,14 @@ namespace UE
 	ShaderHeaderConstructor::~ShaderHeaderConstructor()
 	{}
 
-	UEResult ShaderHeaderConstructor::SetElements(const std::vector<Element>& elements)
+	UEResult<> ShaderHeaderConstructor::SetElements(const std::vector<Element>& elements)
 	{
 		m_Elements = elements;
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult ShaderHeaderConstructor::Construct(UEString& vertSource, UEString& fragSource)
+	UEResult<> ShaderHeaderConstructor::Construct(UEString& vertSource, UEString& fragSource)
 	{
 		for (auto& it : m_Elements)
 		{
@@ -123,6 +123,6 @@ namespace UE
 		UE_CORE_TRACE(m_VertexSource);
 		UE_CORE_TRACE(m_FragmentSource);
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 }

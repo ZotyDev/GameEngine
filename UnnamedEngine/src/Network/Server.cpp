@@ -3,7 +3,7 @@
 
 namespace UE
 {
-	UEResult Server::Start(IPEndpoint listeningIP)
+	UEResult<> Server::Start(IPEndpoint listeningIP)
 	{
 		m_ListeningIP = listeningIP;
 
@@ -13,27 +13,27 @@ namespace UE
 		if (m_ListeningSocket->Bind(listeningIP))
 		{
 			UE_CORE_ERROR("Failed to start server: failed to bind listening socket");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		if (m_ListeningSocket->Block(false))
 		{
 			UE_CORE_ERROR("Failed to start server: failed to set listening socket to non-blocking");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		UE_CORE_INFO("Server started and listening on: {0}", listeningIP.GetAddress());
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult Server::Shutdown()
+	UEResult<> Server::Shutdown()
 	{
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult Server::OnUpdate(Timestep dt)
+	UEResult<> Server::OnUpdate(Timestep dt)
 	{
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 }

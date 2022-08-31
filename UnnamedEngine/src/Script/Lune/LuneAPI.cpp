@@ -3,7 +3,7 @@
 
 namespace UE
 {
-	UEResult LuneErrorCheck(lua_State* L, int status)
+	UEResult<> LuneErrorCheck(lua_State* L, int status)
 	{
 		if (status != LUA_OK)
 		{
@@ -12,12 +12,12 @@ namespace UE
 				UE_LUA_ERROR(lua_tostring(L, -1));
 				lua_pop(L, 1);
 
-				return UEResult::Error;
+				return UEResult<>::Error;
 			}
 			UE_LUA_ERROR("Unknown error");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
 	void LuneStack::Dump()
@@ -55,25 +55,25 @@ namespace UE
 		}
 	};
 
-	UEResult LuneStack::ExecuteLine(const UEString& line)
+	UEResult<> LuneStack::ExecuteLine(const UEString& line)
 	{
-		if (UE_LUAF(luaL_dostring, line.c_str()) == UEResult::Error)
+		if (!UE_LUAF(luaL_dostring, line.c_str()))
 		{
 			UE_LUA_ERROR("Failed to execute string");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	};
 
-	UEResult LuneStack::ExecuteFile(const UEString& path)
+	UEResult<> LuneStack::ExecuteFile(const UEString& path)
 	{
-		if (UE_LUAF(luaL_dofile, path.c_str()) == UEResult::Error)
+		if (!UE_LUAF(luaL_dofile, path.c_str()))
 		{
 			UE_LUA_ERROR("Failed to execute file");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	};
 }

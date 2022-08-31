@@ -6,55 +6,56 @@
 
 namespace UE
 {
-	UEResult PanelsConfig::LoadConfigs()
+	UEResult<> PanelsConfig::LoadConfigs()
 	{
 		ConfigManager g;
 		UEBool gb;
 		UEPath UserDataFolder;
-		if (FileSystem::GetUserDataFolder(UserDataFolder) == UEResult::Error)
+		if (!FileSystem::GetUserDataFolder(UserDataFolder))
 		{
 			UE_CORE_ERROR("Failed to load Editor Config: could not find user data folder");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 		g.LoadConfigFile(UserDataFolder.string() + "/UnnamedEngine/EditorConfig.lua", "assets/configs/default/DEFAULT_EditorConfig.lua");
+		g.SaveConfigFile("config.lua");
 
 		// PanelsConfig
-		if (g.GetBoolConfig(gb, { "PanelsConfig", "FullScreen" }) == UEResult::Success)
+		if (g.GetBoolConfig(gb, { "PanelsConfig", "FullScreen" }))
 		{
 			PanelsConfig::OptFullscreen = gb;
 		}
-		if (g.GetBoolConfig(gb, { "PanelsConfig", "Padding" }) == UEResult::Success)
+		if (g.GetBoolConfig(gb, { "PanelsConfig", "Padding" }))
 		{
 			PanelsConfig::OptPadding = gb;
 		}
-		if (g.GetBoolConfig(gb, { "PanelsConfig", "MaximizeOnPlay" }) == UEResult::Success)
+		if (g.GetBoolConfig(gb, { "PanelsConfig", "MaximizeOnPlay" }))
 		{
 			PanelsConfig::MaximizeOnPlay = gb;
 		}
 
 		// PanelsShowConfig
-		if (g.GetBoolConfig(gb, { "ActivePanels", "Viewport" }) == UEResult::Success)
+		if (g.GetBoolConfig(gb, { "ActivePanels", "Viewport" }))
 		{
 			PanelsShowConfig::ShowViewport = gb;
 		}
-		if (g.GetBoolConfig(gb, { "ActivePanels", "ContentBrowser" }) == UEResult::Success)
+		if (g.GetBoolConfig(gb, { "ActivePanels", "ContentBrowser" }))
 		{
 			PanelsShowConfig::ShowContentBrowser = gb;
 		}
-		if (g.GetBoolConfig(gb, { "ActivePanels", "SceneHierarchy" }) == UEResult::Success)
+		if (g.GetBoolConfig(gb, { "ActivePanels", "SceneHierarchy" }))
 		{
 			PanelsShowConfig::ShowSceneHierarchy = gb;
 		}
-		if (g.GetBoolConfig(gb, { "ActivePanels", "Properties" }) == UEResult::Success)
+		if (g.GetBoolConfig(gb, { "ActivePanels", "Properties" }))
 		{
 			PanelsShowConfig::ShowProperties = gb;
 		}
-		if (g.GetBoolConfig(gb, { "ActivePanels", "Profiler" }) == UEResult::Success)
+		if (g.GetBoolConfig(gb, { "ActivePanels", "Profiler" }))
 		{
 			PanelsShowConfig::ShowProfiler = gb;
 		}
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
 	UEBool PanelsConfig::OptFullscreen = true;

@@ -14,7 +14,7 @@ namespace UE
 	public:
 		virtual ~SoundAPI() = default;
 
-		virtual UEResult Init() = 0;
+		virtual UEResult<> Init() = 0;
 
 		static API GetAPI() { return s_API; }
 		static Scope<SoundAPI> Create();

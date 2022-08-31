@@ -8,7 +8,7 @@
 
 namespace UE
 {
-	UEResult OpenGLShader::LoadFromSource(const UEPath& path)
+	UEResult<> OpenGLShader::LoadFromSource(const UEPath& path)
 	{
 		// Extract name from filepath
 		auto lastSlash = path.string().find_last_of("/\\");
@@ -24,45 +24,45 @@ namespace UE
 		UEPath FragmentPath = path;
 		FragmentPath += ".frag";
 		
-		if (FileSystem::ReadToBuffer(VertexPath, m_VertexCode) == UEResult::Error)
+		if (!FileSystem::ReadToBuffer(VertexPath, m_VertexCode))
 		{
 			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read vertex source at {1}", tName, VertexPath);
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
-		if (FileSystem::ReadToBuffer(FragmentPath, m_FragmentCode) == UEResult::Error)
+		if (!FileSystem::ReadToBuffer(FragmentPath, m_FragmentCode))
 		{
 			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read fragment source at {1}", tName, FragmentPath);
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		m_Name = tName;
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult OpenGLShader::LoadFromSource(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath)
+	UEResult<> OpenGLShader::LoadFromSource(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath)
 	{
 
 		// Read shader source from files
-		if (FileSystem::ReadToBuffer(vertexPath, m_VertexCode) == UEResult::Error)
+		if (!FileSystem::ReadToBuffer(vertexPath, m_VertexCode))
 		{
 			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read vertex source at {1}", name, vertexPath);
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
-		if (FileSystem::ReadToBuffer(fragmentPath, m_FragmentCode) == UEResult::Error)
+		if (!FileSystem::ReadToBuffer(fragmentPath, m_FragmentCode))
 		{
 			UE_CORE_ERROR("Failed to load \"{0}\" Shader: could not read fragment source at {1}", name, fragmentPath);
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		m_Name = name;
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult OpenGLShader::Compile()
+	UEResult<> OpenGLShader::Compile()
 	{
 		unsigned int vertex;
 		unsigned int fragment;
@@ -81,7 +81,7 @@ namespace UE
 		{
 			glGetShaderInfoLog(vertex, 512, NULL, infoLog);
 			UE_CORE_ERROR("Failed to compile Vertex Shader:\n {0}", infoLog);
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		// Fragmnet shader
@@ -97,7 +97,7 @@ namespace UE
 			glGetShaderInfoLog(fragment, 512, NULL, infoLog);
 			UE_CORE_ERROR("Failed to compile Fragment Shader:\n {0}", infoLog);
 			std::cout << infoLog << "\n";
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		// Shader Program
@@ -113,14 +113,14 @@ namespace UE
 			glGetProgramInfoLog(m_ID, 512, NULL, infoLog);
 			UE_CORE_ERROR("Failed to link Shader Program:\n {0}", infoLog);
 			std::cout << infoLog << "\n";
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		// Delete temporary shaders
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
 	OpenGLShader::~OpenGLShader()

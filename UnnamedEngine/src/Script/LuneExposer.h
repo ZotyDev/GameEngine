@@ -4,5 +4,5 @@
 
 namespace UE
 {
-	UEResult ExposeCoreToLune(Ref<LuneStack> stack);
+	UEResult<> ExposeCoreToLune(Ref<LuneStack> stack);
 }

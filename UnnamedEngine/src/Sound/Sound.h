@@ -9,7 +9,7 @@ namespace UE
 	public:
 		virtual ~Sound() = default;
 
-		virtual UEResult LoadFromFile(const std::string& filename) = 0;
+		virtual UEResult<> LoadFromFile(const std::string& filename) = 0;
 
 		virtual const uint8_t& GetChannels() const = 0;
 		virtual const uint32_t& GetSampleRate() const = 0;

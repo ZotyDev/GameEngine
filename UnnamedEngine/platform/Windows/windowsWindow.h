@@ -13,7 +13,7 @@ namespace UE
 	public:
 		~WindowsWindow();
 
-		virtual UEResult Init(const WindowProps& props) override;
+		virtual UEResult<> Init(const WindowProps& props) override;
 
 		virtual void OnUpdate() override;
 
@@ -28,7 +28,7 @@ namespace UE
 		virtual void SetVSync(bool enabled) override;
 		virtual bool IsVSync() const override;
 
-		virtual UEResult SetIcon(const UEString& path) override;
+		virtual UEResult<> SetIcon(const UEString& path) override;
 
 		virtual void SetCursorHidden(bool hidden) override;
 

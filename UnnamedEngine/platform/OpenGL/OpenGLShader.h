@@ -9,10 +9,10 @@ namespace UE
 	public:
 		OpenGLShader() = default;
 
-		virtual UEResult LoadFromSource(const UEPath& path) override;
-		virtual UEResult LoadFromSource(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath) override;
+		virtual UEResult<> LoadFromSource(const UEPath& path) override;
+		virtual UEResult<> LoadFromSource(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath) override;
 
-		virtual UEResult Compile() override;
+		virtual UEResult<> Compile() override;
 
 		virtual ~OpenGLShader();
 

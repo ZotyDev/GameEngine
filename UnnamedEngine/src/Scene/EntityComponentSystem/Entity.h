@@ -11,9 +11,9 @@ namespace UE
 		EntityManager();
 
 		Entity CreateEntity();
-		UEResult DestroyEntity(Entity entity);
+		UEResult<> DestroyEntity(Entity entity);
 
-		UEResult Each(const std::function<UEResult(Entity)>& f);
+		UEResult<> Each(const std::function<UEResult<>(Entity)>& f);
 
 		UEUint32 Size() { return m_EntityCount; }
 

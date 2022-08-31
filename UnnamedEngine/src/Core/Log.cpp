@@ -44,13 +44,13 @@ namespace UE
 		s_LuaLogger->flush_on(spdlog::level::trace);
 	}
 
-	UEResult Log::CreateCustomLogger(const std::string& name)
+	UEResult<> Log::CreateCustomLogger(const std::string& name)
 	{
 		auto it = s_CustomLoggers.find(name);
 		if (it != s_CustomLoggers.end())
 		{
 			UE_CORE_ERROR("Failed to create logger {0}: already registered", name);
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		std::vector<spdlog::sink_ptr> LogSinks;
@@ -67,7 +67,7 @@ namespace UE
 
 		s_CustomLoggers.insert({ name, CustomLogger });
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
 	Ref<spdlog::logger> Log::GetCustomLogger(const std::string& name)

@@ -19,12 +19,12 @@ namespace UE
 		OpenALSoundListener();
 		virtual ~OpenALSoundListener() override;
 
-		virtual UEResult MakeCurrent() override;
+		virtual UEResult<> MakeCurrent() override;
 
-		virtual UEResult SetGain(float gain) override;
-		virtual UEResult SetPosition(const glm::vec3& position) override;
-		virtual UEResult SetVelocity(const glm::vec3& velocity) override;
-		virtual UEResult SetOrientation(const glm::quat& orientation) override;
+		virtual UEResult<> SetGain(float gain) override;
+		virtual UEResult<> SetPosition(const glm::vec3& position) override;
+		virtual UEResult<> SetVelocity(const glm::vec3& velocity) override;
+		virtual UEResult<> SetOrientation(const glm::quat& orientation) override;
 
 		virtual const float& GetGain() override { return m_Gain; }
 		virtual const glm::vec3& GetPosition() { return m_Position; }

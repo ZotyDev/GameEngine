@@ -30,7 +30,7 @@ extern "C"
 
 namespace UE
 {
-	UEResult LuneErrorCheck(lua_State* L, int status);
+	UEResult<> LuneErrorCheck(lua_State* L, int status);
 
 	enum class LuneType
 	{
@@ -70,8 +70,8 @@ namespace UE
 
 		void Dump();
 
-		UEResult ExecuteLine(const UEString& line);
-		UEResult ExecuteFile(const UEString& path);
+		UEResult<> ExecuteLine(const UEString& line);
+		UEResult<> ExecuteFile(const UEString& path);
 
 		lua_State* L;
 	};

@@ -179,7 +179,7 @@ namespace UE
 			if (ImGui::Button("Browse"))
 			{
 				UEPath TempPathHolder;
-				if (FileSystem::FileSelectorDialog(TempPathHolder, {}, false) == UEResult::Success)
+				if (FileSystem::FileSelectorDialog(TempPathHolder, {}, false))
 				{
 					std::strcpy(ProjectLocationBuffer, TempPathHolder.string().c_str());
 				}

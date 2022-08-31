@@ -34,9 +34,9 @@ namespace UE
 		ShaderHeaderConstructor(const UEPath& path);
 		~ShaderHeaderConstructor();
 
-		UEResult SetElements(const std::vector<Element>& elements);
+		UEResult<> SetElements(const std::vector<Element>& elements);
 
-		UEResult Construct(UEString& vertSource, UEString& fragSource);
+		UEResult<> Construct(UEString& vertSource, UEString& fragSource);
 	
 	private:
 		static std::array<UEString, (UEUint32)ShaderDataType::Last> s_DataTypeStringIndex;

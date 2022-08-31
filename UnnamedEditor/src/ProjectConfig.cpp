@@ -6,19 +6,19 @@
 
 namespace UE
 {
-	UEResult ProjectConfig::LoadConfigs()
+	UEResult<> ProjectConfig::LoadConfigs()
 	{
 		ConfigManager g;
 		UEString gs;
 		UEPath UserDataFolder;
-		if (FileSystem::GetUserDataFolder(UserDataFolder) == UEResult::Error)
+		if (!FileSystem::GetUserDataFolder(UserDataFolder))
 		{
 			UE_CORE_ERROR("Could not read Projcts Config: could not find user data folder");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 		g.LoadConfigFile(UserDataFolder.string() + "/UnnamedEngine/ProjectsConfig.lua", "assets/configs/default/DEFAULT_ProjectsConfig.lua");
 
-		if (g.GetStringConfig(gs, { "LastOpened" }) == UEResult::Success)
+		if (g.GetStringConfig(gs, { "LastOpened" }))
 		{
 			ProjectConfig::AssetPath = UEPath(gs).append("assets");
 			ProjectConfig::CurrentDirectory = ProjectConfig::AssetPath;
@@ -29,17 +29,17 @@ namespace UE
 
 			l.LoadConfigFile(ProjectConfig::ProjectLocation.append("ProjectConfig.lua"), "assets/configs/default/DEFAULT_ProjectConfig.lua");
 
-			if (l.GetStringConfig(gs, { "Name" }) == UEResult::Success)
+			if (l.GetStringConfig(gs, { "Name" }))
 			{
 				ProjectConfig::ProjectName = gs;
 			}
-			if (l.GetStringConfig(gs, { "Version" }) == UEResult::Success)
+			if (l.GetStringConfig(gs, { "Version" }))
 			{
 				ProjectConfig::ProjectVersion = gs;
 			}
 		}
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
 	UEString ProjectConfig::ProjectName = "UnnamedProject";

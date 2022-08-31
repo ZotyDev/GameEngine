@@ -28,22 +28,22 @@ namespace UE
 			return m_aux_traverse_iterator - m_aux_begin_iterator;
 		}
 
-		UEResult SetEachFn(std::function<UEResult(DynamicTree<T>*, DynamicTree<T>*)> f)
+		UEResult<> SetEachFn(std::function<UEResult<>(DynamicTree<T>*, DynamicTree<T>*)> f)
 		{
 			m_EachFunction = f;
 
-			return UEResult::Success;
+			return UEResult<>::Success;
 		}
 
-		UEResult Each()
+		UEResult<> Each()
 		{
 			UpdateIterators(0);
 			while (m_aux_traverse_iterator != m_aux_end_iterator)
 			{
-				if (m_EachFunction(this, &*m_aux_traverse_iterator) == UEResult::Error)
+				if (!m_EachFunction(this, &*m_aux_traverse_iterator))
 				{
 					UE_CORE_ERROR("Dynamic Tree Each() failed: function returned error");
-					return UEResult::Error;
+					return UEResult<>::Error;
 				}
 
 				if (m_ShouldIncrement)
@@ -56,7 +56,7 @@ namespace UE
 				}
 			}
 
-			return UEResult::Success;
+			return UEResult<>::Success;
 		}
 
 		void PushBack(const DynamicTree<T>& element)
@@ -194,6 +194,6 @@ namespace UE
 		UEBool m_ShouldIncrement = true;
 
 	private:
-		typename std::function<UEResult(DynamicTree<T>*, DynamicTree<T>*)> m_EachFunction;
+		typename std::function<UEResult<>(DynamicTree<T>*, DynamicTree<T>*)> m_EachFunction;
 	};
 }

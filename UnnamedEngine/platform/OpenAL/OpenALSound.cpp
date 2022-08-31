@@ -20,7 +20,7 @@ namespace UE
 		alDeleteBuffers(1, &m_Buffer);
 	}
 
-	UEResult OpenALSound::LoadFromFile(const std::string& filename)
+	UEResult<> OpenALSound::LoadFromFile(const std::string& filename)
 	{
 		std::string FileType = filename.substr(filename.find_first_of(".") + 1);
 
@@ -28,16 +28,16 @@ namespace UE
 
 		if (FileType == "wav" || FileType == "WAV")
 		{
-			if (LoadWav(FileBuffer, filename, m_Channels, m_SampleRate, m_BitsPerSample, m_Size) == UEResult::Error)
+			if (!LoadWav(FileBuffer, filename, m_Channels, m_SampleRate, m_BitsPerSample, m_Size))
 			{
 				UE_CORE_ERROR("Failed to load sound data from: {0}", filename);
-				return UEResult::Error;
+				return UEResult<>::Error;
 			}
 		}
 		else
 		{
 			UE_CORE_ERROR("Filename not supported");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		alGenBuffers(1, &m_Buffer);
@@ -62,20 +62,20 @@ namespace UE
 		else
 		{
 			UE_CORE_ERROR("Unknwon WAVE format:\n Channels: {0}\n Bps: {1}", m_Channels, m_BitsPerSample);
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		alBufferData(m_Buffer, Format, FileBuffer.data(), m_Size, m_SampleRate);
 		if (CheckAlError())
 		{
 			UE_CORE_ERROR("Failed to buffer data into sound");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 		FileBuffer.clear();
 
 		m_NumberOfSamples = m_Size / (m_Channels * (m_BitsPerSample) / 8);
 		m_Duration = m_NumberOfSamples / m_SampleRate;
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 }

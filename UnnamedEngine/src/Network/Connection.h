@@ -21,10 +21,10 @@ namespace UE
 		Connection();
 		virtual ~Connection();
 
-		virtual UEResult Connect() = 0;
-		virtual UEResult Disconnect() = 0;
-		virtual UEResult OnUpdate() = 0;
-		virtual UEResult SendHeartbeat() = 0;
+		virtual UEResult<> Connect() = 0;
+		virtual UEResult<> Disconnect() = 0;
+		virtual UEResult<> OnUpdate() = 0;
+		virtual UEResult<> SendHeartbeat() = 0;
 
 		bool IsConnected() const { return m_CurrentState == Connection::State::Connected; }
 

@@ -4,7 +4,7 @@ namespace UE
 {
 	struct PanelsConfig
 	{
-		static UEResult LoadConfigs();
+		static UEResult<> LoadConfigs();
 
 		static UEBool OptFullscreen;
 		static UEBool OptPadding;

@@ -20,7 +20,7 @@ namespace UE
 		#if defined(UE_PLATFORM_OPENGL)
 		case RendererAPI::API::OpenGL: 
 			Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
-			if (t_Shader->LoadFromSource(path) == UEResult::Error)
+			if (!t_Shader->LoadFromSource(path))
 			{
 				UE_CORE_ERROR("Failed to create Shader!");
 				return nullptr;
@@ -50,7 +50,7 @@ namespace UE
 		#if defined(UE_PLATFORM_OPENGL)
 		case RendererAPI::API::OpenGL:
 			Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
-			if (t_Shader->LoadFromSource(name, vertexPath, fragmentPath) == UEResult::Error)
+			if (!t_Shader->LoadFromSource(name, vertexPath, fragmentPath))
 			{
 				UE_CORE_ERROR("Failed to create Shader!");
 				return nullptr;

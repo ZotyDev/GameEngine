@@ -15,34 +15,34 @@ namespace UE
 	OpenALSoundListener::~OpenALSoundListener()
 	{}
 
-	UEResult OpenALSoundListener::MakeCurrent()
+	UEResult<> OpenALSoundListener::MakeCurrent()
 	{
 		s_CurrentContext = this;
 
-		if (SetGain(m_Gain) == UEResult::Error)
+		if (!SetGain(m_Gain))
 		{
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
-		if (SetPosition(m_Position) == UEResult::Error)
+		if (!SetPosition(m_Position))
 		{
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 		
-		if (SetVelocity(m_Velocity) == UEResult::Error)
+		if (!SetVelocity(m_Velocity))
 		{
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
-		if (SetOrientation(m_Orientation) == UEResult::Error)
+		if (!SetOrientation(m_Orientation))
 		{
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult OpenALSoundListener::SetGain(float gain)
+	UEResult<> OpenALSoundListener::SetGain(float gain)
 	{
 		if (s_CurrentContext == this)
 		{
@@ -50,16 +50,16 @@ namespace UE
 			if (CheckAlError())
 			{
 				UE_CORE_ERROR("Failed to set listener gain");
-				return UEResult::Error;
+				return UEResult<>::Error;
 			}
 		}
 
 		m_Gain = gain;
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult OpenALSoundListener::SetPosition(const glm::vec3& position)
+	UEResult<> OpenALSoundListener::SetPosition(const glm::vec3& position)
 	{
 		if (s_CurrentContext == this)
 		{
@@ -67,16 +67,16 @@ namespace UE
 			if (CheckAlError())
 			{
 				UE_CORE_ERROR("Failed to set listener position");
-				return UEResult::Error;
+				return UEResult<>::Error;
 			}
 		}
 
 		m_Position = position;
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult OpenALSoundListener::SetVelocity(const glm::vec3& velocity)
+	UEResult<> OpenALSoundListener::SetVelocity(const glm::vec3& velocity)
 	{
 		if (s_CurrentContext == this)
 		{
@@ -84,16 +84,16 @@ namespace UE
 			if (CheckAlError())
 			{
 				UE_CORE_ERROR("Failed to set listener velocity");
-				return UEResult::Error;
+				return UEResult<>::Error;
 			}
 		}
 
 		m_Position = velocity;
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult OpenALSoundListener::SetOrientation(const glm::quat& orientation)
+	UEResult<> OpenALSoundListener::SetOrientation(const glm::quat& orientation)
 	{
 		if (s_CurrentContext == this)
 		{
@@ -108,12 +108,12 @@ namespace UE
 			if (CheckAlError())
 			{
 				UE_CORE_ERROR("Failed to set listener orientation");
-				return UEResult::Error;
+				return UEResult<>::Error;
 			}
 		}
 
 		m_Orientation = orientation;
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 }

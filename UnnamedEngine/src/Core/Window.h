@@ -27,7 +27,7 @@ namespace UE
 		using EventCallbackFn = std::function<void(Event&)>;
 
 		virtual ~Window() = default;
-		virtual UEResult Init(const WindowProps& props) = 0;
+		virtual UEResult<> Init(const WindowProps& props) = 0;
 
 		virtual void OnUpdate() = 0;
 
@@ -42,7 +42,7 @@ namespace UE
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
 
-		virtual UEResult SetIcon(const UEString& path) = 0;
+		virtual UEResult<> SetIcon(const UEString& path) = 0;
 
 		virtual void SetCursorHidden(bool hidden) = 0;
 

@@ -17,7 +17,7 @@ namespace UE
 		OpenALSoundAPI();
 		virtual ~OpenALSoundAPI() override;
 
-		virtual UEResult Init() override;
+		virtual UEResult<> Init() override;
 	private:
 		ALCdevice* m_SoundDevice;
 		ALCcontext* m_SoundContext;

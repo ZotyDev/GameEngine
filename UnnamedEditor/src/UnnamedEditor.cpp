@@ -10,7 +10,7 @@ namespace UE
 	public:
 		UnnamedEditor()
 		{
-			PushLayer(new EditorLayer(m_Data));
+			PushLayer(CreateRef<EditorLayer>(m_Data));
 		}
 
 		~UnnamedEditor()

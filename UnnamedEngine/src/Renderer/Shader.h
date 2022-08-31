@@ -12,10 +12,10 @@ namespace UE
 	public:
 		virtual ~Shader() = default;
 
-		virtual UEResult LoadFromSource(const UEPath& path) = 0;
-		virtual UEResult LoadFromSource(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath) = 0;
+		virtual UEResult<> LoadFromSource(const UEPath& path) = 0;
+		virtual UEResult<> LoadFromSource(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath) = 0;
 
-		virtual UEResult Compile() = 0;
+		virtual UEResult<> Compile() = 0;
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;

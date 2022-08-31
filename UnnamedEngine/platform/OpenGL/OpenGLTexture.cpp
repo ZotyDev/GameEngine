@@ -8,7 +8,7 @@
 
 namespace UE
 {
-	UEResult OpenGLTexture2D::LoadFromSource(const UEPath& path, TextureFlags flags)
+	UEResult<> OpenGLTexture2D::LoadFromSource(const UEPath& path, TextureFlags flags)
 	{
 		int width = 0;
 		int height = 0;
@@ -20,9 +20,9 @@ namespace UE
 			UE_CORE_ERROR("Failed to load texture {0}: {1}", path, stbi_failure_reason());
 			UE_CORE_ERROR("Using fallback texture to prevent crash");
 			
-			UE_CORE_ASSERT(LoadFromSource("assets/core/textures/fallback.png") == UEResult::Success, "Failed to load fallback texture");
+			UE_CORE_ASSERT(LoadFromSource("assets/core/textures/fallback.png"), "Failed to load fallback texture");
 
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 		else
 		{
@@ -51,7 +51,7 @@ namespace UE
 				break;
 			default:
 				UE_CORE_ERROR("Failed to load texture \"{0}\": unknown format with {1} channels", path, channels);
-				return UEResult::Error;
+				return UEResult<>::Error;
 			}
 
 			m_InternalFormat = internalFormat;
@@ -99,7 +99,7 @@ namespace UE
 
 			stbi_image_free(data);
 
-			return UEResult::Success;
+			return UEResult<>::Success;
 		}
 	}
 

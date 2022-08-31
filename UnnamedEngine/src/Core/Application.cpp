@@ -47,7 +47,7 @@ namespace UE
 		Renderer::Init();
 
 		// Initialize ImGui
-		m_Data->m_ImGuiLayer = new ImGuiLayer();
+		m_Data->m_ImGuiLayer = ImGuiLayer::Create();
 		PushOverlay(m_Data->m_ImGuiLayer);
 
 		// Initialize Lua
@@ -73,13 +73,13 @@ namespace UE
 		//LuaAPI::Shutdown();
 	}
 
-	void Application::PushLayer(Layer* layer)
+	void Application::PushLayer(Ref<Layer> layer)
 	{
 		m_LayerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
-	void Application::PushOverlay(Layer* overlay)
+	void Application::PushOverlay(Ref<Layer> overlay)
 	{
 		m_LayerStack.PushOverlay(overlay);
 		overlay->OnAttach();
@@ -113,7 +113,7 @@ namespace UE
 		{
 			// Update layers
 			{
-				for (Layer* layer : m_LayerStack)
+				for (auto& layer : m_LayerStack)
 				{
 					layer->OnUpdate(timestep);
 				}
@@ -122,7 +122,7 @@ namespace UE
 			// Update imgui
 			m_Data->m_ImGuiLayer->Begin();
 			{
-				for (Layer* layer : m_LayerStack)
+				for (auto& layer : m_LayerStack)
 				{
 					layer->OnImGuiRender();
 				}

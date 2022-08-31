@@ -164,7 +164,7 @@ namespace UE
 		m_SelectionContext = entity;
 	}
 
-	UEResult SceneHierarchyPanel::DrawEntityNode(DynamicTree<Entity>* self, DynamicTree<Entity>* branch)
+	UEResult<> SceneHierarchyPanel::DrawEntityNode(DynamicTree<Entity>* self, DynamicTree<Entity>* branch)
 	{
 		Entity CurrentEntity = branch->Element;
 		UEUint32 CurrentEntityIndex = self->GetTraverseIndex();
@@ -244,7 +244,7 @@ namespace UE
 			self->EraseAtTraverse();
 		}
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
 	//void SceneHierarchyPanel::DrawEntityNode()

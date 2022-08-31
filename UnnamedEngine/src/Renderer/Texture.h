@@ -15,7 +15,7 @@ namespace UE
 		};
 
 	public:
-		virtual UEResult LoadFromSource(const UEPath& path, TextureFlags flags = TextureFlags::NONE) = 0;
+		virtual UEResult<> LoadFromSource(const UEPath& path, TextureFlags flags = TextureFlags::NONE) = 0;
 
 		virtual ~Texture() = default;
 

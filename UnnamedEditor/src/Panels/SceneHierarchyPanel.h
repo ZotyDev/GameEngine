@@ -16,7 +16,7 @@ namespace UE
 		Entity GetSelectedEntity() const { return m_SelectionContext; }
 		void SetSelectedEntity(Entity entity);
 	private:
-		UEResult DrawEntityNode(DynamicTree<Entity>* self, DynamicTree<Entity>* branch);
+		UEResult<> DrawEntityNode(DynamicTree<Entity>* self, DynamicTree<Entity>* branch);
 
 	private:
 		Entity m_SelectionContext;

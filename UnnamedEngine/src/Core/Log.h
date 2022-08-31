@@ -24,7 +24,7 @@ namespace UE
 		static Ref<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
 		static Ref<spdlog::logger>& GetLuaLogger() { return s_LuaLogger; }
 	public:
-		static UEResult CreateCustomLogger(const std::string& name);
+		static UEResult<> CreateCustomLogger(const std::string& name);
 		static Ref<spdlog::logger> GetCustomLogger(const std::string& name);
 	private:
 		static Ref<spdlog::logger> s_CoreLogger;

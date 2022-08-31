@@ -12,7 +12,7 @@ namespace UE
 	public:
 		virtual ~FreeTypeTextAPI() override;
 
-		virtual UEResult Init() override;
+		virtual UEResult<> Init() override;
 
 		virtual void* GetRawLibrary() override;
 	private:

@@ -57,24 +57,71 @@ namespace UE
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 
+	typedef UEInt8 _UEResultT;
+
+	template<typename T = void>
 	class UEResult
 	{
 	public:
-		static UEInt8 Error;
-		static UEInt8 Success;
-		static UEInt8 Warn;
-		static UEInt8 Undefined;
+		enum : _UEResultT {
+			Error = -1,
+			Success = 0,
+			Warn = 1,
+			Undefined = UE_INT8_MAX
+		};
 
 	public:
-		UEResult();
-		UEResult(UEInt8 result);
+		UEResult()
+			: Result(UEResult::Undefined) {}
 
-		operator UEBool() const;
+		UEResult(_UEResultT result)
+			: Result(result) {}
 
-		UEResult& operator = (UEInt8 result);
+		operator UEBool() const
+		{
+			return (Result == UEResult::Success);
+		}
 
-	private:
-		UEInt8 m_Result;
+		UEResult& operator = (_UEResultT result)
+		{
+			Result = result;
+			return *this;
+		}
+
+		T Value;
+		_UEResultT Result;
+	};
+
+	template<>
+	class UEResult<void>
+	{
+	public:
+		enum : _UEResultT {
+			Error = -1,
+			Success = 0,
+			Warn = 1,
+			Undefined = UE_INT8_MAX
+		};
+
+	public:
+		UEResult()
+			: Result(UEResult::Undefined) {}
+
+		UEResult(_UEResultT result)
+			: Result(result) {}
+
+		operator UEBool() const
+		{
+			return (Result == UEResult::Success);
+		}
+
+		UEResult& operator = (_UEResultT result)
+		{
+			Result = result;
+			return *this;
+		}
+
+		_UEResultT Result;
 	};
 }
 

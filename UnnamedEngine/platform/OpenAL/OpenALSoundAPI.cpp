@@ -76,14 +76,14 @@ namespace UE
 		alcCloseDevice(m_SoundDevice);
 	}
 
-	UEResult OpenALSoundAPI::Init()
+	UEResult<> OpenALSoundAPI::Init()
 	{
 		// Select the device to output sound to
 		m_SoundDevice = alcOpenDevice(nullptr);
 		if (m_SoundDevice == nullptr || CheckAlcError(m_SoundDevice))
 		{
 			UE_CORE_ERROR("Failed to select default audio output device");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		// Create context
@@ -91,14 +91,14 @@ namespace UE
 		if (m_SoundContext == nullptr || CheckAlcError(m_SoundDevice))
 		{
 			UE_CORE_ERROR("Failed to create OpenAL context");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		// Make context current
 		if (!alcMakeContextCurrent(m_SoundContext) || CheckAlcError(m_SoundDevice))
 		{
 			UE_CORE_ERROR("Failed to make OpenAL context current");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		UE_CORE_INFO("OpenAL info:\n Vendor: {0}\n Renderer: {1}\n Version: {2}",
@@ -106,6 +106,6 @@ namespace UE
 			alGetString(AL_RENDERER),
 			alGetString(AL_VERSION));
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 }

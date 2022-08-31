@@ -7,30 +7,30 @@
 
 namespace UE
 {
-	UEResult GlobalConfig::LoadConfigs()
+	UEResult<> GlobalConfig::LoadConfigs()
 	{
 		ConfigManager g;
 		UEDouble gd;
 		UEUint32 gu;
 		UEPath UserDataFolder;
-		if (FileSystem::GetUserDataFolder(UserDataFolder) == UEResult::Error)
+		if (!FileSystem::GetUserDataFolder(UserDataFolder))
 		{
 			UE_CORE_ERROR("Failed to load Global Configs: could not find user data folder");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 		g.LoadConfigFile(UserDataFolder.string() + "/UnnamedEngine/GlobalConfig.lua", "assets/configs/default/DEFAULT_GlobalConfig.lua");
 
 		// Window
-		if (g.GetNumberConfig(gd, { "Window", "Width" }) == UEResult::Success)
+		if (g.GetNumberConfig(gd, { "Window", "Width" }))
 		{
 			Application::Width = (UEFloat)gd;
 		}
-		if (g.GetNumberConfig(gd, { "Window", "Height" }) == UEResult::Success)
+		if (g.GetNumberConfig(gd, { "Window", "Height" }))
 		{
 			Application::Height = (UEFloat)gd;
 		}
 		// Renderer
-		if (g.GetNumberConfig(gd, { "Renderer", "PixelSize"}) == UEResult::Success)
+		if (g.GetNumberConfig(gd, { "Renderer", "PixelSize"}))
 		{
 			Rendering::PixelSize = (UEFloat)gd;
 		}
@@ -40,34 +40,34 @@ namespace UE
 		Rendering::DesiredHeight = (UEUint32)((UEFloat)Rendering::ScreenHeight / Rendering::PixelSize);
 
 		// Mouse
-		if (g.GetNumberConfig(gd, { "Mouse", "XMovementSensibility" }) == UEResult::Success)
+		if (g.GetNumberConfig(gd, { "Mouse", "XMovementSensibility" }))
 		{
 			Mouse::MovementSensibilityX = (UEFloat)gd;
 		}
-		if (g.GetNumberConfig(gd, { "Mouse", "YMovementSensibility" }) == UEResult::Success)
+		if (g.GetNumberConfig(gd, { "Mouse", "YMovementSensibility" }))
 		{
 			Mouse::MovementSensibilityY = (UEFloat)gd;
 		}
-		if (g.GetNumberConfig(gd, { "Mouse", "XScrollSensibility" }) == UEResult::Success)
+		if (g.GetNumberConfig(gd, { "Mouse", "XScrollSensibility" }))
 		{
 			Mouse::ScrollSensibilityX = (UEFloat)gd;
 		}
-		if (g.GetNumberConfig(gd, { "Mouse", "YScrollSensibility" }) == UEResult::Success)
+		if (g.GetNumberConfig(gd, { "Mouse", "YScrollSensibility" }))
 		{
 			Mouse::ScrollSensibilityY = (UEFloat)gd;
 		}
 
 		// Camera
-		if (g.GetNumberConfig(gd, { "Camera", "ZoomInSensibility" }) == UEResult::Success)
+		if (g.GetNumberConfig(gd, { "Camera", "ZoomInSensibility" }))
 		{
 			Zoom::SensibilityIn = (UEFloat)gd;
 		}
-		if (g.GetNumberConfig(gd, { "Camera", "ZoomOutSensibility" }) == UEResult::Success)
+		if (g.GetNumberConfig(gd, { "Camera", "ZoomOutSensibility" }))
 		{
 			Zoom::SensibilityOut = (UEFloat)gd;
 		}
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
 	UEUint32 GlobalConfig::Application::Width = 1280;

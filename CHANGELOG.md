@@ -4,6 +4,7 @@ This release is the first of the engine, every feature that is mentioned here sh
 
 ---
 ## Internal
+- *Base* - Added `UEResult` W.I.P.
 - *FileSystem* - Added `FileSelectorDialog()` for Windows.
 - *FileSystem* - Added `DoesFileExists()` for Windows.
 - *FileSystem* - Added `ReadToBuffer()` for Windows.

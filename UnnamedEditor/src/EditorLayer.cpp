@@ -33,7 +33,7 @@ namespace UE
 
 		m_Texture2D = Texture2D::Create();
 		const UEString TexturePath = "assets/textures/grass.png";
-		if (m_Texture2D->LoadFromSource(TexturePath) == UEResult::Error)
+		if (!m_Texture2D->LoadFromSource(TexturePath))
 		{
 			UE_ERROR("Failed to load {0}: not found", TexturePath);
 		}

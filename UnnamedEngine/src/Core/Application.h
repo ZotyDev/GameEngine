@@ -36,8 +36,8 @@ namespace UE
 		//void OnNetworkEvent(Event& event);
 		void OnRendererEvent(Event& event);
 
-		void PushLayer(Layer* layer);
-		void PushOverlay(Layer* overlay);
+		void PushLayer(Ref<Layer> layer);
+		void PushOverlay(Ref<Layer> overlay);
 
 		Window& GetWindow() { return *m_Data->m_Window; }
 
@@ -53,7 +53,7 @@ namespace UE
 		{
 			Ref<Window> m_Window;
 			Ref<LuneStack> m_Lune;
-			ImGuiLayer* m_ImGuiLayer;
+			Ref<ImGuiLayer> m_ImGuiLayer;
 			bool m_Running = true;
 			bool m_Minimized = false;
 			bool m_Fullscreen = false;

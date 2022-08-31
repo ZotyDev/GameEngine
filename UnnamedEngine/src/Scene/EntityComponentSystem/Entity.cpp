@@ -34,17 +34,17 @@ namespace UE
 		return NewEntity;
 	}
 
-	UEResult EntityManager::DestroyEntity(Entity entity)
+	UEResult<> EntityManager::DestroyEntity(Entity entity)
 	{
 		if (entity > MaxEntities)
 		{
 			UE_CORE_ERROR("Failed to destroy entity: value out of range (Expected value between: 0~{0} - Got {1})", MaxEntities, (UEUint64)entity);
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 		else if (m_EntityToIndexMap.find(entity) == m_EntityToIndexMap.end())
 		{
 			UE_CORE_ERROR("Failed to destroy entity: specified entity does not exist");
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		// Return entity to avaliable pool
@@ -65,18 +65,18 @@ namespace UE
 
 		m_EntityCount--;
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult EntityManager::Each(const std::function<UEResult(Entity)>& f)
+	UEResult<> EntityManager::Each(const std::function<UEResult<>(Entity)>& f)
 	{
 		for (UEUint32 i = 0; i < m_EntityCount; i++)
 		{
 			Entity CurrentEntity = m_ActiveEntityPool[i];
-			if (f(CurrentEntity) == UEResult::Error)
+			if (!f(CurrentEntity))
 			{
 				UE_CORE_INFO("Entity {0} failed to update: \"Each()\" returned ERROR", CurrentEntity);
-				return UEResult::Error;
+				return UEResult<>::Error;
 			}
 		}
 	}

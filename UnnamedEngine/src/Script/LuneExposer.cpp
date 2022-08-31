@@ -12,7 +12,7 @@
 
 namespace UE
 {
-	UEResult ExposeCoreToLune(Ref<LuneStack> stack)
+	UEResult<> ExposeCoreToLune(Ref<LuneStack> stack)
 	{
 		LuneModule Core("Core");
 		Core
@@ -256,6 +256,6 @@ namespace UE
 
 		Core.RegisterSelf(stack);
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 }

@@ -10,10 +10,10 @@ namespace UE
 	{
 	public:
 
-		UEResult Start(IPEndpoint listeningIP);
-		UEResult Shutdown();
+		UEResult<> Start(IPEndpoint listeningIP);
+		UEResult<> Shutdown();
 
-		UEResult OnUpdate(Timestep dt);
+		UEResult<> OnUpdate(Timestep dt);
 
 	private:
 		IPEndpoint m_ListeningIP;

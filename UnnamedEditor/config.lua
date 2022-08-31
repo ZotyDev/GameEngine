@@ -1,0 +1,3 @@
+PanelsConfig
+ConfigVersion
+ActivePanels

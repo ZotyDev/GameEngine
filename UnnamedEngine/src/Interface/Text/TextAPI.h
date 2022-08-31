@@ -14,7 +14,7 @@ namespace UE
 	public:
 		virtual ~TextAPI() = default;
 
-		virtual UEResult Init() = 0;
+		virtual UEResult<> Init() = 0;
 
 		virtual void* GetRawLibrary() = 0;
 

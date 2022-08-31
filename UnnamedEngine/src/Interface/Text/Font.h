@@ -9,7 +9,7 @@ namespace UE
 	public:
 		virtual ~Font() = default;
 
-		virtual UEResult LoadFromFile(const std::string& filename) = 0;
+		virtual UEResult<> LoadFromFile(const std::string& filename) = 0;
 
 		static Ref<Font> Create();
 	};

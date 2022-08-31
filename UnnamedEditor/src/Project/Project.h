@@ -12,10 +12,10 @@ namespace UE
 			UEPath Location;
 		};
 	public:
-		static UEResult Create(const Project::Header& header);
-		static UEResult Read(const UEPath& path);
-		static UEResult Update(const Project::Header& header);
-		static UEResult Delete(const UEPath& path);
+		static UEResult<> Create(const Project::Header& header);
+		static UEResult<> Read(const UEPath& path);
+		static UEResult<> Update(const Project::Header& header);
+		static UEResult<> Delete(const UEPath& path);
 
 	private:
 		static Project::Header m_ProjectHeader;

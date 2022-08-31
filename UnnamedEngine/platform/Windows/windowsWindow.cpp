@@ -33,7 +33,7 @@ namespace UE
 		}
 	};
 
-	UEResult WindowsWindow::Init(const WindowProps& props)
+	UEResult<> WindowsWindow::Init(const WindowProps& props)
 	{
 		// Copy properties
 		m_WindowData.Title = props.Title;
@@ -216,7 +216,7 @@ namespace UE
 		// Set Viewport
 		RenderCommand::SetViewport(0, 0, GlobalConfig::Rendering::ScreenWidth, GlobalConfig::Rendering::ScreenHeight);
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	};
 
 	void WindowsWindow::OnUpdate()
@@ -279,7 +279,7 @@ namespace UE
 		return m_WindowData.VSync;
 	}
 
-	UEResult WindowsWindow::SetIcon(const UEString& path)
+	UEResult<> WindowsWindow::SetIcon(const UEString& path)
 	{
 		GLFWimage IconImage;
 		IconImage.pixels = nullptr;
@@ -289,14 +289,14 @@ namespace UE
 		if (!IconImage.pixels)
 		{
 			UE_CORE_ERROR("Failed to set icon of WindowsWindow: {0} not found", path);
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		glfwSetWindowIcon(m_Window, 1, &IconImage);
 
 		stbi_image_free(IconImage.pixels);
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
 	void WindowsWindow::SetCursorHidden(bool hidden)

@@ -3,8 +3,8 @@
 
 namespace UE
 {
-	UEResult ReadFromFile()
+	UEResult<> ReadFromFile()
 	{
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 }

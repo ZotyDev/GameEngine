@@ -9,7 +9,7 @@ namespace UE
 	ServerConnection::~ServerConnection()
 	{}
 
-	UEResult ServerConnection::Connect()
+	UEResult<> ServerConnection::Connect()
 	{
 		switch (m_CurrentState)
 		{
@@ -35,23 +35,23 @@ namespace UE
 			}
 		}
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult ServerConnection::Disconnect()
+	UEResult<> ServerConnection::Disconnect()
 	{
 		// Send 10 disconnect
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult ServerConnection::OnUpdate()
+	UEResult<> ServerConnection::OnUpdate()
 	{
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult ServerConnection::SendHeartbeat()
+	UEResult<> ServerConnection::SendHeartbeat()
 	{
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 }

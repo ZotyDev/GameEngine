@@ -10,9 +10,9 @@ namespace UE
 		ServerConnection();
 		virtual ~ServerConnection();
 
-		virtual UEResult Connect() override;
-		virtual UEResult Disconnect() override;
-		virtual UEResult OnUpdate() override;
-		virtual UEResult SendHeartbeat() override;
+		virtual UEResult<> Connect() override;
+		virtual UEResult<> Disconnect() override;
+		virtual UEResult<> OnUpdate() override;
+		virtual UEResult<> SendHeartbeat() override;
 	};
 }

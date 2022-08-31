@@ -12,7 +12,7 @@ namespace UE
 		OpenALSound();
 		virtual ~OpenALSound() override;
 
-		virtual UEResult LoadFromFile(const std::string& filename) override;
+		virtual UEResult<> LoadFromFile(const std::string& filename) override;
 
 		virtual const uint8_t& GetChannels() const override { return m_Channels; }
 		virtual const uint32_t& GetSampleRate() const override { return m_SampleRate; }

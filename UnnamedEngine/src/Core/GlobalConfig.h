@@ -4,7 +4,7 @@ namespace UE
 {
 	struct GlobalConfig
 	{
-		static UEResult LoadConfigs();
+		static UEResult<> LoadConfigs();
 
 		struct Application
 		{

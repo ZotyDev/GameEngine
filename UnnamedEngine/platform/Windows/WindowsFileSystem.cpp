@@ -25,12 +25,12 @@ namespace UE
 		return std::filesystem::exists(path);
 	}
 
-	UEResult WindowsFileSystem::ReadToBuffer(const UEPath& path, UEString& buffer)
+	UEResult<> WindowsFileSystem::ReadToBuffer(const UEPath& path, UEString& buffer)
 	{
 		if (Exists(path) == false)
 		{
 			UE_CORE_ERROR("Failed to read {0}: file not found", path);
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		std::ifstream SourceIfstream;
@@ -39,7 +39,7 @@ namespace UE
 		if (SourceIfstream.is_open() == false)
 		{
 			UE_CORE_ERROR("Failed to read {0}: could not open file", path);
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 
 		std::stringstream SourceStringStream;
@@ -49,10 +49,10 @@ namespace UE
 
 		SourceIfstream.close();
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult WindowsFileSystem::FileSelectorDialog(UEPath& receivedPath, const std::vector<std::pair<UEString, UEString>>& filters, UEBool folderOnly)
+	UEResult<> WindowsFileSystem::FileSelectorDialog(UEPath& receivedPath, const std::vector<std::pair<UEString, UEString>>& filters, UEBool folderOnly)
 	{
 		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 		if (SUCCEEDED(hr))
@@ -121,29 +121,29 @@ namespace UE
 				}
 				else
 				{
-					return UEResult::Error;
+					return UEResult<>::Error;
 				}
 				pFileOpen->Release();
 			}
 			CoUninitialize();
 		}
 
-		return UEResult::Success;
+		return UEResult<>::Success;
 	}
 
-	UEResult WindowsFileSystem::MakeSureFolder(const UEPath& path)
+	UEResult<> WindowsFileSystem::MakeSureFolder(const UEPath& path)
 	{
 		if (CreateDirectory(path.c_str(), NULL) || ERROR_ALREADY_EXISTS == GetLastError())
 		{
-			return UEResult::Warn;
+			return UEResult<>::Warn;
 		}
 		else
 		{
-			return UEResult::Success;
+			return UEResult<>::Success;
 		}
 	}
 
-	UEResult WindowsFileSystem::MakeSureFile(const UEPath& path)
+	UEResult<> WindowsFileSystem::MakeSureFile(const UEPath& path)
 	{
 		if (CreateFile(
 			path.c_str(),
@@ -154,15 +154,15 @@ namespace UE
 			FILE_ATTRIBUTE_NORMAL,
 			NULL) || ERROR_FILE_EXISTS == GetLastError())
 		{
-			return UEResult::Warn;
+			return UEResult<>::Warn;
 		}
 		else
 		{
-			return UEResult::Success;
+			return UEResult<>::Success;
 		}
 	}
 
-	UEResult WindowsFileSystem::GetUserDataFolder(UEPath& path)
+	UEResult<> WindowsFileSystem::GetUserDataFolder(UEPath& path)
 	{
 		LPWSTR LocalAppData = NULL;
 		HRESULT Result = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &LocalAppData);
@@ -175,11 +175,11 @@ namespace UE
 			CoTaskMemFree(static_cast<void*>(LocalAppData));
 
 			path = LocalAppDataPath;
-			return UEResult::Success;
+			return UEResult<>::Success;
 		}
 		else
 		{
-			return UEResult::Error;
+			return UEResult<>::Error;
 		}
 	}
 }
