@@ -80,7 +80,7 @@ namespace UE
 					configGroup->String.Register(ConfigName, ConfigValue);
 					configGroup->m_OrderHelper.push_back(ConfigName);
 
-					UE_CORE_INFO("{} : {}", ConfigName, ConfigValue);
+					//UE_CORE_INFO("{} : {}", ConfigName, ConfigValue);
 					break;
 				}
 				case LUA_TBOOLEAN:
@@ -89,7 +89,7 @@ namespace UE
 					configGroup->Bool.Register(ConfigName, ConfigValue);
 					configGroup->m_OrderHelper.push_back(ConfigName);
 
-					UE_CORE_INFO("{} : {}", ConfigName, ConfigValue);
+					//UE_CORE_INFO("{} : {}", ConfigName, ConfigValue);
 					break;
 				}
 				case LUA_TNUMBER:
@@ -98,7 +98,7 @@ namespace UE
 					configGroup->Number.Register(ConfigName, ConfigValue);
 					configGroup->m_OrderHelper.push_back(ConfigName);
 
-					UE_CORE_INFO("{} : {}", ConfigName, ConfigValue);
+					//UE_CORE_INFO("{} : {}", ConfigName, ConfigValue);
 					break;
 				}
 				case LUA_TFUNCTION:
@@ -108,7 +108,7 @@ namespace UE
 				}
 				case LUA_TTABLE:
 				{
-					UE_CORE_INFO(">{}:", ConfigName);
+					//UE_CORE_INFO(">{}:", ConfigName);
 
 					Ref<ConfigGroup> NewConfigGroup = CreateRef<ConfigGroup>();
 					configGroup->Groups.Register(ConfigName, NewConfigGroup);

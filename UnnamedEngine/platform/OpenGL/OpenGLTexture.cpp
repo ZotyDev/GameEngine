@@ -1,5 +1,5 @@
 #include "uepch.h"
-#include "OpenGLTexture.h"
+#include "OpenGL/OpenGLTexture.h"
 
 #include <glad/glad.h>
 

@@ -69,8 +69,9 @@ namespace UE
 		bool OnRendererScaleChange(RendererScaleChangeEvent& event);
 	private:
 		bool OnKeyPressed(KeyPressedEvent& event);
-	private:
+	public:
 		static Application* s_Instance;
+	private:
 		friend int ::main(int argc, char** argv);
 	};
 

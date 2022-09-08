@@ -1,22 +1,11 @@
 #include "uepch.h"
 #include "Vulkan/VulkanContext.h"
 
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-
 namespace UE
 {
-	#ifdef UE_DEBUG
-	const bool EnableValidationLayers = true;
-	#else
-	const bool EnableValidationLayers = false;
-	#endif
+	VkInstance VulkanContext::Instance = VK_NULL_HANDLE;
 
-	const std::vector<const char*> ValidationLayers =
-	{
-		"VK_LAYER_KHRONOS_validation"
-	};
-
+	// Check the supported validation layers
 	bool CheckValidationLayerSupport()
 	{
 		uint32_t LayerCount;
@@ -46,6 +35,7 @@ namespace UE
 		return true;
 	}
 
+	// Get the required extensions
 	std::vector<const char*> GetRequiredExtensions()
 	{
 		uint32_t GlfwExtensionCount = 0;
@@ -61,6 +51,7 @@ namespace UE
 		return Extensions;
 	}
 
+	// The message callback
 	VKAPI_ATTR VkBool32 VKAPI_CALL VulkanMessageCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -86,6 +77,7 @@ namespace UE
 		return VK_FALSE;
 	}
 
+	// Utility to create the message callback
 	VkResult CreateDebugUtilsMessengerEXT(
 		VkInstance instance,
 		const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
@@ -103,6 +95,7 @@ namespace UE
 		}
 	}
 
+	// Utility to destroy the message callback
 	void DestroyDebugUtilsMessengerEXT(
 		VkInstance instance,
 		VkDebugUtilsMessengerEXT debugMessenger,
@@ -115,6 +108,7 @@ namespace UE
 		}
 	}
 
+	// Utility to populate the message callback
 	void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& CreateInfo)
 	{
 		CreateInfo.messageSeverity =
@@ -130,31 +124,33 @@ namespace UE
 		CreateInfo.pUserData = nullptr;
 	} 
 
+	// Start the message callback
 	void VulkanContext::SetupDebugMessenger()
 	{
 		VkDebugUtilsMessengerCreateInfoEXT CreateInfo{};
 		PopulateDebugMessengerCreateInfo(CreateInfo);
 
-		if (CreateDebugUtilsMessengerEXT(*(VkInstance*)m_Instance, &CreateInfo, nullptr, (VkDebugUtilsMessengerEXT*)m_DebugMessenger) != VK_SUCCESS)
+		if (CreateDebugUtilsMessengerEXT(Instance, &CreateInfo, nullptr, &m_DebugMessenger) != VK_SUCCESS)
 		{
 			UE_CORE_ASSERT(false, "Failed to set up debug messenger");
 		}
 	}
 
 	VulkanContext::VulkanContext(GLFWwindow* windowHandle)
-		: m_WindowHandle(windowHandle), m_Instance(VK_NULL_HANDLE), m_DebugMessenger(VK_NULL_HANDLE)
+		: m_WindowHandle(windowHandle), m_DebugMessenger(VK_NULL_HANDLE)
 	{
 		UE_CORE_ASSERT(windowHandle, "Window handle is null!");
 	}
 
 	VulkanContext::~VulkanContext()
 	{
+
 		if (EnableValidationLayers)
 		{
-			DestroyDebugUtilsMessengerEXT(*(VkInstance*)m_Instance, *(VkDebugUtilsMessengerEXT*)m_DebugMessenger, nullptr);
+			DestroyDebugUtilsMessengerEXT(Instance, m_DebugMessenger, nullptr);
 		}
 
-		vkDestroyInstance(*(VkInstance*)m_Instance, nullptr);
+		vkDestroyInstance(Instance, nullptr);
 	}
 
 	void VulkanContext::Init()
@@ -163,44 +159,45 @@ namespace UE
 		// Todo: get this information from somewhere and share it everywhere
 		VkApplicationInfo AppInfo{};
 		AppInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-		AppInfo.pApplicationName = "VoxelGame";
+		AppInfo.pNext = NULL;
+		AppInfo.pApplicationName = "UnnamedProject";
 		AppInfo.applicationVersion = VK_MAKE_API_VERSION(1, 0, 0, 0);
-		AppInfo.pEngineName = "Unnamed Engine";
+		AppInfo.pEngineName = "UnnamedEngine";
 		AppInfo.engineVersion = VK_MAKE_API_VERSION(1, 0, 0, 0);
-		AppInfo.apiVersion = VK_API_VERSION_1_2;
+		AppInfo.apiVersion = VK_API_VERSION_1_3;
 
 		// Define create info
-		VkInstanceCreateInfo CreateInfo{};
-		CreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-		CreateInfo.pApplicationInfo = &AppInfo;
+		VkInstanceCreateInfo InstanceCreateInfo{};
+		InstanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+		InstanceCreateInfo.pNext = NULL;
+		InstanceCreateInfo.flags = 0;
+		InstanceCreateInfo.pApplicationInfo = &AppInfo;
 		
 		VkDebugUtilsMessengerCreateInfoEXT DebugCreateInfo{};
 
 		if (EnableValidationLayers)
 		{
-			CreateInfo.enabledLayerCount = static_cast<uint32_t>(ValidationLayers.size());
-			CreateInfo.ppEnabledLayerNames = ValidationLayers.data();
+			InstanceCreateInfo.enabledLayerCount = static_cast<UEUint32>(ValidationLayers.size());
+			InstanceCreateInfo.ppEnabledLayerNames = ValidationLayers.data();
 
 			PopulateDebugMessengerCreateInfo(DebugCreateInfo);
 			auto DebugFunctionPointer = (VkDebugUtilsMessengerCreateInfoEXT*)&DebugCreateInfo;
-			CreateInfo.pNext = DebugFunctionPointer;
+			InstanceCreateInfo.pNext = DebugFunctionPointer;
 		}
 		else
 		{
-			CreateInfo.enabledLayerCount = 0;
+			InstanceCreateInfo.enabledLayerCount = 0;
 
-			CreateInfo.pNext = VK_NULL_HANDLE;
+			InstanceCreateInfo.pNext = VK_NULL_HANDLE;
 		}
 
 		// Specify desired extensions
 		auto Extensions = GetRequiredExtensions();
-		CreateInfo.enabledExtensionCount = static_cast<uint32_t>(Extensions.size());
-		CreateInfo.ppEnabledExtensionNames = Extensions.data();
+		InstanceCreateInfo.enabledExtensionCount = static_cast<UEUint32>(Extensions.size());
+		InstanceCreateInfo.ppEnabledExtensionNames = Extensions.data();
 
 		// Create vulkan instance
-		VkInstance NewInstance;
-		VkResult Result = vkCreateInstance(&CreateInfo, nullptr, &NewInstance);
-		m_Instance = (void*)&NewInstance;
+		VkResult Result = vkCreateInstance(&InstanceCreateInfo, nullptr, &Instance);
 
 		if (Result != VK_SUCCESS)
 		{
@@ -214,7 +211,7 @@ namespace UE
 		vkEnumerateInstanceExtensionProperties(nullptr, &AvaliableExtensionCount, AvaliableExtensions.data());
 
 		UE_CORE_INFO("Vulkan Info!");
-		UE_CORE_INFO("	Required Extensions: {0}", CreateInfo.enabledExtensionCount);
+		UE_CORE_INFO("	Required Extensions: {0}", InstanceCreateInfo.enabledExtensionCount);
 		for (const auto& extension : Extensions)
 		{
 			bool ExtensionFound = false;
@@ -241,11 +238,10 @@ namespace UE
 			UE_CORE_ASSERT(false, "Validation layers requested, but not supported");
 			SetupDebugMessenger();
 		}
-
 	}
 
 	void VulkanContext::SwapBuffers()
 	{
-
+		glfwSwapBuffers(m_WindowHandle);
 	}
 }

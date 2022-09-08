@@ -1,28 +1,6 @@
 -- Required utilities
 require "Scripts/Premake/PremakeTriggers"
-
--- Include Directories
-IncludeDir = {}
-	IncludeDir["GLFW"] = "%{wks.location}/UnnamedEngine/vendor/GLFW/include"
-	IncludeDir["GLAD"] = "%{wks.location}/UnnamedEngine/vendor/GLAD/include"
-	IncludeDir["GLM"] = "%{wks.location}/UnnamedEngine/vendor/GLM"
-	IncludeDir["STB"] = "%{wks.location}/UnnamedEngine/vendor/STB"
-	IncludeDir["LUA"] = "%{wks.location}/UnnamedEngine/vendor/LUA"
-	IncludeDir["FreeType"] = "%{wks.location}/UnnamedEngine/vendor/FreeType/include"
-	IncludeDir["ImGui"] = "%{wks.location}/UnnamedEngine/vendor/ImGui"
-	IncludeDir["Vulkan"] = "C:/VulkanSDK/1.2.189.2/Include"
-	IncludeDir["OpenAL"] = "%{wks.location}/UnnamedEngine/vendor/OpenAL-Soft/include"
-	IncludeDir["Emscripten"] = "C:/emsdk/upstream/emscripten/system/include"
-	IncludeDir["fmt"] = "%{wks.location}/UnnamedEngine/vendor/fmt/include"
-	
-	IncludeDir["ImPlot"] = "%{wks.location}/UnnamedEngine/vendor/ImPlot"
-	IncludeDir["ImGuizmo"] = "%{wks.location}/UnnamedEngine/vendor/ImGuizmo"
-
--- Library Directories
-LibDir = {}
-	LibDir["OpenAL"] = "%{wks.location}/UnnamedEngine/vendor/OpenAL-Soft/libs/Win64"
-	LibDir["Vulkan"] = "C:/VulkanSDK/1.2.189.2/Lib"
-	LibDir["Emscripten"] = "C:/emsdk/upstream/emscripten/system/lib"
+require "Dependencies"
 
 workspace "GameEngine"
 	startproject "UnnamedEditor"

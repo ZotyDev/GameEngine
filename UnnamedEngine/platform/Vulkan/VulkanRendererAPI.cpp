@@ -1,14 +1,14 @@
 #include "uepch.h"
 #include "Vulkan/VulkanRendererAPI.h"
 
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+#include "Vulkan/VulkanContext.h"
+#include "Vulkan/VulkanDevice.h"
 
 namespace UE
 {
-	void VulkanRendererAPI::Init() 
+	void VulkanRendererAPI::Init()
 	{
-		
+		Device.Init();
 	}
 
 	void VulkanRendererAPI::SetViewport(UEUint32 x, UEUint32 y, UEUint32 width, UEUint32 height)

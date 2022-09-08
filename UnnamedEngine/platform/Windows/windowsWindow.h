@@ -1,10 +1,9 @@
 #pragma once
 
 #include "Core/Window.h"
+#include "Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
-
-#include "Renderer/GraphicsContext.h"
 
 namespace UE
 {

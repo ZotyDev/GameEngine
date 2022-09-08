@@ -6,6 +6,9 @@
 #if defined(UE_PLATFORM_OPENGL)
 	#include "OpenGL/OpenGLTexture.h"
 #endif
+#if defined(UE_PLATFORM_VULKAN)
+	#include "Vulkan/VulkanTexture.h"
+#endif
 
 namespace UE 
 {
@@ -20,6 +23,10 @@ namespace UE
 		#if defined(UE_PLATFORM_OPENGL)
 		case RendererAPI::API::OpenGL:
 			return CreateRef<OpenGLTexture2D>();
+		#endif
+		#if defined(UE_PLATFORM_VULKAN)
+		case RendererAPI::API::Vulkan:
+			return CreateRef<VulkanTexture2D>();
 		#endif
 		}
 

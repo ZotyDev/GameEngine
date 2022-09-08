@@ -2,10 +2,22 @@
 
 #include "Renderer/GraphicsContext.h"
 
-struct GLFWwindow;
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
 
 namespace UE
 {
+	#ifdef UE_DEBUG
+		const UEBool EnableValidationLayers = true;
+	#else
+		const UEBool EnableValidationLayers = false;
+	#endif
+
+	const std::vector<const char*> ValidationLayers =
+	{
+		"VK_LAYER_KHRONOS_validation"
+	};
+
 	class VulkanContext : public GraphicsContext
 	{
 	public:
@@ -16,10 +28,10 @@ namespace UE
 		virtual void SwapBuffers() override;
 	private:
 		GLFWwindow* m_WindowHandle;
+	public:
+		static VkInstance Instance;
 	private:
-		void* m_Instance;
-	private:
-		void* m_DebugMessenger;
+		VkDebugUtilsMessengerEXT m_DebugMessenger;
 		void SetupDebugMessenger();
 	};
 }

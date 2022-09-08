@@ -41,7 +41,7 @@ namespace UE
 		m_Data->m_Window = Window::Create(WindowProps("UnnamedProject"));
 		m_Data->m_Window->SetWindowEventCallback(UE_BIND_EVENT_FN(Application::OnWindowEvent));
 		m_Data->m_Window->SetInputEventCallback(UE_BIND_EVENT_FN(Application::OnInputEvent));
-		m_Data->m_Window->SetVSync(true);
+		//m_Data->m_Window->SetVSync(true);
 
 		// Initialize the renderer
 		Renderer::Init();

@@ -145,19 +145,14 @@ project "UnnamedEngine"
 			"platform/Vulkan/**.cpp",
 		}
 
-		libdirs
-		{
-			"%{LibDir.Vulkan}",
-		}
-
 		includedirs
 		{
-			"%{IncludeDir.Vulkan}",
+			"%{IncludeDir.VulkanSDK}",
 		}
 
 		links
 		{
-			"vulkan-1.lib",
+			"%{Library.Vulkan}"
 		}
 
 	------------------------------------------------------------------------------------
@@ -186,7 +181,7 @@ project "UnnamedEngine"
 
 		libdirs
 		{
-			"%{LibDir.OpenAL}",
+			"%{LibraryDir.OpenAL}",
 		}
 
 		includedirs
@@ -223,6 +218,13 @@ project "UnnamedEngine"
 		runtime "Debug"
 		optimize "Off"
 		symbols "On"
+
+		links
+		{
+			"%{Library.ShaderC_Debug}",
+			"%{Library.SPIRV_Cross_Debug}",
+			"%{Library.SPIRV_Cross_GLSL_Debug}"
+		}
 		
 	------------------------------------------------------------------------------------
 	-- Release-Only configuration
@@ -234,6 +236,13 @@ project "UnnamedEngine"
 		optimize "Speed"
 		symbols "Off"
 
+		links
+		{
+			"%{Library.ShaderC_Release}",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}"
+		}
+
 	------------------------------------------------------------------------------------
 	-- Distribuition-Only configuration
 	------------------------------------------------------------------------------------
@@ -243,4 +252,12 @@ project "UnnamedEngine"
 		runtime "Release"
 		optimize "Full"
 		symbols "Off"
+
+		links
+		{
+			"%{Library.ShaderC_Release}",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}"
+		}
+
 	filter {}

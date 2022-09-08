@@ -4,18 +4,11 @@
 #include <imgui.h>
 
 #if defined(UE_PLATFORM_OPENGL)
-	#include <backends/imgui_impl_glfw.h>
 	#include "OpenGL/OpenGLImGuiLayer.h"
 #endif
 
 #if defined(UE_PLATFORM_VULKAN)
-	#include <backends/imgui_impl_glfw.h>
-	#include <backends/imgui_impl_vulkan.h>
-
-	#define GLFW_INCLUDE_NONE
-	#define GLFW_INCLUDE_VULKAN
-	#include <GLFW/glfw3.h>
-	#include <vulkan/vulkan.h>
+	#include "Vulkan/VulkanImGuiLayer.h"
 #endif
 
 #include "Renderer/Renderer.h";
@@ -35,6 +28,7 @@ namespace UE
 			return CreateRef<OpenGLImGuiLayer>();
 		#endif
 		#if defined(UE_PLATFORM_VULKAN)
+		case RendererAPI::API::Vulkan:
 			return CreateScope<VulkanImGuiLayer>();
 		#endif
 		}

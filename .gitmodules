@@ -37,3 +37,9 @@
 [submodule "UnnamedEngine/vendor/ImPlot"]
 	path = UnnamedEngine/vendor/ImPlot
 	url = https://github.com/ZotyDev/implot
+[submodule "UnnamedEngine/vendor/shaderc"]
+	path = UnnamedEngine/vendor/shaderc
+	url = https://github.com/google/shaderc
+[submodule "UnnamedEngine/vendor/SPIRV-Cross"]
+	path = UnnamedEngine/vendor/SPIRV-Cross
+	url = https://github.com/KhronosGroup/SPIRV-Cross

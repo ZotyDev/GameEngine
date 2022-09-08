@@ -2,6 +2,11 @@
 
 #include "Renderer/RendererAPI.h"
 
+#include "Vulkan/VulkanDevice.h"
+
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
 namespace UE
 {
 	class VulkanRendererAPI : public RendererAPI
@@ -17,5 +22,7 @@ namespace UE
 		virtual void CullBack() override;
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, UEUint32 indexCount = 0) override;
+	public:
+		VulkanDevice Device;
 	};
 }
