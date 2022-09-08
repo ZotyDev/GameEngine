@@ -1,3 +1,3 @@
-ConfigVersion
 PanelsConfig
 ActivePanels
+ConfigVersion

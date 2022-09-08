@@ -6,8 +6,8 @@ namespace UE
 	{
 		static UEResult<> LoadConfigs();
 
-		static UEBool OptFullscreen;
-		static UEBool OptPadding;
+		static UEBool Fullscreen;
+		static UEBool Padding;
 
 		static UEBool MaximizeOnPlay;
 
@@ -18,12 +18,12 @@ namespace UE
 		static UEBool ViewportHovered;
 	};
 
-	struct PanelsShowConfig
+	struct ActivePanelsConfig
 	{
-		static UEBool ShowViewport;
-		static UEBool ShowContentBrowser;
-		static UEBool ShowSceneHierarchy;
-		static UEBool ShowProperties;
-		static UEBool ShowProfiler;
+		static UEBool Viewport;
+		static UEBool ContentBrowser;
+		static UEBool SceneHierarchy;
+		static UEBool Properties;
+		static UEBool Profiler;
 	};
 }

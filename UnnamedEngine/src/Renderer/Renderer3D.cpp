@@ -57,8 +57,8 @@ namespace UE
 			FramebufferSpecification spec = CurrentScreen->m_Framebuffer->GetSpecification();
 			if (CurrentScreen->m_ViewportSize.x > 0.0f && CurrentScreen->m_ViewportSize.y > 0.0f && (spec.Width != CurrentScreen->m_ViewportSize.x || spec.Height != CurrentScreen->m_ViewportSize.y))
 			{
-				UEUint32 Width = (UEUint32)((UEFloat)CurrentScreen->m_ViewportSize.x / GlobalConfig::Rendering::PixelSize);
-				UEUint32 Height = (UEUint32)((UEFloat)CurrentScreen->m_ViewportSize.y / GlobalConfig::Rendering::PixelSize);
+				UEUint32 Width = (UEUint32)((UEFloat)CurrentScreen->m_ViewportSize.x / GlobalConfig::Renderer::PixelSize);
+				UEUint32 Height = (UEUint32)((UEFloat)CurrentScreen->m_ViewportSize.y / GlobalConfig::Renderer::PixelSize);
 				camera->SetViewportSize((UEFloat)Width, (UEFloat)Height);
 				RenderCommand::SetViewport(0, 0, Width, Height);
 				OnWindowResize(Width, Height);

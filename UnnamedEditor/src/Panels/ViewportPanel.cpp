@@ -13,7 +13,7 @@ namespace UE
 
 	void ViewportPanel::OnImGuiRender(Ref<Application::SharedData> data, glm::vec2* viewportBounds, glm::vec2* viewportSize, Ref<Framebuffer> framebuffer)
 	{
-		if (PanelsShowConfig::ShowViewport)
+		if (ActivePanelsConfig::Viewport)
 		{
 			ImGui::Begin("Viewport");
 			auto ViewportMinRegion = ImGui::GetWindowContentRegionMin();
@@ -29,8 +29,8 @@ namespace UE
 			ImVec2 ViewportPanelSize = ImGui::GetContentRegionAvail();
 			*viewportSize = { ViewportPanelSize.x, ViewportPanelSize.y };
 
-			GlobalConfig::Rendering::ScreenWidth = (UEUint32)ViewportPanelSize.x;
-			GlobalConfig::Rendering::ScreenHeight = (UEUint32)ViewportPanelSize.y;
+			GlobalConfig::Renderer::ScreenWidth = (UEUint32)ViewportPanelSize.x;
+			GlobalConfig::Renderer::ScreenHeight = (UEUint32)ViewportPanelSize.y;
 
 			// Todo:zoty the framebuffer should be rendered, and only after that used here
 			UEUint64 TextureID = framebuffer->GetColorAttachmentRendererID();

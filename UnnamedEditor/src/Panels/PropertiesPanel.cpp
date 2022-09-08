@@ -12,7 +12,7 @@ namespace UE
 
 	void PropertiesPanel::OnImGuiRender()
 	{
-		if (PanelsShowConfig::ShowProperties && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning))
+		if (ActivePanelsConfig::Properties && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning))
 		{
 			ImGui::Begin("Properties");
 			ImGui::BeginChild("##properties");

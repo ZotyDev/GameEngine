@@ -6,13 +6,13 @@ namespace UE
 	{
 		static UEResult<> LoadConfigs();
 
-		struct Application
+		struct Window
 		{
 			static UEUint32 Width;
 			static UEUint32 Height;
 		};
 
-		struct Rendering
+		struct Renderer
 		{
 			static UEFloat PixelSize;
 			static UEUint32 ScreenWidth;
@@ -29,10 +29,10 @@ namespace UE
 			static UEFloat ScrollSensibilityY;
 		};
 
-		struct Zoom
+		struct Camera
 		{
-			static UEFloat SensibilityIn;
-			static UEFloat SensibilityOut;
+			static UEFloat ZoomInSensibility;
+			static UEFloat ZoomOutSensibility;
 		};
 	};
 }

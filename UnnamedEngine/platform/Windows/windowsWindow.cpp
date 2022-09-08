@@ -214,7 +214,7 @@ namespace UE
 			});
 
 		// Set Viewport
-		RenderCommand::SetViewport(0, 0, GlobalConfig::Rendering::ScreenWidth, GlobalConfig::Rendering::ScreenHeight);
+		RenderCommand::SetViewport(0, 0, GlobalConfig::Renderer::ScreenWidth, GlobalConfig::Renderer::ScreenHeight);
 
 		return UEResult<>::Success;
 	};

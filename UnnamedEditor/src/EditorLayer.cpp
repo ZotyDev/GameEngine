@@ -39,20 +39,20 @@ namespace UE
 		}
 
 		m_Camera = CreateRef<Camera3D>(
-			GlobalConfig::Rendering::ScreenWidth, 
-			GlobalConfig::Rendering::ScreenHeight, 
+			GlobalConfig::Renderer::ScreenWidth, 
+			GlobalConfig::Renderer::ScreenHeight, 
 			glm::vec3(0.0f, 0.0f, 1.5f));
 		m_CameraController = CreateRef<CameraController>(m_Camera);
 
 		FramebufferSpecification specs;
-		specs.Width = GlobalConfig::Rendering::DesiredWidth;
-		specs.Height = GlobalConfig::Rendering::DesiredHeight;
+		specs.Width = GlobalConfig::Renderer::DesiredWidth;
+		specs.Height = GlobalConfig::Renderer::DesiredHeight;
 		specs.Samples = 4;
 		specs.Attachments = { FramebufferTextureFormat::Color, FramebufferTextureFormat::Depth };
 		Ref<Framebuffer> tFramebuffer = Framebuffer::Create(specs);
 
-		specs.Width = GlobalConfig::Rendering::DesiredWidth;
-		specs.Height = GlobalConfig::Rendering::DesiredHeight;
+		specs.Width = GlobalConfig::Renderer::DesiredWidth;
+		specs.Height = GlobalConfig::Renderer::DesiredHeight;
 		specs.Samples = 1;
 		specs.Attachments = { FramebufferTextureFormat::Color };
 		Ref<Framebuffer> yFramebuffer = Framebuffer::Create(specs);
@@ -171,7 +171,7 @@ namespace UE
 		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
 		// because it would be confusing to have two docking targets within each others.
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-		if (PanelsConfig::OptFullscreen)
+		if (PanelsConfig::Fullscreen)
 		{
 			const ImGuiViewport* viewport = ImGui::GetMainViewport();
 			ImGui::SetNextWindowPos(viewport->WorkPos);
@@ -197,18 +197,18 @@ namespace UE
 		// all active windows docked into it will lose their parent and become undocked.
 		// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
 		// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
-		if (!PanelsConfig::OptPadding)
+		if (!PanelsConfig::Padding)
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		}
 		
-		ImGui::Begin("DockSpace Demo", &m_Data->m_Running, window_flags);
-		if (!PanelsConfig::OptPadding)
+		ImGui::Begin("MyDockSpace", &m_Data->m_Running, window_flags);
+		if (!PanelsConfig::Padding)
 		{
 			ImGui::PopStyleVar();
 		}
 		
-		if (PanelsConfig::OptFullscreen)
+		if (PanelsConfig::Fullscreen)
 		{
 			ImGui::PopStyleVar(2);
 		}
@@ -237,11 +237,11 @@ namespace UE
 		ImGui::Text("X: %f", Pos.x);
 		ImGui::Text("Y: %f", Pos.y);
 		ImGui::Text("Zoom: %f", m_Camera->GetZoom());
-		ImGui::Text("Width: %i", GlobalConfig::Application::Width);
-		ImGui::Text("Height: %i", GlobalConfig::Application::Height);
-		ImGui::Text("Rendering Screen Width: %i", GlobalConfig::Rendering::ScreenWidth);
-		ImGui::Text("Rendering Screen Height: %i", GlobalConfig::Rendering::ScreenHeight);
-		ImGui::Text("Pixel Size: %f", GlobalConfig::Rendering::PixelSize);
+		ImGui::Text("Width: %i", GlobalConfig::Window::Width);
+		ImGui::Text("Height: %i", GlobalConfig::Window::Height);
+		ImGui::Text("Rendering Screen Width: %i", GlobalConfig::Renderer::ScreenWidth);
+		ImGui::Text("Rendering Screen Height: %i", GlobalConfig::Renderer::ScreenHeight);
+		ImGui::Text("Pixel Size: %f", GlobalConfig::Renderer::PixelSize);
 		ImGui::Text("Rendering Width: %i", m_Screen->m_Framebuffer->GetWidth());
 		ImGui::Text("Rendering Height: %i", m_Screen->m_Framebuffer->GetHeight());
 		UEUint32 ViewportX = 0;
@@ -316,11 +316,11 @@ namespace UE
 			m_CameraController->MoveDown();
 			break;
 		case UE::KeyCode::Up:
-			GlobalConfig::Rendering::PixelSize *= 2;
+			GlobalConfig::Renderer::PixelSize *= 2;
 			OnRendererScaleChange(RendererScaleChangeEvent());
 			break;
 		case UE::KeyCode::Down:
-			GlobalConfig::Rendering::PixelSize /= 2;
+			GlobalConfig::Renderer::PixelSize /= 2;
 			OnRendererScaleChange(RendererScaleChangeEvent());
 			break;
 		}
@@ -433,8 +433,8 @@ namespace UE
 
 	bool EditorLayer::OnRendererScaleChange(RendererScaleChangeEvent& event)
 	{
-		GlobalConfig::Rendering::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenWidth / GlobalConfig::Rendering::PixelSize);
-		GlobalConfig::Rendering::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenHeight / GlobalConfig::Rendering::PixelSize);
+		GlobalConfig::Renderer::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenWidth / GlobalConfig::Renderer::PixelSize);
+		GlobalConfig::Renderer::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenHeight / GlobalConfig::Renderer::PixelSize);
 
 		Renderer::OnWindowResize();
 

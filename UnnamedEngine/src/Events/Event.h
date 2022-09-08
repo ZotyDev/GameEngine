@@ -12,7 +12,8 @@ namespace UE
 		GamepadButtonPressed, GamepadButtonReleased, GamepadAxisUpdated,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
 		ClientConnected, ClientDisconnected, ClientPacket,
-		ServerConnected, ServerDisconnected, ServerPacket
+		ServerConnected, ServerDisconnected, ServerPacket,
+		RendererScaleChange,
 	};
 
 	enum EventCategory
@@ -24,7 +25,8 @@ namespace UE
 		EventCategoryMouse			= BIT(3),
 		EventCategoryMouseButton	= BIT(4),
 		EventCategoryGamepad		= BIT(5),
-		EventCategoryNetwork		= BIT(6)
+		EventCategoryNetwork		= BIT(6),
+		EventCategoryRenderer		= BIT(7),
 	};
 
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() {return EventType::type; }\

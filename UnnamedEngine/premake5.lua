@@ -28,7 +28,8 @@ project "UnnamedEngine"
 		"%{IncludeDir.LUA}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.ImPlot}",
-		"%{IncludeDir.fmt}"
+		"%{IncludeDir.fmt}",
+		"%{IncludeDir.toml}"
 	}
 
 	links

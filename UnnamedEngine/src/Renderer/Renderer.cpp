@@ -22,16 +22,16 @@ namespace UE
 
 	void Renderer::OnWindowResize()
 	{
-		RenderCommand::SetViewport(0, 0, GlobalConfig::Rendering::ScreenWidth, GlobalConfig::Rendering::ScreenHeight);
+		RenderCommand::SetViewport(0, 0, GlobalConfig::Renderer::ScreenWidth, GlobalConfig::Renderer::ScreenHeight);
 
 		if (Renderer2D::Initialized)
 		{
-			Renderer2D::OnWindowResize(GlobalConfig::Rendering::DesiredWidth, GlobalConfig::Rendering::DesiredHeight);
+			Renderer2D::OnWindowResize(GlobalConfig::Renderer::DesiredWidth, GlobalConfig::Renderer::DesiredHeight);
 		}
 		
 		if (Renderer3D::Initialized)
 		{
-			Renderer3D::OnWindowResize(GlobalConfig::Rendering::DesiredWidth, GlobalConfig::Rendering::DesiredHeight);
+			Renderer3D::OnWindowResize(GlobalConfig::Renderer::DesiredWidth, GlobalConfig::Renderer::DesiredHeight);
 		}
 	}
 

@@ -5,37 +5,38 @@ namespace UE
 	typedef enum class GamepadCode : unsigned short int
 	{
 		// Buttons
-		ButtonA					= 0,
-		ButtonB					= 1,
-		ButtonX					= 2, 
-		ButtonY					= 3,
-								
-		ButtonLeftBumper		= 4,
-		ButtonRightBumper		= 5,
-		ButtonBack				= 6,
-		ButtonStart				= 7,
-		ButtonGuide				= 8,
-		ButtonLeftThumb			= 9,
-		ButtonRightThumb		= 10,
-		ButtonDPadUp			= 11,
-		ButtonDPadRight			= 12,
-		ButtonDPadDown			= 13,
-		ButtonDPadLeft			= 14,
-								
-		ButtonLast				= ButtonDPadLeft,
-		ButtonCross				= ButtonA,
-		ButtonCircle			= ButtonB,
-		ButtonSquare			= ButtonX,
-		ButtonTriangle			= ButtonY,
+		A					= 0,
+		B					= 1,
+		X					= 2, 
+		Y					= 3,
+						
+		LeftBumper			= 4,
+		RightBumper			= 5,
+		Back				= 6,
+		Start				= 7,
+		Guide				= 8,
+		LeftThumb			= 9,
+		RightThumb			= 10,
+		DPadUp				= 11,
+		DPadRight			= 12,
+		DPadDown			= 13,
+		DPadLeft			= 14,
+						
+		LastButton			= DPadLeft,
+
+		Cross				= A,
+		Circle				= B,
+		Square				= X,
+		Triangle			= Y,
 
 		// Axis
-		AxisLeftX				= 0,
-		AxisLeftY				= 1,
-		AxisRightX				= 2,
-		AxisRightY				= 3,
-		AxisLeftTrigger			= 4,
-		AxisRightTrigger		= 5,
+		LeftX				= 0,
+		LeftY				= 1,
+		RightX				= 2,
+		RightY				= 3,
+		LeftTrigger			= 4,
+		RightTrigger		= 5,
 
-		AxisLast				= AxisRightTrigger
+		LastAxis			= RightTrigger
 	};
 }

@@ -14,8 +14,8 @@ namespace UE
 
 	Camera::Camera()
 	{
-		m_ViewportWidth = GlobalConfig::Rendering::ScreenWidth;
-		m_ViewportHeight = GlobalConfig::Rendering::ScreenHeight;
+		m_ViewportWidth = GlobalConfig::Renderer::ScreenWidth;
+		m_ViewportHeight = GlobalConfig::Renderer::ScreenHeight;
 	}
 
 	void Camera::UpdateView()

@@ -1,89 +1,74 @@
 #include "uepch.h"
 #include "Core/GlobalConfig.h"
 
-#include "Core/ConfigManager.h"
-
 #include "PlatformIndependenceLayer/FileSystem.h"
+
+#include <toml.hpp>
 
 namespace UE
 {
 	UEResult<> GlobalConfig::LoadConfigs()
 	{
-		ConfigManager g;
-		UEDouble gd;
-		UEUint32 gu;
+		// Check if file exist
 		UEPath UserDataFolder;
 		if (!FileSystem::GetUserDataFolder(UserDataFolder))
 		{
 			UE_CORE_ERROR("Failed to load Global Configs: could not find user data folder");
 			return UEResult<>::Error;
 		}
-		g.LoadConfigFile(UserDataFolder.string() + "/UnnamedEngine/GlobalConfig.lua", "assets/configs/default/DEFAULT_GlobalConfig.lua");
 
+		// Load config file
+		auto ConfigData = toml::parse<toml::preserve_comments>(UserDataFolder.string() + "/UnnamedEngine/GlobalConfig.toml");
+
+		// Create file if it does not exist
+
+		// Create/Compare configs
+
+		// Get configs
 		// Window
-		if (g.GetNumberConfig(gd, { "Window", "Width" }))
-		{
-			Application::Width = (UEFloat)gd;
-		}
-		if (g.GetNumberConfig(gd, { "Window", "Height" }))
-		{
-			Application::Height = (UEFloat)gd;
-		}
+		auto& WindowConfig = toml::find(ConfigData, "Window");
+		Window::Width = toml::find_or<UEUint32>(WindowConfig, "Width", 1280);
+		Window::Height = toml::find_or<UEUint32>(WindowConfig, "Height", 720);
+
 		// Renderer
-		if (g.GetNumberConfig(gd, { "Renderer", "PixelSize"}))
-		{
-			Rendering::PixelSize = (UEFloat)gd;
-		}
-		Rendering::ScreenWidth = Application::Width;
-		Rendering::ScreenHeight = Application::Height;
-		Rendering::DesiredWidth = (UEUint32)((UEFloat)Rendering::ScreenWidth / Rendering::PixelSize);
-		Rendering::DesiredHeight = (UEUint32)((UEFloat)Rendering::ScreenHeight / Rendering::PixelSize);
+		auto& RendererConfig = toml::find(ConfigData, "Renderer");
+		Renderer::PixelSize = toml::find_or<UEFloat>(RendererConfig, "PixelSize", 1.0f);
 
 		// Mouse
-		if (g.GetNumberConfig(gd, { "Mouse", "XMovementSensibility" }))
-		{
-			Mouse::MovementSensibilityX = (UEFloat)gd;
-		}
-		if (g.GetNumberConfig(gd, { "Mouse", "YMovementSensibility" }))
-		{
-			Mouse::MovementSensibilityY = (UEFloat)gd;
-		}
-		if (g.GetNumberConfig(gd, { "Mouse", "XScrollSensibility" }))
-		{
-			Mouse::ScrollSensibilityX = (UEFloat)gd;
-		}
-		if (g.GetNumberConfig(gd, { "Mouse", "YScrollSensibility" }))
-		{
-			Mouse::ScrollSensibilityY = (UEFloat)gd;
-		}
+		auto& MouseConfig = toml::find(ConfigData, "Mouse");
+		Mouse::MovementSensibilityX = toml::find_or<UEFloat>(MouseConfig, "MovementSensibilityX", 1.0f);
+		Mouse::MovementSensibilityY = toml::find_or<UEFloat>(MouseConfig, "MovementSensibilityY", 1.0f);
+		Mouse::ScrollSensibilityX = toml::find_or<UEFloat>(MouseConfig, "ScrollSensibilityX", 1.0f);
+		Mouse::ScrollSensibilityY = toml::find_or<UEFloat>(MouseConfig, "ScrollSensibilityY", 1.0f);
 
 		// Camera
-		if (g.GetNumberConfig(gd, { "Camera", "ZoomInSensibility" }))
-		{
-			Zoom::SensibilityIn = (UEFloat)gd;
-		}
-		if (g.GetNumberConfig(gd, { "Camera", "ZoomOutSensibility" }))
-		{
-			Zoom::SensibilityOut = (UEFloat)gd;
-		}
+		auto& CameraConfig = toml::find(ConfigData, "Camera");
+		Camera::ZoomInSensibility = toml::find_or<UEFloat>(CameraConfig, "ZoomInSensibility", 1.0f);
+		Camera::ZoomOutSensibility = toml::find_or<UEFloat>(CameraConfig, "ZoomOutSensibility", 1.0f);
+
+
+		Renderer::ScreenWidth = Window::Width;
+		Renderer::ScreenHeight = Window::Height;
+		Renderer::DesiredWidth = (UEUint32)((UEFloat)Renderer::ScreenWidth / Renderer::PixelSize);
+		Renderer::DesiredHeight = (UEUint32)((UEFloat)Renderer::ScreenHeight / Renderer::PixelSize);
 
 		return UEResult<>::Success;
 	}
 
-	UEUint32 GlobalConfig::Application::Width = 1280;
-	UEUint32 GlobalConfig::Application::Height = 720;
+	UEUint32 GlobalConfig::Window::Width = 1280;
+	UEUint32 GlobalConfig::Window::Height = 720;
 	
-	UEFloat GlobalConfig::Rendering::PixelSize = 1.0f;
-	UEUint32 GlobalConfig::Rendering::ScreenWidth = GlobalConfig::Application::Width;
-	UEUint32 GlobalConfig::Rendering::ScreenHeight = GlobalConfig::Application::Height;
-	UEUint32 GlobalConfig::Rendering::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenWidth / GlobalConfig::Rendering::PixelSize);
-	UEUint32 GlobalConfig::Rendering::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenHeight / GlobalConfig::Rendering::PixelSize);
+	UEFloat GlobalConfig::Renderer::PixelSize = 1.0f;
+	UEUint32 GlobalConfig::Renderer::ScreenWidth = GlobalConfig::Window::Width;
+	UEUint32 GlobalConfig::Renderer::ScreenHeight = GlobalConfig::Window::Height;
+	UEUint32 GlobalConfig::Renderer::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenWidth / GlobalConfig::Renderer::PixelSize);
+	UEUint32 GlobalConfig::Renderer::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenHeight / GlobalConfig::Renderer::PixelSize);
 
 	UEFloat GlobalConfig::Mouse::MovementSensibilityX = 1.0f;
 	UEFloat GlobalConfig::Mouse::MovementSensibilityY = 1.0f;
 	UEFloat GlobalConfig::Mouse::ScrollSensibilityX = 1.0f;
 	UEFloat GlobalConfig::Mouse::ScrollSensibilityY = 1.0f;
 
-	UEFloat GlobalConfig::Zoom::SensibilityIn = 1.0f;
-	UEFloat GlobalConfig::Zoom::SensibilityOut = 1.0f;
+	UEFloat GlobalConfig::Camera::ZoomInSensibility = 1.0f;
+	UEFloat GlobalConfig::Camera::ZoomOutSensibility = 1.0f;
 }

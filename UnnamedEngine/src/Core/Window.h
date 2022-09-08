@@ -14,8 +14,8 @@ namespace UE
 		UEUint32 Height;
 
 		WindowProps(const UEString& title = "UnnamedEngine",
-			UEUint32 width = GlobalConfig::Application::Width,
-			UEUint32 height = GlobalConfig::Application::Height)
+			UEUint32 width = GlobalConfig::Window::Width,
+			UEUint32 height = GlobalConfig::Window::Height)
 			: Title(title), Width(width), Height(height)
 		{}
 	};

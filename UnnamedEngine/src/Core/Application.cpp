@@ -11,9 +11,9 @@
 
 #include "Renderer/Shader/ShaderHeaderConstructor.h"
 
-#include "Core/ConfigManager.h"
-
 #include "Debug/Instrumentator.h"
+
+#include <toml.hpp>
 
 namespace UE
 {
@@ -54,16 +54,14 @@ namespace UE
 		m_Data->m_Lune = CreateRef<LuneStack>();
 		ExposeCoreToLune(m_Data->m_Lune);
 
-		ConfigManager tConfigManager;
 		UEPath EngineConfigFolder;
 		FileSystem::GetUserDataFolder(EngineConfigFolder);
 		EngineConfigFolder.append("UnnamedEngine/");
-		UEPath GlobalConfigPath = EngineConfigFolder.string() + "GlobalConfig.lua";
+		UEPath GlobalConfigPath = EngineConfigFolder.string() + "GlobalConfig.toml";
 		FileSystem::MakeSureFolder(EngineConfigFolder);
 
-		tConfigManager.LoadConfigFile(GlobalConfigPath, "assets/configs/default/DEFAULT_GlobalConfig.lua");
-
-		m_Data->m_Lune->ExecuteFile("init.lua");
+		auto Data = toml::parse(GlobalConfigPath);
+		auto& Window = toml::find(Data, "Window");
 	}
 
 	Application::~Application()
@@ -199,12 +197,12 @@ namespace UE
 		}
 
 		// Update global configs
-		GlobalConfig::Application::Width = event.GetWidth();
-		GlobalConfig::Application::Height = event.GetHeight();
-		GlobalConfig::Rendering::ScreenWidth = GlobalConfig::Application::Width;
-		GlobalConfig::Rendering::ScreenHeight = GlobalConfig::Application::Height;
-		GlobalConfig::Rendering::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenWidth / GlobalConfig::Rendering::PixelSize);
-		GlobalConfig::Rendering::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenHeight / GlobalConfig::Rendering::PixelSize);
+		GlobalConfig::Window::Width = event.GetWidth();
+		GlobalConfig::Window::Height = event.GetHeight();
+		GlobalConfig::Renderer::ScreenWidth = GlobalConfig::Window::Width;
+		GlobalConfig::Renderer::ScreenHeight = GlobalConfig::Window::Height;
+		GlobalConfig::Renderer::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenWidth / GlobalConfig::Renderer::PixelSize);
+		GlobalConfig::Renderer::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenHeight / GlobalConfig::Renderer::PixelSize);
 
 		// Update renderer
 		Renderer::OnWindowResize();
@@ -215,8 +213,8 @@ namespace UE
 	bool Application::OnRendererScaleChange(RendererScaleChangeEvent& event)
 	{
 		// Update global configs
-		GlobalConfig::Rendering::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenWidth / GlobalConfig::Rendering::PixelSize);
-		GlobalConfig::Rendering::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenHeight / GlobalConfig::Rendering::PixelSize);
+		GlobalConfig::Renderer::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenWidth / GlobalConfig::Renderer::PixelSize);
+		GlobalConfig::Renderer::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenHeight / GlobalConfig::Renderer::PixelSize);
 
 		Renderer::OnWindowResize();
 

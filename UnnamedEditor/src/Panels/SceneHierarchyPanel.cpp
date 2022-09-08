@@ -22,7 +22,7 @@ namespace UE
 
 	void SceneHierarchyPanel::OnImGuiRender()
 	{
-		if (PanelsShowConfig::ShowSceneHierarchy && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning))
+		if (ActivePanelsConfig::SceneHierarchy && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning))
 		{
 			ImGui::Begin("Scene Hierarchy");
 

@@ -4,18 +4,18 @@ namespace UE
 {
 	typedef enum class MouseCode : unsigned short int
 	{
-		Button0			= 0,
-		Button1			= 1,
-		Button2			= 2,
-		Button3			= 3,
-		Button4			= 4,
-		Button5			= 5,
-		Button6			= 6,
-		Button7			= 7,
-						
-		ButtonLast		= Button7,
-		ButtonLeft		= Button0,
-		ButtonRight		= Button1,
-		ButtonMiddle	= Button2
+		B0			= 0,
+		B1			= 1,
+		B2			= 2,
+		B3			= 3,
+		B4			= 4,
+		B5			= 5,
+		B6			= 6,
+		B7			= 7,
+		
+		Last		= B7,
+		Left		= B0,
+		Right		= B1,
+		Middle		= B2
 	} Mouse;
 }

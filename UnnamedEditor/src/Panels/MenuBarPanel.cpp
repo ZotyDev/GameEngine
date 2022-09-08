@@ -76,27 +76,27 @@ namespace UE
 
 			if (ImGui::BeginMenu("View"))
 			{
-				if (ImGui::MenuItem("Viewport", NULL, &PanelsShowConfig::ShowViewport))
+				if (ImGui::MenuItem("Viewport", NULL, &ActivePanelsConfig::Viewport))
 				{
 
 				}
 
-				if (ImGui::MenuItem("ContentBrowser", NULL, &PanelsShowConfig::ShowContentBrowser))
+				if (ImGui::MenuItem("ContentBrowser", NULL, &ActivePanelsConfig::ContentBrowser))
 				{
 
 				}
 
-				if (ImGui::MenuItem("Properties", NULL, &PanelsShowConfig::ShowProperties))
+				if (ImGui::MenuItem("Properties", NULL, &ActivePanelsConfig::Properties))
 				{
 
 				}
 
-				if (ImGui::MenuItem("Scene Hierarchy", NULL, &PanelsShowConfig::ShowSceneHierarchy))
+				if (ImGui::MenuItem("Scene Hierarchy", NULL, &ActivePanelsConfig::SceneHierarchy))
 				{
 
 				}
 
-				if (ImGui::MenuItem("Profiler", NULL, &PanelsShowConfig::ShowProfiler))
+				if (ImGui::MenuItem("Profiler", NULL, &ActivePanelsConfig::Profiler))
 				{
 
 				}

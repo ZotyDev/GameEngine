@@ -15,6 +15,7 @@ IncludeDir = {}
 	IncludeDir["fmt"] = "%{wks.location}/UnnamedEngine/vendor/fmt/include"
     IncludeDir["shaderc"] = "{%wks.location}/UnnamedEngine/vendor/shaderc/libshaderc/include"
     IncludeDir["SPIRV_Cross"] = "%{wks.location}/UnnamedEngine/vendor/SPIRV-Cross"
+    IncludeDir["toml"] = "%{wks.location}/UnnamedEngine/vendor/toml"
 	
 	IncludeDir["ImPlot"] = "%{wks.location}/UnnamedEngine/vendor/ImPlot"
 	IncludeDir["ImGuizmo"] = "%{wks.location}/UnnamedEngine/vendor/ImGuizmo"
