@@ -202,7 +202,7 @@ namespace UE
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		}
 		
-		ImGui::Begin("MyDockSpace", &m_Data->m_Running, window_flags);
+		ImGui::Begin("DockSpace Demo", &m_Data->m_Running, window_flags);
 		if (!PanelsConfig::Padding)
 		{
 			ImGui::PopStyleVar();
