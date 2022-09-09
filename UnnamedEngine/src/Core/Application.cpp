@@ -54,14 +54,14 @@ namespace UE
 		m_Data->m_Lune = CreateRef<LuneStack>();
 		ExposeCoreToLune(m_Data->m_Lune);
 
-		UEPath EngineConfigFolder;
-		FileSystem::GetUserDataFolder(EngineConfigFolder);
-		EngineConfigFolder.append("UnnamedEngine/");
-		UEPath GlobalConfigPath = EngineConfigFolder.string() + "GlobalConfig.toml";
-		FileSystem::MakeSureFolder(EngineConfigFolder);
-
-		auto Data = toml::parse(GlobalConfigPath);
-		auto& Window = toml::find(Data, "Window");
+		//UEPath EngineConfigFolder;
+		//FileSystem::GetUserDataFolder(EngineConfigFolder);
+		//EngineConfigFolder.append("UnnamedEngine/");
+		//UEPath GlobalConfigPath = EngineConfigFolder.string() + "GlobalConfig.toml";
+		//FileSystem::MakeSureFolder(EngineConfigFolder);
+		//
+		//auto Data = toml::parse(GlobalConfigPath);
+		//auto& Window = toml::find(Data, "Window");
 	}
 
 	Application::~Application()

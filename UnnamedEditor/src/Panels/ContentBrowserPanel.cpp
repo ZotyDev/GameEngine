@@ -3,64 +3,54 @@
 
 #include <imgui.h>
 
-#include "ProjectConfig.h"
+#include "Project/Project.h"
 
 #include "Panels/PanelsConfig.h"
 
 namespace UE
 {
+	std::vector<UEString> IconsToBeLoaded = {
+		"Directory",
+		"File",
+		"Back",
+		"png",
+		"lua",
+		"ttf",
+		"txt",
+		"wav",
+		"vert",
+		"frag",
+		"matdef",
+		"mat",
+		"toml"
+	};
+
 	ContentBrowserPanel::ContentBrowserPanel()
 	{
-		m_DirectoryIcon = Texture2D::Create();
-		m_DirectoryIcon->LoadFromSource("res/Editor/ContentBrowser/NewDirectory.png");
-
-		m_FileIcon = Texture2D::Create();
-		m_FileIcon->LoadFromSource("res/Editor/ContentBrowser/File.png");
-
-		m_ImageIcon = Texture2D::Create();
-		m_ImageIcon->LoadFromSource("res/Editor/ContentBrowser/Image.png");
-		
-		m_LuaScriptIcon = Texture2D::Create();
-		m_LuaScriptIcon->LoadFromSource("res/Editor/ContentBrowser/LuaScript.png");
-
-		m_FontIcon = Texture2D::Create();
-		m_FontIcon->LoadFromSource("res/Editor/ContentBrowser/Font.png");
-
-		m_TextIcon = Texture2D::Create();
-		m_TextIcon->LoadFromSource("res/Editor/ContentBrowser/Text.png");
-
-		m_AudioIcon = Texture2D::Create();
-		m_AudioIcon->LoadFromSource("res/Editor/ContentBrowser/Audio.png");
-
-		m_VertexShaderIcon = Texture2D::Create();
-		m_VertexShaderIcon->LoadFromSource("res/Editor/ContentBrowser/VertexShader.png");
-
-		m_FragmentShaderIcon = Texture2D::Create();
-		m_FragmentShaderIcon->LoadFromSource("res/Editor/ContentBrowser/FragmentShader.png");
-
-		m_MaterialDefinitionIcon = Texture2D::Create();
-		m_MaterialDefinitionIcon->LoadFromSource("res/Editor/ContentBrowser/MaterialDefinition.png");
-
-		m_MaterialIcon = Texture2D::Create();
-		m_MaterialIcon->LoadFromSource("res/Editor/ContentBrowser/Material.png");
+		for (const auto& it : IconsToBeLoaded)
+		{
+			Ref<Texture2D> CurrentIconTexture = Texture2D::Create();
+			CurrentIconTexture->LoadFromSource("res/Editor/ContentBrowser/" + it + ".png");
+			m_Icons.insert({ it, CurrentIconTexture });
+		}
 	}
 
 	void ContentBrowserPanel::OnImGuiRender()
 	{
-		if (ActivePanelsConfig::ContentBrowser && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning))
+		if (ActivePanelsConfig::ContentBrowser && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning) && Project::Header::IsOpen)
 		{
 			ImGui::Begin("Content Browser");
 
-			if (ProjectConfig::CurrentDirectory != ProjectConfig::AssetPath)
+			if (Project::Header::CurrentDirectory != Project::Header::AssetPath)
 			{
-				if (ImGui::Button("<-"))
+				if (ImGui::ImageButton((ImTextureID)m_Icons["Back"]->GetID(), { 15.0f, 15.0f }, { 0, 1 }, { 1, 0 }))
 				{
-					ProjectConfig::CurrentDirectory = ProjectConfig::CurrentDirectory.parent_path();
+					Project::Header::CurrentDirectory = Project::Header::CurrentDirectory.parent_path();
 				}
 			}
 
 			static float Padding = 16.0f;
-			static float ThumbnailSize = 66.66f;
+			static float ThumbnailSize = 120.0f;
 			float CellSize = Padding + ThumbnailSize;
 
 			float PanelWidth = ImGui::GetContentRegionAvail().x;
@@ -72,63 +62,31 @@ namespace UE
 
 			ImGui::Columns(ColumnCount, 0, false);
 
-			for (auto& directoryEntry : std::filesystem::directory_iterator(ProjectConfig::CurrentDirectory))
+			for (auto& directoryEntry : std::filesystem::directory_iterator(Project::Header::CurrentDirectory))
 			{
 				const UEPath& Path = directoryEntry.path();
-				UEPath RelativePath = std::filesystem::relative(Path, ProjectConfig::AssetPath);
+				UEPath RelativePath = std::filesystem::relative(Path, Project::Header::AssetPath);
 				UEString FilenameString = RelativePath.filename().string();
 
 				ImGui::PushID(FilenameString.c_str());
 				Ref<Texture2D> Icon;
 				UEString FilenameExtension = FilenameString.substr(FilenameString.find_last_of(".") + 1);
-				// todo:zoty make this faster and smarter
 				if (directoryEntry.is_directory())
 				{
-					Icon = m_DirectoryIcon;
+					Icon = m_Icons["Directory"];
 				}
-				else if (FilenameExtension == "png")
+				else if (m_Icons.find(FilenameExtension) != m_Icons.end())
 				{
-					Icon = m_ImageIcon;
-				}
-				else if (FilenameExtension == "lua")
-				{
-					Icon = m_LuaScriptIcon;
-				}
-				else if (FilenameExtension == "ttf")
-				{
-					Icon = m_FontIcon;
-				}
-				else if (FilenameExtension == "txt")
-				{
-					Icon = m_TextIcon;
-				}
-				else if (FilenameExtension == "wav")
-				{
-					Icon = m_AudioIcon;
-				}
-				else if (FilenameExtension == "vert")
-				{
-					Icon = m_VertexShaderIcon;
-				}
-				else if (FilenameExtension == "frag")
-				{
-					Icon = m_FragmentShaderIcon;
-				}
-				else if (FilenameExtension == "matdef")
-				{
-					Icon = m_MaterialDefinitionIcon;
-				}
-				else if (FilenameExtension == "mat")
-				{
-					Icon = m_MaterialIcon;
+					Icon = m_Icons[FilenameExtension];
 				}
 				else
 				{
-					Icon = m_FileIcon;
+					Icon = m_Icons["File"];
 				}
 
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 				ImGui::ImageButton((ImTextureID)Icon->GetID(), { ThumbnailSize, ThumbnailSize }, { 0, 1 }, { 1, 0 });
+				ImGui::PopStyleColor();
 
 				if (ImGui::BeginDragDropSource())
 				{
@@ -138,17 +96,16 @@ namespace UE
 					ImGui::EndDragDropSource();
 				}
 
-				ImGui::PopStyleColor();
 				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 				{
 					if (directoryEntry.is_directory())
 					{
-						ProjectConfig::CurrentDirectory /= Path.filename();
+						Project::Header::CurrentDirectory /= Path.filename();
 					}
 					else if (FilenameExtension == "lua")
 					{
 						UEString CommandString = "code ";
-						CommandString += (ProjectConfig::CurrentDirectory / Path.filename()).string();
+						CommandString += (Project::Header::CurrentDirectory / Path.filename()).string();
 						// Todo:zoty find a better way of doing this
 						system(CommandString.c_str());
 					}
@@ -162,12 +119,7 @@ namespace UE
 
 			ImGui::Columns(1);
 
-			ImGui::SliderFloat("Thumbnail Size", &ThumbnailSize, 16, 512);
-			ImGui::SliderFloat("Padding", &Padding, 0, 32);
-
-			// TODO: status bar
 			ImGui::End();
-
 		}
 	}
 }

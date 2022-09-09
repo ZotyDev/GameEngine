@@ -4,6 +4,7 @@
 #include "imgui.h"
 
 #include "Panels/PanelsConfig.h"
+#include "Project/Project.h"
 
 namespace UE
 {
@@ -12,7 +13,7 @@ namespace UE
 
 	void PropertiesPanel::OnImGuiRender()
 	{
-		if (ActivePanelsConfig::Properties && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning))
+		if (ActivePanelsConfig::Properties && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning) && Project::Header::IsOpen)
 		{
 			ImGui::Begin("Properties");
 			ImGui::BeginChild("##properties");

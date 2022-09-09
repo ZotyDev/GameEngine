@@ -7,18 +7,18 @@ namespace UE
 	public:
 		struct Header 
 		{
-			UEString Name;
-			UEString Version;
-			UEPath Location;
+			static UEString Name;
+			static UEString Version;
+			static UEPath Location;
+
+			static UEPath AssetPath;
+			static UEPath CurrentDirectory;
+
+			static UEBool IsOpen;
 		};
 	public:
 		static UEResult<> Create(const Project::Header& header);
 		static UEResult<> Read(const UEPath& path);
-		static UEResult<> Update(const Project::Header& header);
-		static UEResult<> Delete(const UEPath& path);
-
-	private:
-		static Project::Header m_ProjectHeader;
-		static UEBool m_IsOpen;
+		static UEResult<> ReadLatest();
 	};
 }

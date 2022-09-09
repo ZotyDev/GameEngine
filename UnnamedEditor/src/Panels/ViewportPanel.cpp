@@ -6,6 +6,8 @@
 #include "Panels/PanelsConfig.h"
 #include "Core/GlobalConfig.h"
 
+#include "Project/Project.h"
+
 namespace UE
 {
 	ViewportPanel::ViewportPanel()
@@ -13,7 +15,7 @@ namespace UE
 
 	void ViewportPanel::OnImGuiRender(Ref<Application::SharedData> data, glm::vec2* viewportBounds, glm::vec2* viewportSize, Ref<Framebuffer> framebuffer)
 	{
-		if (ActivePanelsConfig::Viewport)
+		if (ActivePanelsConfig::Viewport && Project::Header::IsOpen)
 		{
 			ImGui::Begin("Viewport");
 			auto ViewportMinRegion = ImGui::GetWindowContentRegionMin();

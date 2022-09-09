@@ -72,6 +72,7 @@ namespace UE
 			}
 
 			glfwWindowHint(GLFW_SAMPLES, 4);
+			glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
 			m_Window = glfwCreateWindow((int)m_WindowData.Width, (int)m_WindowData.Height, m_WindowData.Title.c_str(), nullptr, nullptr);
 			int PosX = 0;

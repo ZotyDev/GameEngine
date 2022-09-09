@@ -4,9 +4,9 @@
 #include <imgui_internal.h>
 
 #include "Panels/PanelsConfig.h"
-#include "ProjectConfig.h"
-
 #include "Debug/Instrumentator.h"
+
+#include "Project/Project.h"
 
 namespace UE
 {
@@ -21,12 +21,14 @@ namespace UE
 	void EditorLayer::OnAttach()
 	{
 		PanelsConfig::LoadConfigs();
-		ProjectConfig::LoadConfigs();
 
-		UE_INFO("Current project:\n Name: {0}\n Location: {1}\n CurrentDirectory: {2}", 
-			ProjectConfig::ProjectName, 
-			ProjectConfig::ProjectLocation,
-			ProjectConfig::CurrentDirectory);
+		Project::ReadLatest();
+
+		UE_CORE_TRACE("Current project:\n Name: {0}\n Version: {1}\n Location: {2}\n CurrentDirectory: {3}", 
+			Project::Header::Name,
+			Project::Header::Version,
+			Project::Header::Location,
+			Project::Header::CurrentDirectory);
 
 		// Set the icon for the game window
 		m_Data->m_Window->SetIcon("res/icon.png");

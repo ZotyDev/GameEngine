@@ -3,9 +3,9 @@
 
 #include <imgui.h>
 
-#include "ProjectConfig.h"
-
 #include "Panels/PanelsConfig.h"
+
+#include "Project/Project.h"
 
 namespace UE
 {
@@ -15,15 +15,22 @@ namespace UE
 	UEBool NewProjectPopupTemp = false;
 	UEBool OpenProjectPopupTemp = false;
 	UEBool ProjectInfoPopupTemp = false;
+	
+	UEBool FolderAlreadyExistsError = false;
+	UEBool NameEmptyError = false;
+	UEBool VersionEmptyError = false;
+	UEBool LocationEmptyError = false;
+	UEBool InvalidProjectError = false;
 
 	char ProjectNameBuffer[256] = "";
+	char ProjectVersionBuffer[256] = "";
 	char ProjectLocationBuffer[256] = "";
 
 	void MenuBarPanel::OnImGuiRender(Ref<Application::SharedData> data)
 	{
 		if (ImGui::BeginMenuBar())
 		{
-			if (ImGui::BeginMenu("File"))
+			if (ImGui::BeginMenu("Project"))
 			{
 				if (ImGui::MenuItem("New", "Ctrl+N"))
 				{
@@ -35,26 +42,26 @@ namespace UE
 					OpenProjectPopupTemp = true;
 				}
 
-				if (ImGui::MenuItem("Save", "Ctrl+S"))
+				if (ImGui::MenuItem("Save", "Ctrl+S", false, Project::Header::IsOpen))
 				{
 
 				}
 
-				if (ImGui::MenuItem("Save As..", "Ctrl+Shift+S"))
+				if (ImGui::MenuItem("Save As..", "Ctrl+Shift+S", false, Project::Header::IsOpen))
 				{
 
 				}
 
 				ImGui::Separator();
 
-				if (ImGui::MenuItem("Project Info"))
+				if (ImGui::MenuItem("Project Info", NULL, false, Project::Header::IsOpen))
 				{
 					ProjectInfoPopupTemp = true;
 				}
 
 				ImGui::Separator();
 
-				if (ImGui::BeginMenu("Options"))
+				if (ImGui::BeginMenu("Options", Project::Header::IsOpen))
 				{
 					if (ImGui::MenuItem("Maximize on play", NULL, &PanelsConfig::MaximizeOnPlay))
 					{
@@ -74,7 +81,7 @@ namespace UE
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu("View"))
+			if (ImGui::BeginMenu("View", Project::Header::IsOpen))
 			{
 				if (ImGui::MenuItem("Viewport", NULL, &ActivePanelsConfig::Viewport))
 				{
@@ -104,7 +111,7 @@ namespace UE
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu("Game"))
+			if (ImGui::BeginMenu("Game", Project::Header::IsOpen))
 			{
 				if (ImGui::MenuItem("Play", !PanelsConfig::ProjectRunning ? "F9" : NULL, nullptr, !PanelsConfig::ProjectRunning))
 				{
@@ -170,7 +177,22 @@ namespace UE
 		if (ImGui::BeginPopupModal("New Project", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::Text("Project Name:");
+			ImGui::PushItemWidth(350.0f);
 			ImGui::InputText("##ProjectName", ProjectNameBuffer, 256);
+			ImGui::PopItemWidth();
+			if (NameEmptyError)
+			{
+				ImGui::TextColored({ 1.0f, 0.0f, 0.0f, 1.0f }, "Name cannot be empty");
+			}
+
+			ImGui::Text("Project Version:");
+			ImGui::PushItemWidth(350.0f);
+			ImGui::InputText("##ProjectVersion", ProjectVersionBuffer, 256);
+			ImGui::PopItemWidth();
+			if (VersionEmptyError)
+			{
+				ImGui::TextColored({ 1.0f, 0.0f, 0.0f, 1.0f }, "Version cannot be empty");
+			}
 
 			ImGui::Text("Project Location:");
 			
@@ -179,28 +201,63 @@ namespace UE
 			if (ImGui::Button("Browse"))
 			{
 				UEPath TempPathHolder;
-				if (FileSystem::FileSelectorDialog(TempPathHolder, {}, false))
+				if (FileSystem::FileSelectorDialog(TempPathHolder, {}, true))
 				{
 					std::strcpy(ProjectLocationBuffer, TempPathHolder.string().c_str());
 				}
 			}
-
-			if (ImGui::Button("Create", ImVec2(120, 0))) 
+			if (FolderAlreadyExistsError)
 			{
-				ProjectConfig::ProjectName = ProjectNameBuffer;
-				ProjectConfig::ProjectLocation = ProjectLocationBuffer;
-				ProjectConfig::AssetPath = ProjectConfig::ProjectLocation.string() + "/assets";
-				ProjectConfig::CurrentDirectory = ProjectConfig::AssetPath;
+				ImGui::TextColored({ 1.0f, 0.0f, 0.0f, 1.0f }, "There is already a project with this name here");
+			}
+			if (LocationEmptyError)
+			{
+				ImGui::TextColored({ 1.0f, 0.0f, 0.0f, 1.0f }, "Location cannot be empty");
+			}
 
-				ImGui::CloseCurrentPopup(); 
+			ImVec2 ButtonsSize = { (ImGui::GetContentRegionAvail().x - 8) / 2, 0.0f };
+			if (ImGui::Button("Create", ButtonsSize))
+			{
+				Project::Header NewProjectHeader;
+				NewProjectHeader.Name = ProjectNameBuffer;
+				NewProjectHeader.Version = "0.0.1a";
+				NewProjectHeader.Location = ProjectLocationBuffer;
+
+				UEBool ShouldClose = false;
+
+				ShouldClose |= NameEmptyError = strlen(ProjectNameBuffer) == 0;
+				ShouldClose |= VersionEmptyError = strlen(ProjectVersionBuffer) == 0;
+				ShouldClose |= LocationEmptyError = strlen(ProjectLocationBuffer) == 0;
+
+				if (!ShouldClose)
+				{
+					ShouldClose |= FolderAlreadyExistsError = !Project::Create(NewProjectHeader);
+				}
+
+				if (!ShouldClose)
+				{
+					ImGui::CloseCurrentPopup();
+
+					ProjectNameBuffer[0] = '\0';
+					ProjectVersionBuffer[0] = '\0';
+					ProjectLocationBuffer[0] = '\0';
+				}
 			}
 			
 			ImGui::SetItemDefaultFocus();
 			ImGui::SameLine();
 			
-			if (ImGui::Button("Cancel", ImVec2(120, 0))) 
+			if (ImGui::Button("Cancel", ButtonsSize))
 			{ 
 				ImGui::CloseCurrentPopup(); 
+
+				ProjectNameBuffer[0] = '\0';
+				ProjectVersionBuffer[0] = '\0';
+				ProjectLocationBuffer[0] = '\0';
+
+				NameEmptyError = false;
+				VersionEmptyError = false;
+				LocationEmptyError = false;
 			}
 
 			ImGui::EndPopup();
@@ -213,22 +270,58 @@ namespace UE
 
 			ImGui::Text("Project Location:");
 			ImGui::InputText("##ProjectLocation", ProjectLocationBuffer, 256);
-
-			if (ImGui::Button("Open", ImVec2(120, 0)))
+			ImGui::SameLine();
+			if (ImGui::Button("Browse"))
 			{
-				ProjectConfig::ProjectLocation = ProjectLocationBuffer;
-				ProjectConfig::AssetPath = ProjectConfig::ProjectLocation.string() + "/assets";
-				ProjectConfig::CurrentDirectory = ProjectConfig::AssetPath;
+				UEPath TempPathHolder;
+				if (FileSystem::FileSelectorDialog(TempPathHolder, {}, true))
+				{
+					std::strcpy(ProjectLocationBuffer, TempPathHolder.string().c_str());
+				}
+			}
+			if (LocationEmptyError)
+			{
+				ImGui::TextColored({ 1.0f, 0.0f, 0.0f, 1.0f }, "Location cannot be empty");
+			}
+			if (InvalidProjectError)
+			{
+				ImGui::TextColored({ 1.0f, 0.0f, 0.0f, 1.0f }, "Invalid project location");
+			}
 
-				ImGui::CloseCurrentPopup();
+			ImVec2 ButtonsSize = { (ImGui::GetContentRegionAvail().x - 8) / 2, 0.0f };
+			if (ImGui::Button("Open", ButtonsSize))
+			{
+				UEBool ShouldClose = false;
+
+				ShouldClose |= LocationEmptyError = strlen(ProjectLocationBuffer) == 0;
+
+				if (!ShouldClose)
+				{
+					ShouldClose |= InvalidProjectError = !Project::Read(ProjectLocationBuffer);
+				}
+
+				if (!ShouldClose)
+				{
+					ImGui::CloseCurrentPopup();
+
+					ProjectLocationBuffer[0] = '\0';
+
+					LocationEmptyError = false;
+					InvalidProjectError = false;
+				}
 			}
 
 			ImGui::SetItemDefaultFocus();
 			ImGui::SameLine();
 
-			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			if (ImGui::Button("Cancel", ButtonsSize))
 			{
 				ImGui::CloseCurrentPopup();
+
+				ProjectLocationBuffer[0] = '\0';
+
+				LocationEmptyError = false;
+				InvalidProjectError = false;
 			}
 
 			ImGui::EndPopup();
@@ -236,12 +329,11 @@ namespace UE
 
 		// Always center this window when appearing
 		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
 		if (ImGui::BeginPopupModal("Project Info", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			ImGui::Text(ProjectConfig::ProjectName.c_str());
-			ImGui::Text(("Location: " + ProjectConfig::ProjectLocation.string()).c_str());
-			ImGui::Text(("Version: " + ProjectConfig::ProjectVersion).c_str());
+			ImGui::Text(Project::Header::Name.c_str());
+			ImGui::Text(("Location: " + Project::Header::Location.string()).c_str());
+			ImGui::Text(("Version: " + Project::Header::Version).c_str());
 
 			if (ImGui::Button("OK", ImVec2(120, 0))) 
 			{ 
