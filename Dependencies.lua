@@ -19,6 +19,7 @@ IncludeDir = {}
 	
 	IncludeDir["ImPlot"] = "%{wks.location}/UnnamedEngine/vendor/ImPlot"
 	IncludeDir["ImGuizmo"] = "%{wks.location}/UnnamedEngine/vendor/ImGuizmo"
+    IncludeDir["ImGuiNodeEditor"] = "%{wks.location}/UnnamedEngine/vendor/imgui-node-editor"
 
 -- Library Directories
 LibraryDir = {}

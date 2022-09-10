@@ -27,6 +27,7 @@ workspace "GameEngine"
 		include "UnnamedEngine/vendor/GLFW"
 		include "UnnamedEngine/vendor/imgui"
 		include "UnnamedEngine/vendor/ImPlot"
+		include "UnnamedEngine/vendor/imgui-node-editor"
 	group ""
 
 	include "UnnamedEngine"

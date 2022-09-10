@@ -26,16 +26,6 @@ namespace UE
 		s_Data->CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer3DData::CameraData), 0);
 		s_Data->Screen = screen;
 
-		//FramebufferSpecification specs;
-		//specs.Width = GlobalConfig::Rendering::Width;
-		//specs.Height = GlobalConfig::Rendering::Height;
-		//specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Color));
-		//specs.Attachments.Attachments.push_back(FramebufferTextureSpecification(FramebufferTextureFormat::Depth));
-		//Ref<Framebuffer> tFramebuffer = Framebuffer::Create(specs);
-		// 
-		//ShaderLibrary::Get("screen")->Compile();
-		//s_Data->Screen = CreateRef<Screen>(ShaderLibrary::Get("screen"), tFramebuffer);
-
 		Initialized = true;
 	}
 
@@ -92,7 +82,7 @@ namespace UE
 
 		// Render opaque object layer
 
-		// Render opque particle layer
+		// Render opaque particle layer
 
 		// Render transparent object layer
 

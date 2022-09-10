@@ -28,6 +28,7 @@ project "UnnamedEngine"
 		"%{IncludeDir.LUA}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.ImPlot}",
+		"%{IncludeDir.ImGuiNodeEditor}",
 		"%{IncludeDir.fmt}",
 		"%{IncludeDir.toml}"
 	}
@@ -70,7 +71,8 @@ project "UnnamedEngine"
 			"GLFW",
 			"FreeType",
 			"ImGui",
-			"ImPlot"
+			"ImPlot",
+			"ImGuiNodeEditor"
 		}
 
 	------------------------------------------------------------------------------------

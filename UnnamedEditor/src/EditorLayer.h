@@ -8,6 +8,7 @@
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/PropertiesPanel.h"
 #include "Panels/ProfilerPanel.h"
+#include "Panels/NodeEditorPanel/NodeEditorPanel.h"
 
 namespace UE
 {
@@ -48,6 +49,7 @@ namespace UE
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		PropertiesPanel m_PropertiesPanel;
 		ProfilerPanel m_ProfilerPanel;
+		NodeEditorPanel m_NodeEditorPanel;
 	private:
 		bool OnWindowResize(WindowResizeEvent& event);
 	private:

@@ -27,16 +27,17 @@ namespace UE
 		// Get configs
 		// PanelsConfig
 		auto& TomlPanelsConfig = toml::find(ConfigData, "PanelsConfig");
-		PanelsConfig::Fullscreen = toml::find_or<UEBool>(TomlPanelsConfig, "Fullscreen", true);
-		PanelsConfig::Padding = toml::find_or<UEBool>(TomlPanelsConfig, "Padding", false);
-		PanelsConfig::MaximizeOnPlay = toml::find_or<UEBool>(TomlPanelsConfig, "MaximizeOnPlay", false);
+		PanelsConfig::Fullscreen = toml::find_or<UEBool>(TomlPanelsConfig, "Fullscreen", PanelsConfig::Fullscreen);
+		PanelsConfig::Padding = toml::find_or<UEBool>(TomlPanelsConfig, "Padding", PanelsConfig::Padding);
+		PanelsConfig::MaximizeOnPlay = toml::find_or<UEBool>(TomlPanelsConfig, "MaximizeOnPlay", PanelsConfig::MaximizeOnPlay);
 
 		// PanelsShowConfig
 		auto& TomlActivePanelsConfig = toml::find(ConfigData, "ActivePanels");
-		ActivePanelsConfig::Viewport = toml::find_or<UEBool>(TomlActivePanelsConfig, "Viewport", true);
-		ActivePanelsConfig::ContentBrowser = toml::find_or<UEBool>(TomlActivePanelsConfig, "ContentBrowser", true);
-		ActivePanelsConfig::SceneHierarchy = toml::find_or<UEBool>(TomlActivePanelsConfig, "Properties", true);
-		ActivePanelsConfig::Profiler = toml::find_or<UEBool>(TomlActivePanelsConfig, "Profiler", true);
+		ActivePanelsConfig::Viewport = toml::find_or<UEBool>(TomlActivePanelsConfig, "Viewport", ActivePanelsConfig::Viewport);
+		ActivePanelsConfig::ContentBrowser = toml::find_or<UEBool>(TomlActivePanelsConfig, "ContentBrowser", ActivePanelsConfig::ContentBrowser);
+		ActivePanelsConfig::SceneHierarchy = toml::find_or<UEBool>(TomlActivePanelsConfig, "Properties", ActivePanelsConfig::Properties);
+		ActivePanelsConfig::Profiler = toml::find_or<UEBool>(TomlActivePanelsConfig, "Profiler", ActivePanelsConfig::SceneHierarchy);
+		ActivePanelsConfig::NodeEditor = toml::find_or<UEBool>(TomlActivePanelsConfig, "NodeEditor", ActivePanelsConfig::NodeEditor);
 
 		return UEResult<>::Success;
 	}
@@ -56,5 +57,6 @@ namespace UE
 	UEBool ActivePanelsConfig::ContentBrowser = true;
 	UEBool ActivePanelsConfig::Properties = true;
 	UEBool ActivePanelsConfig::SceneHierarchy = true;
-	UEBool ActivePanelsConfig::Profiler = false;
+	UEBool ActivePanelsConfig::Profiler = true;
+	UEBool ActivePanelsConfig::NodeEditor = true;
 }

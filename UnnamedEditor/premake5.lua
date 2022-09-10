@@ -22,6 +22,7 @@ project "UnnamedEditor"
         "%{IncludeDir.LUA}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.ImPlot}",
+        "%{IncludeDir.ImGuiNodeEditor}",
         "%{IncludeDir.toml}"
     }
 

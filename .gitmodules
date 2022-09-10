@@ -46,3 +46,6 @@
 [submodule "UnnamedEngine/vendor/toml"]
 	path = UnnamedEngine/vendor/toml
 	url = https://github.com/ToruNiina/toml11
+[submodule "UnnamedEngine/vendor/imgui-node-editor"]
+	path = UnnamedEngine/vendor/imgui-node-editor
+	url = https://github.com/thedmd/imgui-node-editor

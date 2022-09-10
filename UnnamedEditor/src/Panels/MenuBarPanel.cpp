@@ -88,7 +88,7 @@ namespace UE
 
 				}
 
-				if (ImGui::MenuItem("ContentBrowser", NULL, &ActivePanelsConfig::ContentBrowser))
+				if (ImGui::MenuItem("Content Browser", NULL, &ActivePanelsConfig::ContentBrowser))
 				{
 
 				}
@@ -104,6 +104,11 @@ namespace UE
 				}
 
 				if (ImGui::MenuItem("Profiler", NULL, &ActivePanelsConfig::Profiler))
+				{
+
+				}
+
+				if (ImGui::MenuItem("Node Editor", NULL, &ActivePanelsConfig::NodeEditor))
 				{
 
 				}

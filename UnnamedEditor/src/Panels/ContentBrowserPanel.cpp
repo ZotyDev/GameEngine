@@ -102,7 +102,7 @@ namespace UE
 					{
 						Project::Header::CurrentDirectory /= Path.filename();
 					}
-					else if (FilenameExtension == "lua")
+					else if (FilenameExtension == "lua" || FilenameExtension == "toml")
 					{
 						UEString CommandString = "code ";
 						CommandString += (Project::Header::CurrentDirectory / Path.filename()).string();

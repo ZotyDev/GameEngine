@@ -25,5 +25,6 @@ namespace UE
 		static UEBool SceneHierarchy;
 		static UEBool Properties;
 		static UEBool Profiler;
+		static UEBool NodeEditor;
 	};
 }

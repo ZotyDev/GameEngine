@@ -229,6 +229,7 @@ namespace UE
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_PropertiesPanel.OnImGuiRender();
 		m_ProfilerPanel.OnImGuiRender();
+		m_NodeEditorPanel.OnImGuiRender();
 		
 		ImGui::End();
 
@@ -253,6 +254,7 @@ namespace UE
 		ImGui::Text("Viewportheight: %i", ViewportY);
 
 		ImGui::End();
+
 
 		//ImGui::ShowDemoWindow();
 	}
