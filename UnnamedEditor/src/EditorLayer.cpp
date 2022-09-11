@@ -40,10 +40,10 @@ namespace UE
 			UE_ERROR("Failed to load {0}: not found", TexturePath);
 		}
 
-		m_Camera = CreateRef<Camera3D>(
+		m_Camera = CreateRef<Camera2D>(
 			GlobalConfig::Renderer::ScreenWidth, 
 			GlobalConfig::Renderer::ScreenHeight, 
-			glm::vec3(0.0f, 0.0f, 1.5f));
+			glm::vec3(0.0f, 0.0f, 10.5f));
 		m_CameraController = CreateRef<CameraController>(m_Camera);
 
 		FramebufferSpecification specs;
@@ -82,6 +82,7 @@ namespace UE
 		m_Screen = CreateRef<UE::Screen>(ShaderLibrary::Get("screen"), tFramebuffer, yFramebuffer);
 
 		Renderer3D::Init(m_Screen);
+		Renderer2D::Init(m_Screen);
 
 		ShaderHeaderConstructor MyShaderHeaderConstructor("assets/shaders/default");
 		std::vector<ShaderHeaderConstructor::Element> tShaderElements;
@@ -156,13 +157,15 @@ namespace UE
 
 	void EditorLayer::Render()
 	{
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 1.0f, 0.0f, 0.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 1.0f, 0.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 1.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { -1.0f, 0.0f, 0.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, -1.0f, 0.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, -1.0f });
+		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
+		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 1.0f, 0.0f, 0.0f });
+		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 1.0f, 0.0f });
+		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 1.0f });
+		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { -1.0f, 0.0f, 0.0f });
+		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, -1.0f, 0.0f });
+		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, -1.0f });
+
+		Renderer2D::DrawQuad({ 0.0f, 0.0f }, {1.0f, 1.0f },  { 1.0f, 1.0f, 1.0f, 1.0f });
 	}
 
 	void EditorLayer::OnImGuiRender()

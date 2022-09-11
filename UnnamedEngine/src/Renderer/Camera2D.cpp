@@ -25,20 +25,20 @@ namespace UE
 		glm::vec4 tProjection;
 		
 		// Should work
-		tProjection = {
-			0.0f,
-			m_ViewportWidth,
-			0.0f,
-			m_ViewportHeight
-		};
+		//tProjection = {
+		//	0.0f,
+		//	m_ViewportWidth,
+		//	0.0f,
+		//	m_ViewportHeight
+		//};
 
 		// Works
-		//tProjection = {
-		//	-m_AspectRatio / m_Scale,
-		//	m_AspectRatio / m_Scale,
-		//	-1.0f / m_Scale,
-		//	1.0f / m_Scale
-		//};
+		tProjection = {
+			-m_AspectRatio / m_Scale,
+			m_AspectRatio / m_Scale,
+			-1.0f / m_Scale,
+			1.0f / m_Scale
+		};
 
 		m_Projection = glm::ortho(tProjection.x, tProjection.y, tProjection.z, tProjection.w, m_NearClip, m_FarClip);
 	}
