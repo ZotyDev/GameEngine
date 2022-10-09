@@ -21,7 +21,6 @@ namespace UE
 	{
 		glm::vec3 Position;
 		glm::vec4 Color;
-		glm::vec2 TexCoords;
 	};
 
 	struct Renderer2DData
@@ -29,7 +28,6 @@ namespace UE
 		static const UEUint32 MaxQuads = 20000;
 		static const UEUint32 MaxVertices = MaxQuads * 4;
 		static const UEUint32 MaxIndices = MaxQuads * 6;
-		static const UEUint32 MaxTextures = 32;
 
 		UEUint32 QuadIndexCount = 0;
 
@@ -40,8 +38,9 @@ namespace UE
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr = nullptr;
 
-		std::array<Ref<Texture2D>, MaxTextures> TextureArray;
-		UEUint32 TextureArrayCount = 0;
+		std::vector<Ref<Texture2D>> AlbedoArray;
+		std::vector<Ref<Texture2D>> NormalArray;
+		std::vector<Ref<Texture2D>> EmissiveArray;
 
 		glm::vec4 QuadVertexPositions[4];
 
@@ -62,8 +61,7 @@ namespace UE
 		s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
 		s_Data.QuadVertexBuffer->SetLayout({
 			{ ShaderDataType::Vec3, "a_Position"	},
-			{ ShaderDataType::Vec4, "a_Color"		},
-			{ ShaderDataType::Vec2, "a_TextCoord"	}
+			{ ShaderDataType::Vec4, "a_Color"		}
 			});
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 
@@ -88,8 +86,14 @@ namespace UE
 		s_Data.QuadVertexArray->AddIndexBuffer(QuadIB);
 		delete[] QuadIndices;
 
-		s_Data.QuadShader = Shader::Create("assets/shaders/quad");
+		s_Data.QuadShader = Shader::Create();
+		s_Data.QuadShader->LoadFromSource("assets/shader/quad");
 		s_Data.QuadShader->Compile();
+
+		s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[2] = { 0.5f, 0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[3] = { -0.5f, 0.5f, 0.0f, 1.0f };
 
 		s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2DData::CameraData), 0);
 		s_Data.Screen = screen;
@@ -128,6 +132,7 @@ namespace UE
 
 		// Empty rendering data
 		s_Data.QuadIndexCount = 0;
+		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 	}
 
 	void Renderer2D::EndRender()
@@ -141,6 +146,12 @@ namespace UE
 		s_Data.Screen->Bind();
 
 		// Rendering
+		UEUint32 DataSize = (UEUint32)((UEUint8*)s_Data.QuadVertexBufferPtr - (UEUint8*)s_Data.QuadVertexBufferBase);
+		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, DataSize);
+		
+		s_Data.QuadShader->Bind();
+		s_Data.QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
 
 		// End of rendering
 		s_Data.Screen->Unbind();
@@ -154,7 +165,23 @@ namespace UE
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		constexpr UEUint32 QuadVertexCount = 4;
+		const UEFloat TextureIndex = 0.0f;
+		constexpr glm::vec2 TextureCoords[] = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+		const float TilingFactor = 1.0f;
 
+		glm::mat4 Transform = glm::mat4(1.0f);
+		Transform = glm::translate(Transform, glm::vec3(position, 1.0f));
+		Transform = glm::scale(Transform, glm::vec3(size, 1.0f));
+
+		for (UEUint32 i = 0; i < QuadVertexCount; i++)
+		{
+			s_Data.QuadVertexBufferPtr->Position = Transform * s_Data.QuadVertexPositions[i];
+			s_Data.QuadVertexBufferPtr->Color = color;
+			s_Data.QuadVertexBufferPtr++;
+		}
+
+		s_Data.QuadIndexCount += 6;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture>& texture, UEFloat tilingFactor, const glm::vec4 tintColor)

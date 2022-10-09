@@ -66,8 +66,7 @@ namespace UE
 
 		virtual const UEString& GetName() const = 0;
 
-		static Ref<Shader> Create(const UEPath& path);
-		static Ref<Shader> Create(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath);
+		static Ref<Shader> Create();
 	};
 
 	class ShaderLibrary
@@ -75,8 +74,8 @@ namespace UE
 	public:
 		static void Add(const UEString& name, const Ref<Shader>& shader);
 		static void Add(const Ref<Shader>& shader);
-		static Ref<Shader> Load(const UEPath& path);
-		static Ref<Shader> Load(const UEString& name, const UEPath& path);
+		static UEResult<> Load(const UEPath& path);
+		static UEResult<> Load(const UEString& name, const UEPath& path);
 
 		static Ref<Shader> Get(const UEString& name);
 

@@ -76,6 +76,12 @@ namespace UE
 			}
 			case ShaderHeaderConstructor::UseType::VertOutput:
 			{
+				ToBeInserted = s_UseTypeStringIndex[(UEUint32)ShaderHeaderConstructor::UseType::VertInput];
+				ToBeInserted = fmt::format(ToBeInserted, m_VertInputCount++, s_DataTypeStringIndex[(UEUint32)it.DataType], "vi_" + it.Name);
+				m_VertexSource.insert(m_VertInsertOffset, ToBeInserted);
+				m_VertInsertOffset += ToBeInserted.size();
+
+				ToBeInserted = s_UseTypeStringIndex[(UEUint32)ShaderHeaderConstructor::UseType::VertOutput];
 				ToBeInserted = fmt::format(ToBeInserted, m_VertOutputCount++, s_DataTypeStringIndex[(UEUint32)it.DataType], "vo_" + it.Name);
 				m_VertexSource.insert(m_VertInsertOffset, ToBeInserted);
 				m_VertInsertOffset += ToBeInserted.size();

@@ -33,4 +33,10 @@ namespace UE
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	};
+
+	void OpenGLVertexBuffer::SetData(const void* data, UEUint32 size)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_ID);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+	}
 }

@@ -1,12 +1,20 @@
 #version 460 core
 
-in vec2 out_Texture;
+layout (location = 0) out vec4 FragColor;
 
-out vec4 FragColor;
+struct VertexOutput
+{
+	vec4 Color;
+};
 
-layout (binding = 0) uniform sampler2D u_Texture;
+layout (location = 0) in VertexOutput Input;
 
 void main()
 {
-	FragColor = texture(u_Texture, out_Texture);
+	if (Input.Color.a == 0.0)
+	{
+		discard;
+	}
+
+	FragColor = Input.Color;
 }

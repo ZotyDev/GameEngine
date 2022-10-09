@@ -26,7 +26,7 @@ namespace UE
 		m_Framebuffer->Bind();
 
 		// Clear screen frambuffer
-		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::SetClearColor({ 0.529f, 0.808f, 0.922f, 1.0f });
 		RenderCommand::Clear();	
 	}
 

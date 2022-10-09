@@ -46,12 +46,10 @@ namespace UE
 			Ref<Screen> Screen;
 
 			std::array<Ref<VertexArray>, 32> VaoArray;
-			std::array<Ref<Shader>, 32> ShaderArray;
-			std::array<Ref<Texture2D>, 32> TextureArray;
+			std::array<Ref<Material>, 32> MaterialArray;
 			std::array<glm::vec3, 32> PositionArray;
 			std::array<glm::vec3, 32> SizeArray;
 			std::array<glm::vec3, 32> RotationArray;
-			std::array<Ref<Material>, 32> MaterialArray;
 			UEUint32 Index;
 
 			std::unordered_map<Ref<Material>, std::vector<UEUint32>> MaterialIndexMap;
@@ -59,7 +57,6 @@ namespace UE
 			Ref<UniformBuffer> CameraUniformBuffer;
 		};
 
-		static Scope<MaterialLibrary> s_MaterialLibrary;
 		static Scope<Renderer3DData> s_Data;
 	};
 }

@@ -10,7 +10,7 @@ namespace UE
 	{
 	public:
 
-		Ref<VertexArray> Bake(Ref<Chunk> chunk);
+		static Ref<VertexArray> Bake(Ref<Chunk> chunk);
 
 	private:
 	};

@@ -1,0 +1,16 @@
+ShaderElements:
+  Position:
+    data: vec3
+    use: vertInput
+  Texture:
+    data: vec2
+    use: vertOutput
+  FragColor:
+    data: vec4
+    use: fragOutput
+  Transform:
+    data: mat4
+    use: vertUniform
+  Albedo:
+    data: sampler2d
+    use: fragSampler

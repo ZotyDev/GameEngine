@@ -28,6 +28,7 @@ workspace "GameEngine"
 		include "UnnamedEngine/vendor/imgui"
 		include "UnnamedEngine/vendor/ImPlot"
 		include "UnnamedEngine/vendor/imgui-node-editor"
+		include "UnnamedEngine/vendor/yaml-cpp"
 	group ""
 
 	include "UnnamedEngine"

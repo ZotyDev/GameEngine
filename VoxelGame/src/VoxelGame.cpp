@@ -10,7 +10,7 @@ namespace UE
 	public:
 		VoxelGame()
 		{
-			PushLayer(new VoxelGameApp(m_Data));
+			PushLayer(CreateRef<VoxelGameApp>(m_Data));
 		}
 
 		~VoxelGame()

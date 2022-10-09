@@ -9,6 +9,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtx/hash.hpp"
 
+#include "Renderer/VertexArray.h"
+
 namespace UE
 {
 	class Chunk
@@ -22,6 +24,8 @@ namespace UE
 		void SetVoxel(UEInt32 x, UEInt32 y, UEInt32 z, Voxel voxel) { Voxels[z * CHUNK_AREA + y * CHUNK_SIZE + x] = voxel; }
 
 		Voxel Voxels[CHUNK_VOLUME];
+
+		Ref<VertexArray> m_Mesh;
 	};
 
 	class ChunkManager

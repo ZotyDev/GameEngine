@@ -8,6 +8,8 @@
 
 #include "Project/Project.h"
 
+#include "PlatformIndependenceLayer/DynamicTree.h"
+
 namespace UE
 {
 	EditorLayer::EditorLayer(Ref<Application::SharedData> data)
@@ -81,7 +83,7 @@ namespace UE
 		ShaderLibrary::Get("screen")->Compile();
 		m_Screen = CreateRef<UE::Screen>(ShaderLibrary::Get("screen"), tFramebuffer, yFramebuffer);
 
-		Renderer3D::Init(m_Screen);
+		//Renderer3D::Init(m_Screen);
 		Renderer2D::Init(m_Screen);
 
 		ShaderHeaderConstructor MyShaderHeaderConstructor("assets/shaders/default");
@@ -165,7 +167,7 @@ namespace UE
 		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, -1.0f, 0.0f });
 		//Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, -1.0f });
 
-		Renderer2D::DrawQuad({ 0.0f, 0.0f }, {1.0f, 1.0f },  { 1.0f, 1.0f, 1.0f, 1.0f });
+		Renderer2D::DrawQuad({ 0.0f, 0.0f }, {1.0f, 1.0f },  { 0.0f, 1.0f, 1.0f, 1.0f });
 	}
 
 	void EditorLayer::OnImGuiRender()

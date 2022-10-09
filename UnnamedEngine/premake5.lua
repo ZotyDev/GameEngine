@@ -30,12 +30,14 @@ project "UnnamedEngine"
 		"%{IncludeDir.ImPlot}",
 		"%{IncludeDir.ImGuiNodeEditor}",
 		"%{IncludeDir.fmt}",
-		"%{IncludeDir.toml}"
+		"%{IncludeDir.toml}",
+		"%{IncludeDir.yaml_cpp}"
 	}
 
 	links
 	{
-		"LUA"
+		"LUA",
+		"yaml-cpp"
 	}
 
 	filter "files:vendor/ImGuizmo/**.cpp"

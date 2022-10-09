@@ -9,7 +9,7 @@
 
 namespace UE
 {
-	Ref<Shader> Shader::Create(const UEPath& path)
+	Ref<Shader> Shader::Create()
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -19,53 +19,11 @@ namespace UE
 
 		#if defined(UE_PLATFORM_OPENGL)
 		case RendererAPI::API::OpenGL: 
-			Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
-			if (!t_Shader->LoadFromSource(path))
-			{
-				UE_CORE_ERROR("Failed to create Shader!");
-				return nullptr;
-			}
-			//if (t_Shader->Compile())
-			//{
-			//	UE_CORE_ERROR("Failed to create Shader!");
-			//	return nullptr;
-			//}
-
-			return t_Shader;
+			return CreateRef<OpenGLShader>();
 		#endif
 		}
 
 		UE_CORE_ASSERT(false, "Unknown RendererAPI");
-		return nullptr;
-	}
-
-	Ref<Shader> Shader::Create(const UEString& name, const UEPath& vertexPath, const UEPath& fragmentPath)
-	{
-		switch (Renderer::GetAPI())
-		{
-		case RendererAPI::API::None:
-			UE_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
-			return nullptr;
-
-		#if defined(UE_PLATFORM_OPENGL)
-		case RendererAPI::API::OpenGL:
-			Ref<OpenGLShader> t_Shader = CreateRef<OpenGLShader>();
-			if (!t_Shader->LoadFromSource(name, vertexPath, fragmentPath))
-			{
-				UE_CORE_ERROR("Failed to create Shader!");
-				return nullptr;
-			}
-			//if (t_Shader->Compile())
-			//{
-			//	UE_CORE_ERROR("Failed to create Shader!");
-			//	return nullptr;
-			//}
-
-			return t_Shader;
-		#endif
-		}
-
-		UE_CORE_ERROR("Unknown RendererAPI");
 		return nullptr;
 	}
 
@@ -87,18 +45,28 @@ namespace UE
 		Add(name, shader);
 	}
 
-	Ref<Shader> ShaderLibrary::Load(const UEPath& path)
+	UEResult<> ShaderLibrary::Load(const UEPath& path)
 	{
-		auto shader = Shader::Create(path);
+		auto shader = Shader::Create();
+		if (!shader->LoadFromSource(path))
+		{
+			return UEResult<>::Error;
+		}
 		Add(shader);
-		return shader;
+
+		return UEResult<>::Success;
 	}
 
-	Ref<Shader> ShaderLibrary::Load(const UEString& name, const UEPath& path)
+	UEResult<> ShaderLibrary::Load(const UEString& name, const UEPath& path)
 	{
-		auto shader = Shader::Create(path);
+		auto shader = Shader::Create();
+		if (!shader->LoadFromSource(path))
+		{
+			return UEResult<>::Error;
+		}
 		Add(name, shader);
-		return shader;
+
+		return UEResult<>::Success;
 	}
 
 	Ref<Shader> ShaderLibrary::Get(const UEString& name)

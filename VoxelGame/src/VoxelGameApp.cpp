@@ -3,6 +3,7 @@
 #include <imgui/imgui.h>
 
 #include "World/Chunk.h"
+#include "World/ChunkMesher.h"
 
 namespace UE
 {
@@ -10,35 +11,40 @@ namespace UE
 		: Layer("VoxelGameApp"), m_Data(data)
 	{}
 
+	Ref<Material> ChunkMaterial;
 	Ref<Material> GrassMaterial = CreateRef<Material>();
+
+	Ref<Chunk> TestChunk = CreateRef<Chunk>();
 
 	void VoxelGameApp::OnAttach()
 	{
 		m_Texture2D = Texture2D::Create();
-		const UEPath TexturePath = "assets/textures/grass.png";
-		if (m_Texture2D->LoadFromSource(TexturePath, (Texture::TextureFlags)(Texture::TextureFlags::FILTERING_NEAREST | Texture::TextureFlags::CLAMP_TO_EDGE)) == UEResult::Error)
+		const UEPath TexturePath = "assets/textures/dirt.png";
+		if (m_Texture2D->LoadFromSource(TexturePath, (Texture::TextureFlags)(Texture::TextureFlags::FILTERING_NEAREST | Texture::TextureFlags::CLAMP_TO_EDGE)) == UEResult<>::Error)
 		{
 			UE_ERROR("Failed to load {0}: not found", TexturePath);
 		}
 
 		// Start the camera centered using offset
-		UEInt32 CameraX = (UEInt32)GlobalConfig::Rendering::DesiredWidth / -2;
-		UEInt32 CameraY = (UEInt32)GlobalConfig::Rendering::DesiredHeight / -2;
+		//UEInt32 CameraX = (UEInt32)GlobalConfig::Renderer::DesiredWidth / -2;
+		//UEInt32 CameraY = (UEInt32)GlobalConfig::Renderer::DesiredHeight / -2;
 
 		m_Camera = CreateRef<Camera3D>(
-			GlobalConfig::Rendering::ScreenWidth,
-			GlobalConfig::Rendering::ScreenHeight, 
-			glm::vec3(0.0f, 0.0f, 1.5f));
+			GlobalConfig::Renderer::ScreenWidth,
+			GlobalConfig::Renderer::ScreenHeight,
+			glm::vec3(0.0f, 0.0f, 10.5f));
 		//m_Camera->SetPositionOffset({ (UEFloat)CameraX, (UEFloat)CameraY, 0.0f });
 		m_CameraController = CreateRef<CameraController>(m_Camera);
 
 		FramebufferSpecification specs;
-		specs.Width = GlobalConfig::Rendering::DesiredWidth;
-		specs.Height = GlobalConfig::Rendering::DesiredHeight;
-		specs.Samples = 1;
+		specs.Width = GlobalConfig::Renderer::DesiredWidth;
+		specs.Height = GlobalConfig::Renderer::DesiredHeight;
+		specs.Samples = 4;
 		specs.Attachments = { FramebufferTextureFormat::Color, FramebufferTextureFormat::Depth };
 		Ref<Framebuffer> tFramebuffer = Framebuffer::Create(specs);
 
+		specs.Width = GlobalConfig::Renderer::DesiredWidth;
+		specs.Height = GlobalConfig::Renderer::DesiredHeight;
 		specs.Samples = 1;
 		specs.Attachments = { FramebufferTextureFormat::Color };
 		Ref<Framebuffer> yFramebuffer = Framebuffer::Create(specs);
@@ -68,54 +74,10 @@ namespace UE
 
 		Renderer3D::Init(m_Screen);
 
-		ShaderHeaderConstructor MyShaderHeaderConstructor("assets/shaders/default");
-		std::vector<ShaderHeaderConstructor::Element> tShaderElements;
+		ChunkMesher::Bake(TestChunk);
 
-		tShaderElements.push_back({
-			"Position",
-			ShaderDataType::Vec3,
-			ShaderHeaderConstructor::UseType::VertInput,
-			});
-
-		tShaderElements.push_back({
-			"Texture",
-			ShaderDataType::Vec2,
-			ShaderHeaderConstructor::UseType::VertInput,
-			});
-
-		tShaderElements.push_back({
-			"Texture",
-			ShaderDataType::Vec2,
-			ShaderHeaderConstructor::UseType::VertOutput,
-			});
-
-		tShaderElements.push_back({
-			"FragColor",
-			ShaderDataType::Vec4,
-			ShaderHeaderConstructor::UseType::FragOutput,
-			});
-
-		tShaderElements.push_back({
-			"Transform",
-			ShaderDataType::Mat4,
-			ShaderHeaderConstructor::UseType::VertUniform,
-			});
-
-		tShaderElements.push_back({
-			"Albedo",
-			ShaderDataType::Sampler2D,
-			ShaderHeaderConstructor::UseType::FragSampler,
-			});
-
-		MyShaderHeaderConstructor.SetElements(tShaderElements);
-
-		UEString NewVertSource;
-		UEString NewFragSource;
-		MyShaderHeaderConstructor.Construct(NewVertSource, NewFragSource);
-
-		ShaderLibrary::Get("default")->Set(NewVertSource, NewFragSource);
-		GrassMaterial->RegisterShader("Shader", ShaderLibrary::Get("default"));
-		GrassMaterial->RegisterTexture("Texture", m_Texture2D);
+		ChunkMaterial = CreateRef<Material>("chunk");
+		ChunkMaterial->PushTexture(m_Texture2D);
 	}
 
 	void VoxelGameApp::OnDetach()
@@ -134,36 +96,31 @@ namespace UE
 
 	void VoxelGameApp::Render()
 	{
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 0.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 1.0f, 0.0f, 0.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 1.0f, 0.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, 1.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { -1.0f, 0.0f, 0.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, -1.0f, 0.0f });
-		Renderer3D::Submit(m_Quad->VAO, GrassMaterial, { 0.0f, 0.0f, -1.0f });
+		Renderer3D::Submit(TestChunk->m_Mesh, ChunkMaterial, { 1.0f, 1.0f, 1.0f });
 	}
 
 	void VoxelGameApp::OnImGuiRender()
 	{
-		//auto Pos = m_Camera->GetPosition();
-		//
-		//ImGui::Begin("Debug");
-		//
-		//ImGui::Text("X: %f", Pos.x);
-		//ImGui::Text("Y: %f", Pos.y);
-		//ImGui::Text("Zoom: %f", m_Camera->GetZoom());
-		//ImGui::Text("Width: %i", GlobalConfig::Application::Width);
-		//ImGui::Text("Height: %i", GlobalConfig::Application::Height);
-		//ImGui::Text("Pixel Size: %f", GlobalConfig::Rendering::PixelSize);
-		//ImGui::Text("Rendering Width: %i", m_Screen->m_Framebuffer->GetWidth());
-		//ImGui::Text("Rendering Height: %i", m_Screen->m_Framebuffer->GetHeight());
-		//UEUint32 ViewportX = 0;
-		//UEUint32 ViewportY = 0;
-		//RenderCommand::GetViewport(ViewportX, ViewportY);
-		//ImGui::Text("ViewportWidth: %i", ViewportX);
-		//ImGui::Text("Viewportheight: %i", ViewportY);
-		//
-		//ImGui::End();
+		auto Pos = m_Camera->GetPosition();
+		
+		ImGui::Begin("Debug");
+		
+		ImGui::Text("X: %f", Pos.x);
+		ImGui::Text("Y: %f", Pos.y);
+		ImGui::Text("Z: %f", Pos.z);
+		ImGui::Text("Zoom: %f", m_Camera->GetZoom());
+		ImGui::Text("Width: %i", GlobalConfig::Window::Width);
+		ImGui::Text("Height: %i", GlobalConfig::Window::Height);
+		ImGui::Text("Pixel Size: %f", GlobalConfig::Renderer::PixelSize);
+		ImGui::Text("Rendering Width: %i", m_Screen->m_Framebuffer->GetWidth());
+		ImGui::Text("Rendering Height: %i", m_Screen->m_Framebuffer->GetHeight());
+		UEUint32 ViewportX = 0;
+		UEUint32 ViewportY = 0;
+		RenderCommand::GetViewport(ViewportX, ViewportY);
+		ImGui::Text("ViewportWidth: %i", ViewportX);
+		ImGui::Text("Viewportheight: %i", ViewportY);
+		
+		ImGui::End();
 	}
 
 	void VoxelGameApp::OnWindowEvent(Event& event)
@@ -239,11 +196,11 @@ namespace UE
 			m_CameraController->MoveDown();
 			break;
 		case UE::KeyCode::Up:
-			GlobalConfig::Rendering::PixelSize *= 2;
+			GlobalConfig::Renderer::PixelSize *= 2;
 			OnRendererScaleChange(RendererScaleChangeEvent());
 			break;
 		case UE::KeyCode::Down:
-			GlobalConfig::Rendering::PixelSize /= 2;
+			GlobalConfig::Renderer::PixelSize /= 2;
 			OnRendererScaleChange(RendererScaleChangeEvent());
 			break;
 		}
@@ -339,7 +296,7 @@ namespace UE
 
 	bool VoxelGameApp::OnMouseScrolled(MouseScrolledEvent& event)
 	{
-		m_Camera->ZoomIn(event.GetXOffset() * 0.25f * GlobalConfig::Zoom::SensibilityIn);
+		m_Camera->ZoomIn(event.GetXOffset() * 0.25f * GlobalConfig::Camera::ZoomInSensibility);
 
 		return false;
 	}
@@ -356,8 +313,8 @@ namespace UE
 
 	bool VoxelGameApp::OnRendererScaleChange(RendererScaleChangeEvent& event)
 	{
-		GlobalConfig::Rendering::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenWidth / GlobalConfig::Rendering::PixelSize);
-		GlobalConfig::Rendering::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Rendering::ScreenHeight / GlobalConfig::Rendering::PixelSize);
+		GlobalConfig::Renderer::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenWidth / GlobalConfig::Renderer::PixelSize);
+		GlobalConfig::Renderer::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenHeight / GlobalConfig::Renderer::PixelSize);
 
 		Renderer::OnWindowResize();
 
