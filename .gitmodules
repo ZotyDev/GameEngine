@@ -49,3 +49,6 @@
 [submodule "UnnamedEngine/vendor/imgui-node-editor"]
 	path = UnnamedEngine/vendor/imgui-node-editor
 	url = https://github.com/thedmd/imgui-node-editor
+[submodule "UnnamedEngine/vendor/yaml-cpp"]
+	path = UnnamedEngine/vendor/yaml-cpp
+	url = https://github.com/ZotyDev/yaml-cpp
