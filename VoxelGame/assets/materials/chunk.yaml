@@ -12,5 +12,5 @@ ShaderElements:
     data: mat4
     use: vertUniform
   Albedo:
-    data: sampler2d
+    data: sampler2D
     use: fragSampler

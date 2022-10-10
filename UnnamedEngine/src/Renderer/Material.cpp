@@ -11,60 +11,16 @@ namespace UE
 	Material::Material()
 	{}
 
-	ShaderDataType StringToShaderDataType(UEString t)
-	{
-		if (t == "vec2")
-		{
-			return ShaderDataType::Vec2;
-		}
-		else if (t == "vec3")
-		{
-			return ShaderDataType::Vec3;
-		}
-		else if (t == "vec4")
-		{
-			return ShaderDataType::Vec4;
-		}
-		else if (t == "mat4")
-		{
-			return ShaderDataType::Mat4;
-		}
-		else if (t == "sampler2d")
-		{
-			return ShaderDataType::Sampler2D;
-		}
-		else
-		{
-			return ShaderDataType::Bool;
-		}
-	}
-
 	ShaderHeaderConstructor::UseType StringToShaderUseType(UEString t)
 	{
-		if (t == "vertInput")
-		{
-			return ShaderHeaderConstructor::UseType::VertInput;
-		}
-		else if (t == "vertOutput")
-		{
-			return ShaderHeaderConstructor::UseType::VertOutput;
-		}
-		else if (t == "fragOutput")
-		{
-			return ShaderHeaderConstructor::UseType::FragOutput;
-		}
-		else if (t == "vertUniform")
-		{
-			return ShaderHeaderConstructor::UseType::VertUniform;
-		}
-		else if (t == "fragSampler")
-		{
-			return ShaderHeaderConstructor::UseType::FragSampler;
-		}
-		else
-		{
-			return ShaderHeaderConstructor::UseType::VertInput;
-		}
+		if (t == "vertInput") { return ShaderHeaderConstructor::UseType::VertInput; }
+		else if (t == "vertOutput") { return ShaderHeaderConstructor::UseType::VertOutput; }
+		else if (t == "fragInput") { return ShaderHeaderConstructor::UseType::FragInput; }
+		else if (t == "fragOutput") { return ShaderHeaderConstructor::UseType::FragOutput; }
+		else if (t == "vertUniform") { return ShaderHeaderConstructor::UseType::VertUniform; }
+		else if (t == "fragUniform") { return ShaderHeaderConstructor::UseType::FragUniform; }
+		else if (t == "fragSampler") { return ShaderHeaderConstructor::UseType::FragSampler; }
+		else { return ShaderHeaderConstructor::UseType::Invalid; }
 	}
 
 	Material::Material(const UEString& material)
@@ -81,7 +37,7 @@ namespace UE
 			UEString ShaderData = it.second["data"].as<UEString>();
 			UEString ShaderUse = it.second["use"].as<UEString>();
 			
-			ShaderDataType tShaderDataType = StringToShaderDataType(ShaderData);
+			ShaderDataType tShaderDataType = ShaderHeaderConstructor::StringToDataType(ShaderData);
 			ShaderHeaderConstructor::UseType tShaderUseType = StringToShaderUseType(ShaderUse);
 
 			tShaderElements.push_back({

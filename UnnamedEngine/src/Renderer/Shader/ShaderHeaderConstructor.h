@@ -20,7 +20,7 @@ namespace UE
 
 			FragSampler = 6,
 
-			Last
+			Invalid
 		};
 
 		struct Element
@@ -31,6 +31,11 @@ namespace UE
 		};
 
 	public:
+		static UEString DataTypeToString(ShaderDataType type);
+		static UEString UseTypeToString(ShaderHeaderConstructor::UseType type);
+		static ShaderDataType StringToDataType(const UEString& string);
+
+	public:
 		ShaderHeaderConstructor(const UEPath& path);
 		~ShaderHeaderConstructor();
 
@@ -39,8 +44,9 @@ namespace UE
 		UEResult<> Construct(UEString& vertSource, UEString& fragSource);
 	
 	private:
-		static std::array<UEString, (UEUint32)ShaderDataType::Last> s_DataTypeStringIndex;
-		static std::array<UEString, (UEUint32)ShaderHeaderConstructor::UseType::Last> s_UseTypeStringIndex;
+		static std::array<UEString, (UEUint32)ShaderDataType::Invalid> s_DataTypeStringIndex;
+		static std::array<UEString, (UEUint32)ShaderHeaderConstructor::UseType::Invalid> s_UseTypeStringIndex;
+		static std::unordered_map<UEString, ShaderDataType> s_StringDataTypeIndex;
 	private:
 		UEString m_VertexSource;
 		UEString m_FragmentSource;

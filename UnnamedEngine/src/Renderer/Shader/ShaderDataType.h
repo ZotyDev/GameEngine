@@ -54,7 +54,7 @@ namespace UE
 		Sampler3DRect				= 37,
 		Sampler1DArray				= 38,
 		Sampler2DArray				= 39,
-		SamplerCuberArray			= 40,
+		SamplerCubeArray			= 40,
 		SamplerBuffer				= 41,
 		Sampler2DMS					= 42,
 		Sampler2DMSArray			= 43,
@@ -67,7 +67,7 @@ namespace UE
 		ISampler3DRect				= 49,
 		ISampler1DArray				= 50,
 		ISampler2DArray				= 51,
-		ISamplerCuberArray			= 52,
+		ISamplerCubeArray			= 52,
 		ISamplerBuffer				= 53,
 		ISampler2DMS				= 54,
 		ISampler2DMSArray			= 55,
@@ -80,7 +80,7 @@ namespace UE
 		USampler3DRect				= 61,
 		USampler1DArray				= 62,
 		USampler2DArray				= 63,
-		USamplerCuberArray			= 64,
+		USamplerCubeArray			= 64,
 		USamplerBuffer				= 65,
 		USampler2DMS				= 66,
 		USampler2DMSArray			= 67,
@@ -91,8 +91,8 @@ namespace UE
 		Sampler2DRectShadow			= 71,
 		Sampler1DArrayShadow		= 72,
 		Sampler2DArrayShadow		= 73,
-		SamplerCuberArrayShadow		= 74,
+		SamplerCubeArrayShadow		= 74,
 
-		Last
+		Invalid
 	};
 }
