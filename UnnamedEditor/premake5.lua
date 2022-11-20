@@ -23,12 +23,14 @@ project "UnnamedEditor"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.ImPlot}",
         "%{IncludeDir.ImGuiNodeEditor}",
-        "%{IncludeDir.toml}"
+        "%{IncludeDir.toml}",
+        "%{IncludeDir.yaml_cpp}"
     }
 
     links
     {
-        "UnnamedEngine"
+        "UnnamedEngine",
+        "yaml-cpp"
     }
 
     ------------------------------------------------------------------------------------

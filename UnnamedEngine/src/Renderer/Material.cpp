@@ -1,9 +1,6 @@
 #include "uepch.h"
 #include "Renderer/Material.h"
 
-#define YAML_CPP_STATIC_DEFINE
-#include <yaml-cpp/yaml.h>
-
 #include "Renderer/Shader/ShaderHeaderConstructor.h"
 
 namespace UE
@@ -26,7 +23,7 @@ namespace UE
 	Material::Material(const UEString& material)
 	{
 		// Load material
-		YAML::Node Config = YAML::LoadFile("assets/materials/" + material + ".yaml");
+		YAML::Node Config = YAML::LoadFile("assets/materials/" + material + ".mat");
 		YAML::Node ShaderElements = Config["ShaderElements"];
 
 		ShaderHeaderConstructor tShaderHeaderConstructor("assets/shaders/" + material);

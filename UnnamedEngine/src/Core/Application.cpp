@@ -13,7 +13,7 @@
 
 #include "Debug/Instrumentator.h"
 
-#include <toml.hpp>
+#include "Scene/EntityComponentSystem/Entity.h"
 
 namespace UE
 {
@@ -53,6 +53,10 @@ namespace UE
 		// Initialize Lua
 		m_Data->m_Lune = CreateRef<LuneStack>();
 		ExposeCoreToLune(m_Data->m_Lune);
+
+		EntityManager tEntityManager;
+		Entity Player = tEntityManager.CreateEntity().Value;
+		UE_CORE_WARN(Player);
 	}
 
 	Application::~Application()

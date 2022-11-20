@@ -44,7 +44,6 @@
 /* ECS */
 /*============================================================*/
 #include "Scene/EntityComponentSystem/Entity.h"
-#include "Scene/EntityComponentSystem/LowLevelComponent.h"
 
 /* Scene */
 /*============================================================*/

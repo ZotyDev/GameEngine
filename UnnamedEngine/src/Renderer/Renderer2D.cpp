@@ -87,7 +87,7 @@ namespace UE
 		delete[] QuadIndices;
 
 		s_Data.QuadShader = Shader::Create();
-		s_Data.QuadShader->LoadFromSource("assets/shader/quad");
+		s_Data.QuadShader->LoadFromSource("assets/shaders/quad");
 		s_Data.QuadShader->Compile();
 
 		s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };

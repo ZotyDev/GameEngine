@@ -6,6 +6,7 @@
 #include "Panels/PanelsConfig.h"
 
 #include "Project/Project.h"
+#include "Project/ProjectSerializer.h"
 
 namespace UE
 {
@@ -236,7 +237,9 @@ namespace UE
 
 				if (!ShouldClose)
 				{
+					UEString ConfigFilename = UEString(ProjectLocationBuffer) + "/" + ProjectLocationBuffer;
 					ShouldClose |= FolderAlreadyExistsError = !Project::Create(NewProjectHeader);
+					ProjectSerializer::Serialize(ConfigFilename);
 				}
 
 				if (!ShouldClose)
@@ -302,7 +305,7 @@ namespace UE
 
 				if (!ShouldClose)
 				{
-					ShouldClose |= InvalidProjectError = !Project::Read(ProjectLocationBuffer);
+					ShouldClose |= InvalidProjectError = !ProjectSerializer::Deserialize(ProjectLocationBuffer);
 				}
 
 				if (!ShouldClose)

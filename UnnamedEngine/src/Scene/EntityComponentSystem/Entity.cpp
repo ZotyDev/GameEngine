@@ -11,12 +11,12 @@ namespace UE
 		}
 	}
 
-	Entity EntityManager::CreateEntity()
+	UEResult<Entity> EntityManager::CreateEntity()
 	{
 		if (m_ActiveEntityPool.size() > MaxEntities)
 		{
 			UE_CORE_ERROR("Failed to create entity: max number of entities reached");
-			return 0;
+			return UEResult<>::Error;
 		}
 
 		// Get entity from avaliable pool
@@ -24,21 +24,21 @@ namespace UE
 		m_AvaliableEntitiesPool.pop();
 
 		// Put new entity at end and update the map
-		UEUint32 NewIndex = m_EntityCount;
+		UEUint64 NewIndex = m_EntityCount;
 		m_EntityToIndexMap[NewEntity] = NewIndex;
 		m_IndexToEntityMap[NewIndex] = NewEntity;
 		m_ActiveEntityPool[NewIndex] = NewEntity;
 
 		m_EntityCount++;
 
-		return NewEntity;
+		return UEResult<Entity>(NewEntity);
 	}
 
 	UEResult<> EntityManager::DestroyEntity(Entity entity)
 	{
 		if (entity > MaxEntities)
 		{
-			UE_CORE_ERROR("Failed to destroy entity: value out of range (Expected value between: 0~{0} - Got {1})", MaxEntities, (UEUint64)entity);
+			UE_CORE_ERROR("Failed to destroy entity: out of range (Expected value between: 0~{0} - Got {1})", MaxEntities, (UEUint64)entity);
 			return UEResult<>::Error;
 		}
 		else if (m_EntityToIndexMap.find(entity) == m_EntityToIndexMap.end())

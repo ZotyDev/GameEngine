@@ -50,86 +50,10 @@ namespace UE
 		// Create the assets folder
 		FileSystem::MakeSureFolder(ProjectFolder.string() + "/assets");
 
-		// Create the config file
-		std::ofstream ConfigFile(ProjectFolder.string() + "/ProjectConfig.toml", std::ios::binary);
-
-		const toml::value ConfigData{
-			{"Name", header.Name},
-			{"Version", header.Version}
-		};
-
-		ConfigFile << toml::format(ConfigData, 0);
-		ConfigFile.close();
-
 		// Set project header
 		Header::Name = header.Name;
 		Header::Version = header.Version;
 		Header::Location = ProjectFolder;
-
-		Header::AssetPath = Header::Location.string() + "/assets";
-		Header::CurrentDirectory = Header::AssetPath;
-
-		SetRecentProject(Header::Location);
-
-		Header::IsOpen = true;
-
-		return UEResult<>::Success;
-	}
-
-	UEResult<> Project::Read(const UEPath& path)
-	{
-		UEString ConfigFilePath = path.string() + "/ProjectConfig.toml";
-
-		// Check if here is a config file inside the project folder
-		if (!FileSystem::DoesFileExists(ConfigFilePath))
-		{
-			return UEResult<>::Error;
-		}
-
-		// Read configs
-		auto ConfigData = toml::parse(ConfigFilePath);
-		Header::Name = toml::find_or<UEString>(ConfigData, "Name", "UnnamedProject");
-		Header::Version = toml::find_or<UEString>(ConfigData, "Version", "0.0.1a");
-		Header::Location = path;
-
-		Header::AssetPath = Header::Location.string() + "/assets";
-		Header::CurrentDirectory = Header::AssetPath;
-
-		SetRecentProject(Header::Location);
-
-		Header::IsOpen = true;
-
-		return UEResult<>::Success;
-	}
-
-	UEResult<> Project::ReadLatest()
-	{
-		// Get latest opened project
-		UEPath UserDataFolder;
-		FileSystem::GetUserDataFolder(UserDataFolder);
-		if (!FileSystem::DoesFileExists(UserDataFolder.string() + "/UnnamedEngine/ProjectsConfig.toml"))
-		{
-			return UEResult<>::Error;
-		}
-
-		auto RecentProjects = toml::parse<toml::preserve_comments>(UserDataFolder.string() + "/UnnamedEngine/ProjectsConfig.toml");
-		auto RecentProjectsHeader = toml::find(RecentProjects, "RecentProjects");
-		UEPath Path = toml::find<UEString>(RecentProjectsHeader, "0");
-
-		// Open the files
-		UEString ConfigFilePath = Path.string() + "/ProjectConfig.toml";
-
-		// Check if here is a config file inside the project folder
-		if (!FileSystem::DoesFileExists(ConfigFilePath))
-		{
-			return UEResult<>::Error;
-		}
-
-		// Read configs
-		auto ConfigData = toml::parse(ConfigFilePath);
-		Header::Name = toml::find_or<UEString>(ConfigData, "Name", "UnnamedProject");
-		Header::Version = toml::find_or<UEString>(ConfigData, "Version", "0.0.1a");
-		Header::Location = Path;
 
 		Header::AssetPath = Header::Location.string() + "/assets";
 		Header::CurrentDirectory = Header::AssetPath;

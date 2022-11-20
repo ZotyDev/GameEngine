@@ -7,8 +7,12 @@
 #include "Debug/Instrumentator.h"
 
 #include "Project/Project.h"
+#include "Project/ProjectSerializer.h"
 
 #include "PlatformIndependenceLayer/DynamicTree.h"
+
+#include "Scene/Scene.h"
+#include "Scene/SceneSerializer.h"
 
 namespace UE
 {
@@ -16,7 +20,7 @@ namespace UE
 		: Layer("EditorLayer"), m_Data(data)
 	{}
 
-	Ref<Material> GrassMaterial = CreateRef<Material>();
+	Ref<Material> DefaultMaterial;
 
 	EntityManager m_EntityManager;
 
@@ -24,7 +28,7 @@ namespace UE
 	{
 		PanelsConfig::LoadConfigs();
 
-		Project::ReadLatest();
+		ProjectSerializer::Deserialize("D:/Projects/Thoreba");
 
 		UE_CORE_TRACE("Current project:\n Name: {0}\n Version: {1}\n Location: {2}\n CurrentDirectory: {3}", 
 			Project::Header::Name,
@@ -86,54 +90,13 @@ namespace UE
 		//Renderer3D::Init(m_Screen);
 		Renderer2D::Init(m_Screen);
 
-		ShaderHeaderConstructor MyShaderHeaderConstructor("assets/shaders/default");
-		std::vector<ShaderHeaderConstructor::Element> tShaderElements;
+		DefaultMaterial = CreateRef<Material>("default");
+		DefaultMaterial->PushTexture(m_Texture2D);
 
-		tShaderElements.push_back({
-			"Position",
-			ShaderDataType::Vec3,
-			ShaderHeaderConstructor::UseType::VertInput,
-			});
+		Ref<Scene> tScene = CreateRef<Scene>();
+		SceneSerializer tSceneSerializer(tScene);
 
-		tShaderElements.push_back({
-			"Texture",
-			ShaderDataType::Vec2,
-			ShaderHeaderConstructor::UseType::VertInput,
-			});
-
-		tShaderElements.push_back({
-			"Texture",
-			ShaderDataType::Vec2,
-			ShaderHeaderConstructor::UseType::VertOutput,
-			});
-
-		tShaderElements.push_back({
-			"FragColor",
-			ShaderDataType::Vec4,
-			ShaderHeaderConstructor::UseType::FragOutput,
-			});
-
-		tShaderElements.push_back({
-			"Transform",
-			ShaderDataType::Mat4,
-			ShaderHeaderConstructor::UseType::VertUniform,
-			});
-
-		tShaderElements.push_back({
-			"Albedo",
-			ShaderDataType::Sampler2D,
-			ShaderHeaderConstructor::UseType::FragSampler,
-			});
-
-		MyShaderHeaderConstructor.SetElements(tShaderElements);
-
-		UEString NewVertSource;
-		UEString NewFragSource;
-		MyShaderHeaderConstructor.Construct(NewVertSource, NewFragSource);
-
-		ShaderLibrary::Get("default")->Set(NewVertSource, NewFragSource);
-		GrassMaterial->RegisterShader("Shader", ShaderLibrary::Get("default"));
-		GrassMaterial->RegisterTexture("Texture", m_Texture2D);
+		tSceneSerializer.Serialize("assets/default/test.ue");
 	}
 	
 	void EditorLayer::OnDetach()

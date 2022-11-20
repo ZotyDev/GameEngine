@@ -18,7 +18,8 @@ namespace UE
 		};
 	public:
 		static UEResult<> Create(const Project::Header& header);
-		static UEResult<> Read(const UEPath& path);
-		static UEResult<> ReadLatest();
+
+	private:
+		friend class ProjectSerializer;
 	};
 }

@@ -6,6 +6,7 @@ namespace UE
 	Scene::Scene()
 	{
 		m_EntityManager = CreateRef<EntityManager>();
+		m_Name = "Unnamed Scene";
 	}
 
 	Scene::~Scene()

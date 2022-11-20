@@ -17,5 +17,8 @@ namespace UE
 
 	private:
 		Ref<EntityManager> m_EntityManager;
+		UEString m_Name;
+
+		friend class SceneSerializer;
 	};
 }

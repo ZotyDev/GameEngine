@@ -77,6 +77,9 @@ namespace UE
 		UEResult(_UEResultT result)
 			: Result(result) {}
 
+		UEResult(T value)
+			: Value(value), Result(UEResult::Success) {}
+
 		operator UEBool() const
 		{
 			return (Result == UEResult::Success);

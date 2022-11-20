@@ -1,0 +1,28 @@
+navbar:
+  project: Project
+  new: New
+  open: Open
+  save: Save
+  saveAs: Save As
+  projectInfo: Project Info
+  location: Location
+  version: Version
+  options: Options
+  maximizeOnPlay: Maximize On Play
+  exit: Exit
+
+  view: View
+
+  game: Game
+  play: Play
+  stop: Stop
+  pause: Pause
+  resume: Resume
+  hotReload: Hot Reload
+panels:
+  viewport: Viewport
+  contentBrowser: Content Browser
+  properties: Properties
+  sceneHierarchy: Scene Hierarchy
+  profiler: Profiler
+  nodeEditor: NodeEditor
