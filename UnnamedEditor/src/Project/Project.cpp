@@ -1,9 +1,10 @@
 #include "uepch.h"
 #include "Project/Project.h"
 
-#include "PlatformIndependenceLayer/FileSystem.h"
+#include "EditorConfig.h"
 
-#include <toml.hpp>
+#include "Project/ProjectSerializer.h"
+#include "PlatformIndependenceLayer/FileSystem.h"
 
 namespace UE
 {
@@ -14,31 +15,15 @@ namespace UE
 	UEPath Project::Header::CurrentDirectory = "null";
 	UEBool Project::Header::IsOpen = false;
 
-	void SetRecentProject(const UEPath& path)
-	{
-		// Remove cringe backslashes from the path
-		UEString NewPath = path.string();
-		std::replace(NewPath.begin(), NewPath.end(), '\\', '/');
-
-		// Create the config data
-		const toml::value ConfigData{
-			{"RecentProjects", {{"0", NewPath}}}
-		};
-
-		// Open the recent projects file
-		UEPath UserDataFolder;
-		FileSystem::GetUserDataFolder(UserDataFolder);
-		std::ofstream ConfigFile(UserDataFolder.string() + "/UnnamedEngine/ProjectsConfig.toml", std::ios::binary);
-
-		// Write to recents project file
-		ConfigFile << toml::format(ConfigData, 0);
-		ConfigFile.close();
-	}
-
 	UEResult<> Project::Create(const Project::Header& header)
 	{
 		// Check if there is already a folder with the same name inside
-		UEPath ProjectFolder = header.Location.string() + "/" + header.Name;
+		UEPath ProjectFolder = header.Location.string();
+		if (header.Location.string().size() != 3)
+		{
+			ProjectFolder += "/";
+		}
+		ProjectFolder += header.Name;
 		if (FileSystem::DoesFileExists(ProjectFolder))
 		{
 			return UEResult<>::Error;
@@ -58,9 +43,22 @@ namespace UE
 		Header::AssetPath = Header::Location.string() + "/assets";
 		Header::CurrentDirectory = Header::AssetPath;
 
-		SetRecentProject(Header::Location);
-
 		Header::IsOpen = true;
+
+		ProjectSerializer::Serialize(ProjectFolder);
+
+		auto Begin = ProjectConfig::RecentProjects.begin();
+		auto End = ProjectConfig::RecentProjects.end();
+		if (ProjectConfig::RecentProjects.size() == 10)
+		{
+			ProjectConfig::RecentProjects.erase(Begin, Begin + (ProjectConfig::RecentProjects.size() - 10));
+		}
+		auto Search = std::find(Begin, End, ProjectFolder.string());
+		if (Search != End)
+		{
+			ProjectConfig::RecentProjects.erase(Search);
+		}
+		ProjectConfig::RecentProjects.push_back(ProjectFolder.string());
 
 		return UEResult<>::Success;
 	}

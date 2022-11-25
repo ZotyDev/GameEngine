@@ -5,7 +5,7 @@
 #include <imgui_node_editor.h>
 
 #include "Project/Project.h"
-#include "Panels/PanelsConfig.h"
+#include "EditorConfig.h"
 
 #include "Panels/NodeEditorPanel/Node/NodePin.h"
 
@@ -42,7 +42,7 @@ namespace UE
 
 	void NodeEditorPanel::OnImGuiRender()
 	{
-		if (ActivePanelsConfig::NodeEditor && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning) && Project::Header::IsOpen)
+		if (ActivePanelsConfig::NodeEditor && !(PanelsConfig::MaximizeOnPlay && ProjectConfig::ProjectRunning) && Project::Header::IsOpen)
 		{
 			ImGui::Begin("Node Editor");
 

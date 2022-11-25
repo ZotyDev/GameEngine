@@ -1,6 +1,10 @@
 #include "uepch.h"
 #include "Project/ProjectSerializer.h"
 
+#include "EditorConfig.h"
+
+#include "Project/Project.h"
+
 namespace UE
 {
 	UEResult<> ProjectSerializer::Serialize(const UEPath& path)
@@ -42,6 +46,19 @@ namespace UE
 		Project::Header::AssetPath = Project::Header::Location.string() + "/assets";
 		Project::Header::CurrentDirectory = Project::Header::AssetPath;
 		Project::Header::IsOpen = true;
+
+		auto Begin = ProjectConfig::RecentProjects.begin();
+		auto End = ProjectConfig::RecentProjects.end();
+		if (ProjectConfig::RecentProjects.size() == 10)
+		{
+			ProjectConfig::RecentProjects.erase(Begin, Begin + (ProjectConfig::RecentProjects.size() - 10));
+		}
+		auto Search = std::find(Begin, End, path.string());
+		if (Search != End)
+		{
+			ProjectConfig::RecentProjects.erase(Search);
+		}
+		ProjectConfig::RecentProjects.push_back(path.string());
 
 		return UEResult<>::Success;
 	}

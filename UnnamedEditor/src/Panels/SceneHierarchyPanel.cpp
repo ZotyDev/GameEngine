@@ -3,7 +3,7 @@
 
 #include <imgui.h>
 
-#include "Panels/PanelsConfig.h"
+#include "EditorConfig.h"
 
 #include "Project/Project.h"
 
@@ -24,7 +24,7 @@ namespace UE
 
 	void SceneHierarchyPanel::OnImGuiRender()
 	{
-		if (ActivePanelsConfig::SceneHierarchy && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning) && Project::Header::IsOpen)
+		if (ActivePanelsConfig::SceneHierarchy && !(PanelsConfig::MaximizeOnPlay && ProjectConfig::ProjectRunning) && Project::Header::IsOpen)
 		{
 			ImGui::Begin("Scene Hierarchy");
 

@@ -3,7 +3,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
-#include "Panels/PanelsConfig.h"
+#include "EditorConfig.h"
 #include "Debug/Instrumentator.h"
 
 #include "Project/Project.h"
@@ -13,6 +13,8 @@
 
 #include "Scene/Scene.h"
 #include "Scene/SceneSerializer.h"
+
+#include "EditorConfigSerializer.h"
 
 namespace UE
 {
@@ -26,9 +28,14 @@ namespace UE
 
 	void EditorLayer::OnAttach()
 	{
-		PanelsConfig::LoadConfigs();
+		// Load editor config
+		EditorConfigSerializer::Deserialize();
 
-		ProjectSerializer::Deserialize("D:/Projects/Thoreba");
+		// Load project config
+		if (ProjectConfig::RecentProjects.size() != 0)
+		{
+			ProjectSerializer::Deserialize(ProjectConfig::RecentProjects[ProjectConfig::RecentProjects.size() - 1]);
+		}
 
 		UE_CORE_TRACE("Current project:\n Name: {0}\n Version: {1}\n Location: {2}\n CurrentDirectory: {3}", 
 			Project::Header::Name,
@@ -97,11 +104,14 @@ namespace UE
 		SceneSerializer tSceneSerializer(tScene);
 
 		tSceneSerializer.Serialize("assets/default/test.ue");
+
+		//EditorConfigSerializer::Serialize();
 	}
 	
 	void EditorLayer::OnDetach()
 	{
-		
+		// Save editor config
+		EditorConfigSerializer::Serialize();
 	}
 
 	void EditorLayer::OnUpdate(Timestep timestep)

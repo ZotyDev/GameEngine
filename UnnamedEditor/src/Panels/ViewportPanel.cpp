@@ -3,7 +3,7 @@
 
 #include <imgui.h>
 
-#include "Panels/PanelsConfig.h"
+#include "EditorConfig.h"
 #include "Core/GlobalConfig.h"
 
 #include "Project/Project.h"

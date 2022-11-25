@@ -3,7 +3,7 @@
 
 #include <imgui.h>
 
-#include "Panels/PanelsConfig.h"
+#include "EditorConfig.h"
 
 #include "Project/Project.h"
 #include "Project/ProjectSerializer.h"
@@ -43,9 +43,22 @@ namespace UE
 					OpenProjectPopupTemp = true;
 				}
 
+				if (ImGui::BeginMenu("Open Recent", ProjectConfig::RecentProjects.size() != 0))
+				{
+					auto RecentProjectsView = ProjectConfig::RecentProjects;
+					for (auto& it = RecentProjectsView.rbegin(); it != RecentProjectsView.rend(); ++it)
+					{
+						if (ImGui::MenuItem(it->c_str()))
+						{
+							ProjectSerializer::Deserialize(*it);
+						}
+					}
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::MenuItem("Save", "Ctrl+S", false, Project::Header::IsOpen))
 				{
-
+					ProjectSerializer::Serialize(Project::Header::Location);
 				}
 
 				if (ImGui::MenuItem("Save As..", "Ctrl+Shift+S", false, Project::Header::IsOpen))
@@ -119,34 +132,34 @@ namespace UE
 
 			if (ImGui::BeginMenu("Game", Project::Header::IsOpen))
 			{
-				if (ImGui::MenuItem("Play", !PanelsConfig::ProjectRunning ? "F9" : NULL, nullptr, !PanelsConfig::ProjectRunning))
+				if (ImGui::MenuItem("Play", !ProjectConfig::ProjectRunning ? "F9" : NULL, nullptr, !ProjectConfig::ProjectRunning))
 				{
 					if (PanelsConfig::MaximizeOnPlay)
 					{
 					}
 
-					PanelsConfig::ProjectRunning = true;
+					ProjectConfig::ProjectRunning = true;
 				}
 
-				if (ImGui::MenuItem("Stop", PanelsConfig::ProjectRunning? "F9" : NULL, nullptr, PanelsConfig::ProjectRunning))
+				if (ImGui::MenuItem("Stop", ProjectConfig::ProjectRunning? "F9" : NULL, nullptr, ProjectConfig::ProjectRunning))
 				{
-					PanelsConfig::ProjectRunning = false;
-					PanelsConfig::ProjectPaused = false;
+					ProjectConfig::ProjectRunning = false;
+					ProjectConfig::ProjectPaused = false;
 				}
 
-				if (ImGui::MenuItem("Pause", NULL, nullptr, !PanelsConfig::ProjectPaused && PanelsConfig::ProjectRunning))
+				if (ImGui::MenuItem("Pause", NULL, nullptr, !ProjectConfig::ProjectPaused && ProjectConfig::ProjectRunning))
 				{
-					PanelsConfig::ProjectPaused = true;
+					ProjectConfig::ProjectPaused = true;
 				}
 
-				if (ImGui::MenuItem("Resume", NULL, nullptr, PanelsConfig::ProjectPaused))
+				if (ImGui::MenuItem("Resume", NULL, nullptr, ProjectConfig::ProjectPaused))
 				{
-					PanelsConfig::ProjectPaused = false;
+					ProjectConfig::ProjectPaused = false;
 				}
 
 				ImGui::Separator();
 
-				if (ImGui::MenuItem("Hot Reload", "F5", nullptr, PanelsConfig::ProjectRunning))
+				if (ImGui::MenuItem("Hot Reload", "F5", nullptr, ProjectConfig::ProjectRunning))
 				{
 
 				}

@@ -2,18 +2,18 @@
 
 namespace UE
 {
-	struct PanelsConfig
+	struct ProjectConfig
 	{
-		static UEResult<> LoadConfigs();
-
-		static UEBool Fullscreen;
-		static UEBool Padding;
-
-		static UEBool MaximizeOnPlay;
-
 		static UEBool ProjectRunning;
 		static UEBool ProjectPaused;
+		static std::vector<UEString> RecentProjects;
+	};
 
+	struct PanelsConfig
+	{
+		static UEBool Fullscreen;
+		static UEBool Padding;
+		static UEBool MaximizeOnPlay;
 		static UEBool ViewportFocused;
 		static UEBool ViewportHovered;
 	};

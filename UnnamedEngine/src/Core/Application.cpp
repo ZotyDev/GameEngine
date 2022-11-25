@@ -15,6 +15,8 @@
 
 #include "Scene/EntityComponentSystem/Entity.h"
 
+#include "Core/GlobalConfigSerializer.h"
+
 namespace UE
 {
 	Application* Application::s_Instance = nullptr;
@@ -22,7 +24,7 @@ namespace UE
 	Application::Application()
 	{
 		// Load global configurations
-		GlobalConfig::LoadConfigs();
+		GlobalConfigSerializer::Deserialize();
 
 		// Start the clock that provides the time
 		m_Data->m_TimeMeasurer.Start();
@@ -61,6 +63,9 @@ namespace UE
 
 	Application::~Application()
 	{
+		// Save global configurations
+		GlobalConfigSerializer::Serialize();
+
 		Renderer::Shutdown();
 
 		//LuaAPI::Shutdown();

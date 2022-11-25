@@ -1,6 +1,6 @@
 #include "uepch.h"
 #include "Panels/ProfilerPanel.h"
-#include "Panels/PanelsConfig.h"
+#include "EditorConfig.h"
 #include "Project/Project.h"
 
 #include "Debug/Instrumentator.h"
@@ -15,7 +15,7 @@ namespace UE
 
 	void ProfilerPanel::OnImGuiRender()
 	{
-		if (ActivePanelsConfig::Profiler && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning) && Project::Header::IsOpen)
+		if (ActivePanelsConfig::Profiler && !(PanelsConfig::MaximizeOnPlay && ProjectConfig::ProjectRunning) && Project::Header::IsOpen)
 		{
 			ImGui::Begin("Profiler");
 			ImGui::BeginChild("##profiler");

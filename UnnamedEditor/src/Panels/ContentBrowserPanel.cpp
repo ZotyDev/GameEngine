@@ -5,7 +5,7 @@
 
 #include "Project/Project.h"
 
-#include "Panels/PanelsConfig.h"
+#include "EditorConfig.h"
 
 namespace UE
 {
@@ -37,7 +37,7 @@ namespace UE
 
 	void ContentBrowserPanel::OnImGuiRender()
 	{
-		if (ActivePanelsConfig::ContentBrowser && !(PanelsConfig::MaximizeOnPlay && PanelsConfig::ProjectRunning) && Project::Header::IsOpen)
+		if (ActivePanelsConfig::ContentBrowser && !(PanelsConfig::MaximizeOnPlay && ProjectConfig::ProjectRunning) && Project::Header::IsOpen)
 		{
 			ImGui::Begin("Content Browser");
 

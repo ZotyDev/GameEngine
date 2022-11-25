@@ -49,6 +49,7 @@
 #include <map>
 #include <tuple>
 #include <optional>
+#include <stack>
 
 /* Parsing */
 /*============================================================*/

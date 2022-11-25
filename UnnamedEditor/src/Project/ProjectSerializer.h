@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Project/Project.h"
-
 namespace UE
 {
 	class ProjectSerializer
