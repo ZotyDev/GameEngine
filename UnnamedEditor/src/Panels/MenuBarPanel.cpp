@@ -239,7 +239,7 @@ namespace UE
 			{
 				Project::Header NewProjectHeader;
 				NewProjectHeader.Name = ProjectNameBuffer;
-				NewProjectHeader.Version = "0.0.1a";
+				NewProjectHeader.Version = ProjectVersionBuffer;
 				NewProjectHeader.Location = ProjectLocationBuffer;
 
 				UEBool ShouldClose = false;
