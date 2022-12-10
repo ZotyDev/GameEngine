@@ -30,7 +30,6 @@ project "UnnamedEngine"
 		"%{IncludeDir.ImPlot}",
 		"%{IncludeDir.ImGuiNodeEditor}",
 		"%{IncludeDir.fmt}",
-		"%{IncludeDir.toml}",
 		"%{IncludeDir.yaml_cpp}"
 	}
 

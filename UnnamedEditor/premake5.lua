@@ -23,7 +23,6 @@ project "UnnamedEditor"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.ImPlot}",
         "%{IncludeDir.ImGuiNodeEditor}",
-        "%{IncludeDir.toml}",
         "%{IncludeDir.yaml_cpp}"
     }
 
