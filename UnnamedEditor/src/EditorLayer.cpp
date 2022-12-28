@@ -233,8 +233,8 @@ namespace UE
 
 		ImGui::End();
 
-
-		//ImGui::ShowDemoWindow();
+		ImGui::ShowDemoWindow();
+		//ImPlot::ShowDemoWindow();
 	}
 
 	void EditorLayer::OnWindowEvent(Event& event)
