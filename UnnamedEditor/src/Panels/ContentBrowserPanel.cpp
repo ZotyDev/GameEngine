@@ -9,10 +9,13 @@
 
 namespace UE
 {
+	std::vector<UEPath> ForwardStack;
+
 	std::vector<UEString> IconsToBeLoaded = {
 		"Directory",
 		"File",
 		"Back",
+		"Forward",
 		"png",
 		"lua",
 		"ttf",
@@ -25,7 +28,7 @@ namespace UE
 		"toml"
 	};
 
-	static ImGuiTextFilter Filter;
+	ImGuiTextFilter Filter;
 
 	ContentBrowserPanel::ContentBrowserPanel()
 	{
@@ -42,21 +45,43 @@ namespace UE
 		if (ActivePanelsConfig::ContentBrowser && !(PanelsConfig::MaximizeOnPlay && ProjectConfig::ProjectRunning) && Project::Header::IsOpen)
 		{
 			ImGui::Begin("Content Browser");
-			
-			if (ImGui::ImageButton((ImTextureID)m_Icons["Back"]->GetID(), { 15.0f, 15.0f }, { 0, 1 }, { 1, 0 } ))
+
+			if (Project::Header::CurrentDirectory != Project::Header::AssetPath)
 			{
-				if (Project::Header::CurrentDirectory != Project::Header::AssetPath)
+				if (ImGui::ImageButton((ImTextureID)m_Icons["Back"]->GetID(), { 15.0f, 15.0f }, { 0, 1 }, { 1, 0 }))
 				{
+					ForwardStack.push_back(Project::Header::CurrentDirectory);
 					Project::Header::CurrentDirectory = Project::Header::CurrentDirectory.parent_path();
 				}
 			}
-			
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::GetStyleColorVec4(ImGuiCol_Button));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::GetStyleColorVec4(ImGuiCol_Button));
+				ImGui::ImageButton((ImTextureID)m_Icons["Back"]->GetID(), { 15.0f, 15.0f }, { 0, 1 }, { 1, 0 }, -1, ImVec4(0,0,0,0), ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+				ImGui::PopStyleColor(2);
+			}
 			ImGui::SameLine();
-
-			Filter.Draw("##searchbar", 340.0f);
+			if (!ForwardStack.empty())
+			{
+				if (ImGui::ImageButton((ImTextureID)m_Icons["Forward"]->GetID(), { 15.0f, 15.0f }, { 0, 1 }, { 1, 0 }))
+				{
+					Project::Header::CurrentDirectory = ForwardStack.back();
+					ForwardStack.pop_back();
+				}
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::GetStyleColorVec4(ImGuiCol_Button));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::GetStyleColorVec4(ImGuiCol_Button));
+				ImGui::ImageButton((ImTextureID)m_Icons["Forward"]->GetID(), { 15.0f, 15.0f }, { 0, 1 }, { 1, 0 }, -1, ImVec4(0, 0, 0, 0), ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+				ImGui::PopStyleColor(2);
+			}
 
 			ImGui::SameLine();
-		
+			Filter.Draw("###searchbar", 250.0f);
+
+			ImGui::SameLine();
 			if (Project::Header::CurrentDirectory == Project::Header::AssetPath)
 			{
 				ImGui::Text("Assets");
@@ -97,11 +122,11 @@ namespace UE
 					{
 						if (std::filesystem::is_empty(directoryEntry))
 						{
-							Icon = m_Icons["Empty Folder"];
+							Icon = m_Icons["Directory"];
 						}
 						else
 						{
-							Icon = m_Icons["Folder"];
+							Icon = m_Icons["Directory"];
 						}
 					}
 					else if (m_Icons.find(FilenameExtension) != m_Icons.end())
@@ -113,12 +138,22 @@ namespace UE
 						Icon = m_Icons["File"];
 					}
 
-					ImGui::BeginChild(("#" + FilenameString).c_str(), {-1.0f, -1.0f}, false);
+					ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+					ImGui::BeginChild(("#" + FilenameString).c_str(), { ThumbnailSize, ThumbnailSize * 1.5f }, false);
 
 					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::GetStyleColorVec4(ImGuiCol_ButtonHovered));
-					ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ThumbnailSize) * 0.5f);
+
+					ImGuiStyle& Style = ImGui::GetStyle();
+					UEFloat Off = (ImGui::GetContentRegionAvail().x - (ThumbnailSize)) * 0.5f;
+					if (Off > 0.0f)
+					{
+						ImGui::SetCursorPosX(ImGui::GetCursorPosX() + Off);
+					}
+		
+					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, {0.0f, 0.0f});
 					ImGui::ImageButton((ImTextureID)Icon->GetID(), { ThumbnailSize, ThumbnailSize }, { 0, 1 }, { 1, 0 });
+					ImGui::PopStyleVar();
 					ImGui::PopStyleColor(2);
 
 					if (ImGui::BeginDragDropSource())
@@ -134,8 +169,9 @@ namespace UE
 						if (directoryEntry.is_directory())
 						{
 							Project::Header::CurrentDirectory /= Path.filename();
+							ForwardStack.clear();
 						}
-						else if (FilenameExtension == "lua" || FilenameExtension == "toml")
+						else if (FilenameExtension == "lua" || FilenameExtension == "yaml")
 						{
 							UEString CommandString = "code ";
 							CommandString += (Project::Header::CurrentDirectory / Path.filename()).string();
@@ -145,7 +181,6 @@ namespace UE
 					}
 					auto WindowWidth = ImGui::GetWindowSize().x;
 					auto TextWidth = ImGui::CalcTextSize(FilenameString.c_str()).x;
-					//ImGui::SetCursorPosX((WindowWidth - TextWidth) * 0.5f);
 					UEFloat TextPositionHelper = (WindowWidth - TextWidth) * 0.5f;
 					if (TextPositionHelper < 0)
 					{
@@ -155,10 +190,10 @@ namespace UE
 					{
 						ImGui::SetCursorPosX(TextPositionHelper);
 					}
-					//ImGui::PushTextWrapPos((WindowWidth - TextWidth) * 0.5f);
 					ImGui::TextWrapped(FilenameString.c_str());
 
 					ImGui::EndChild();
+					ImGui::PopStyleVar();
 
 					ImGui::NextColumn();
 

@@ -207,6 +207,9 @@ namespace UE
 		// Update renderer
 		Renderer::OnWindowResize();
 
+		// Makes sure the rendering still happens while resizing
+		MainLoop();
+
 		return false;
 	}
 

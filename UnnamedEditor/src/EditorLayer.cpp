@@ -233,7 +233,7 @@ namespace UE
 
 		ImGui::End();
 
-		ImGui::ShowDemoWindow();
+		//ImGui::ShowDemoWindow();
 		//ImPlot::ShowDemoWindow();
 	}
 
