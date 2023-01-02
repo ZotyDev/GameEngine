@@ -188,7 +188,6 @@ namespace UE
 			ProjectInfoPopupTemp = false;
 		}
 
-
 		// Always center this window when appearing
 		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
 		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));

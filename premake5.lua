@@ -33,4 +33,5 @@ workspace "GameEngine"
 
 	include "UnnamedEngine"
 	include "UnnamedEditor"
+	include "UnnamedServer"
 	include "UnnamedClient"
