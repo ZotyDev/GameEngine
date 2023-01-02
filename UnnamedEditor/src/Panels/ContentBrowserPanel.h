@@ -14,5 +14,6 @@ namespace UE
 		void OnImGuiRender();
 	private:
 		std::unordered_map<UEString, Ref<Texture2D>> m_Icons;
+		std::unordered_map<UEString, Ref<Texture2D>> m_Previews;
 	};
 }

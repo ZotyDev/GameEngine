@@ -35,6 +35,9 @@ namespace UE
 		// Create the assets folder
 		FileSystem::MakeSureFolder(ProjectFolder.string() + "/assets");
 
+		// Create the cache folder
+		FileSystem::MakeSureFolder(ProjectFolder.string() + "/.cache");
+
 		// Set project header
 		Header::Name = header.Name;
 		Header::Version = header.Version;

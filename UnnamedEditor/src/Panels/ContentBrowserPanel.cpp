@@ -2,6 +2,7 @@
 #include "Panels/ContentBrowserPanel.h"
 
 #include <imgui.h>
+#include <imgui_internal.h>
 
 #include "Project/Project.h"
 
@@ -113,6 +114,8 @@ namespace UE
 				UEPath RelativePath = std::filesystem::relative(Path, Project::Header::AssetPath);
 				UEString FilenameString = RelativePath.filename().string();
 
+				UEBool IsPreview = false;
+
 				if (Filter.PassFilter(FilenameString.c_str()))
 				{
 					ImGui::PushID(FilenameString.c_str());
@@ -128,6 +131,21 @@ namespace UE
 						{
 							Icon = m_Icons["Directory"];
 						}
+					}
+					else if (m_Previews.find(Project::Header::AssetPath.string() + "/" + RelativePath.string()) != m_Previews.end())
+					{
+						Icon = m_Previews[Project::Header::AssetPath.string() + "/" + RelativePath.string()];
+						IsPreview = true;
+					}
+					else if (FilenameExtension == "png" || FilenameExtension == "jpg" || FilenameExtension == "jpeg")
+					{
+						// Load the image as a preview
+						Ref<Texture2D> CurrentPreview = Texture2D::Create();
+						UEString PreviewLocation = Project::Header::AssetPath.string() + "/" + RelativePath.string();
+						CurrentPreview->LoadFromSourceScaledMax(PreviewLocation, ThumbnailSize);
+						m_Previews.insert({ PreviewLocation, CurrentPreview });
+						Icon = CurrentPreview;
+						IsPreview = true;
 					}
 					else if (m_Icons.find(FilenameExtension) != m_Icons.end())
 					{
@@ -151,10 +169,42 @@ namespace UE
 						ImGui::SetCursorPosX(ImGui::GetCursorPosX() + Off);
 					}
 		
-					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, {0.0f, 0.0f});
-					ImGui::ImageButton((ImTextureID)Icon->GetID(), { ThumbnailSize, ThumbnailSize }, { 0, 1 }, { 1, 0 });
-					ImGui::PopStyleVar();
-					ImGui::PopStyleColor(2);
+					if (IsPreview)
+					{
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 0.0f, 0.0f, 0.0f, 0.0f });
+						ImGui::PushStyleColor(ImGuiCol_ButtonActive, { 0.0f, 0.0f, 0.0f, 0.0f });
+						ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 0.0f, 0.0f });
+						
+						UEFloat IconSizeX = IconSizeX = (UEFloat)Icon->GetWidth();
+						UEFloat IconSizeY = IconSizeY = (UEFloat)Icon->GetHeight();
+						
+						if (Icon->GetWidth() < ThumbnailSize && Icon->GetHeight() < ThumbnailSize)
+						{
+							UEFloat IconRatio = Icon->GetRatio();
+							IconSizeX = IconSizeX * IconRatio;
+							IconSizeY = IconSizeY * IconRatio;
+						}
+
+						if (Icon->GetWidth() < Icon->GetHeight())
+						{
+							UEFloat Off = (ImGui::GetContentRegionAvail().x - Icon->GetWidth()) * 0.25f;
+							if (Off > 0.0f)
+							{
+								ImGui::SetCursorPosX(ImGui::GetCursorPosX() + Off);
+							}
+						}
+
+						ImGui::ImageButton((ImTextureID)Icon->GetID(), { IconSizeX , IconSizeY }, {0, 1}, {1, 0});
+						ImGui::PopStyleVar();
+						ImGui::PopStyleColor(4);
+					}
+					else
+					{
+						ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 0.0f, 0.0f });
+						ImGui::ImageButton((ImTextureID)Icon->GetID(), { ThumbnailSize, ThumbnailSize }, { 0, 1 }, { 1, 0 });
+						ImGui::PopStyleVar();
+						ImGui::PopStyleColor(2);
+					}
 
 					if (ImGui::BeginDragDropSource())
 					{
@@ -164,24 +214,38 @@ namespace UE
 						ImGui::EndDragDropSource();
 					}
 
-					if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+					if (ImGui::IsItemHovered())
 					{
-						if (directoryEntry.is_directory())
+						if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 						{
-							Project::Header::CurrentDirectory /= Path.filename();
-							ForwardStack.clear();
-						}
-						else if (FilenameExtension == "lua" || FilenameExtension == "yaml")
-						{
-							UEString CommandString = "code ";
-							CommandString += (Project::Header::CurrentDirectory / Path.filename()).string();
-							// Todo:zoty find a better way of doing this
-							system(CommandString.c_str());
+							if (directoryEntry.is_directory())
+							{
+								Project::Header::CurrentDirectory /= Path.filename();
+								ForwardStack.clear();
+							}
+							else if (FilenameExtension == "lua" || FilenameExtension == "yaml")
+							{
+								UEString CommandString = "code ";
+								CommandString += (Project::Header::CurrentDirectory / Path.filename()).string();
+								// Todo:zoty find a better way of doing this
+								system(CommandString.c_str());
+							}
 						}
 					}
-					auto WindowWidth = ImGui::GetWindowSize().x;
-					auto TextWidth = ImGui::CalcTextSize(FilenameString.c_str()).x;
+
+					// Big text handler
+					UEFloat WindowWidth = ImGui::GetWindowSize().x;
+					UEFloat TextWidth = ImGui::CalcTextSize(FilenameString.c_str()).x;
+					UEInt32 TextSize = FilenameString.length();
+					//UE_CORE_INFO("{} -\n {}", FilenameString, TextSize);
+					UEInt32 TextMaxSize = 47;
+					UEInt32 TextSizeDiff = TextSize - TextMaxSize;
 					UEFloat TextPositionHelper = (WindowWidth - TextWidth) * 0.5f;
+					if (TextSizeDiff > 0)
+					{
+						FilenameString.erase(FilenameString.begin() + TextMaxSize, FilenameString.end());
+						FilenameString.replace(TextMaxSize - 3, TextMaxSize, "...");
+					}
 					if (TextPositionHelper < 0)
 					{
 						ImGui::PushTextWrapPos(TextPositionHelper);
