@@ -40,6 +40,7 @@ namespace UE
 		virtual void SetFullscreen(bool enabled) = 0;
 		virtual void SetHidden(bool enabled) = 0;
 		virtual void SetVSync(bool enabled) = 0;
+		virtual void SetTitle(UEString title) = 0;
 		virtual bool IsVSync() const = 0;
 
 		virtual UEResult<> SetIcon(const UEString& path) = 0;

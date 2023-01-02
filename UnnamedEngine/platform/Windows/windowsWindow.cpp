@@ -274,6 +274,11 @@ namespace UE
 		m_WindowData.VSync = enabled;
 	}
 
+	void WindowsWindow::SetTitle(UEString title)
+	{
+		glfwSetWindowTitle(m_Window, title.c_str());
+	}
+
 	bool WindowsWindow::IsVSync() const
 	{
 		return m_WindowData.VSync;

@@ -43,7 +43,7 @@ namespace UE
 
 	void ContentBrowserPanel::OnImGuiRender()
 	{
-		if (ActivePanelsConfig::ContentBrowser && !(PanelsConfig::MaximizeOnPlay && ProjectConfig::ProjectRunning) && Project::Header::IsOpen)
+		if (ActivePanelsConfig::ContentBrowser && !(PanelsConfig::MaximizeOnPlay && ProjectConfig::ProjectRunning && !ProjectConfig::ProjectPaused) && Project::Header::IsOpen)
 		{
 			ImGui::Begin("Content Browser");
 

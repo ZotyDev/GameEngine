@@ -35,6 +35,7 @@ namespace UE
 		if (ProjectConfig::RecentProjects.size() != 0)
 		{
 			ProjectSerializer::Deserialize(ProjectConfig::RecentProjects[ProjectConfig::RecentProjects.size() - 1]);
+			m_Data->m_Window->SetTitle(Project::Header::Name);
 		}
 
 		UE_CORE_TRACE("Current project:\n Name: {0}\n Version: {1}\n Location: {2}\n CurrentDirectory: {3}", 

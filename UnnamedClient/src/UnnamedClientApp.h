@@ -4,11 +4,11 @@
 
 namespace UE
 {
-	class VoxelGameApp : public Layer
+	class UnnamedClientApp : public Layer
 	{
 	public:
-		VoxelGameApp(Ref<Application::SharedData> data);
-		virtual ~VoxelGameApp() = default;
+		UnnamedClientApp(Ref<Application::SharedData> data);
+		virtual ~UnnamedClientApp() = default;
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;

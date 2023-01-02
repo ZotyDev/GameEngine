@@ -33,4 +33,4 @@ workspace "GameEngine"
 
 	include "UnnamedEngine"
 	include "UnnamedEditor"
-	include "VoxelGame"
+	include "UnnamedClient"

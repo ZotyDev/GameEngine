@@ -1,4 +1,4 @@
-project "VoxelGame"
+project "UnnamedClient"
 	kind "ConsoleAPP"
 	language "C++"
 	cppdialect "C++17"
@@ -20,12 +20,14 @@ project "VoxelGame"
 		"%{wks.location}/UnnamedEngine/src",
 		"%{wks.location}/UnnamedEngine/vendor",
 		"%{IncludeDir.GLM}",
-		"%{IncludeDir.LUA}"
+		"%{IncludeDir.LUA}",
+		"%{IncludeDir.yaml_cpp}"
 	}
 
 	links
 	{
-		"UnnamedEngine"
+		"UnnamedEngine",
+		"yaml-cpp"
 	}
 
 	------------------------------------------------------------------------------------

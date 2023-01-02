@@ -263,6 +263,8 @@ namespace UE
 					ProjectVersionBuffer[0] = '\0';
 					ProjectLocationBuffer[0] = '\0';
 				}
+
+				data->m_Window->SetTitle(Project::Header::Name);
 			}
 			
 			ImGui::SetItemDefaultFocus();
@@ -330,6 +332,8 @@ namespace UE
 					LocationEmptyError = false;
 					InvalidProjectError = false;
 				}
+
+				data->m_Window->SetTitle(Project::Header::Name);
 			}
 
 			ImGui::SetItemDefaultFocus();

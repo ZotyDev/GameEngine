@@ -15,7 +15,7 @@ namespace UE
 
 	void ProfilerPanel::OnImGuiRender()
 	{
-		if (ActivePanelsConfig::Profiler && !(PanelsConfig::MaximizeOnPlay && ProjectConfig::ProjectRunning) && Project::Header::IsOpen)
+		if (ActivePanelsConfig::Profiler && !(PanelsConfig::MaximizeOnPlay && ProjectConfig::ProjectRunning && !ProjectConfig::ProjectPaused) && Project::Header::IsOpen)
 		{
 			ImGui::Begin("Profiler");
 			ImGui::BeginChild("##profiler");

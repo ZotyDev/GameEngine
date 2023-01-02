@@ -1,4 +1,4 @@
-#include "VoxelGameApp.h"
+#include "UnnamedClientApp.h"
 
 #include <imgui/imgui.h>
 
@@ -7,8 +7,8 @@
 
 namespace UE
 {
-	VoxelGameApp::VoxelGameApp(Ref<Application::SharedData> data)
-		: Layer("VoxelGameApp"), m_Data(data)
+	UnnamedClientApp::UnnamedClientApp(Ref<Application::SharedData> data)
+		: Layer("UnnamedClient"), m_Data(data)
 	{}
 
 	Ref<Material> ChunkMaterial;
@@ -16,7 +16,7 @@ namespace UE
 
 	Ref<Chunk> TestChunk = CreateRef<Chunk>();
 
-	void VoxelGameApp::OnAttach()
+	void UnnamedClientApp::OnAttach()
 	{
 		m_Texture2D = Texture2D::Create();
 		const UEPath TexturePath = "assets/textures/dirt.png";
@@ -76,15 +76,15 @@ namespace UE
 
 		ChunkMesher::Bake(TestChunk);
 
-		ChunkMaterial = CreateRef<Material>("chunk");
-		ChunkMaterial->PushTexture(m_Texture2D);
+		//ChunkMaterial = CreateRef<Material>("chunk");
+		//ChunkMaterial->PushTexture(m_Texture2D);
 	}
 
-	void VoxelGameApp::OnDetach()
+	void UnnamedClientApp::OnDetach()
 	{
 	}
 
-	void VoxelGameApp::OnUpdate(Timestep timestep)
+	void UnnamedClientApp::OnUpdate(Timestep timestep)
 	{
 		m_CameraController->OnUpdate(timestep);
 
@@ -94,12 +94,12 @@ namespace UE
 		Renderer::EndRender();
 	}
 
-	void VoxelGameApp::Render()
+	void UnnamedClientApp::Render()
 	{
-		Renderer3D::Submit(TestChunk->m_Mesh, ChunkMaterial, { 1.0f, 1.0f, 1.0f });
+		//Renderer3D::Submit(TestChunk->m_Mesh, ChunkMaterial, { 1.0f, 1.0f, 1.0f });
 	}
 
-	void VoxelGameApp::OnImGuiRender()
+	void UnnamedClientApp::OnImGuiRender()
 	{
 		auto Pos = m_Camera->GetPosition();
 		
@@ -123,7 +123,7 @@ namespace UE
 		ImGui::End();
 	}
 
-	void VoxelGameApp::OnWindowEvent(Event& event)
+	void UnnamedClientApp::OnWindowEvent(Event& event)
 	{
 		m_CameraController->OnEvent(event);
 
@@ -131,7 +131,7 @@ namespace UE
 		dispatcher.Dispatch<WindowResizeEvent>(UE_BIND_EVENT_FN(OnWindowResize));
 	}
 
-	void VoxelGameApp::OnInputEvent(Event& event)
+	void UnnamedClientApp::OnInputEvent(Event& event)
 	{
 		EventDispatcher dispatcher(event);
 
@@ -146,24 +146,24 @@ namespace UE
 		dispatcher.Dispatch<GamepadButtonReleasedEvent>(UE_BIND_EVENT_FN(OnGamepadButtonReleased));
 	}
 
-	void VoxelGameApp::OnRendererEvent(Event& event)
+	void UnnamedClientApp::OnRendererEvent(Event& event)
 	{
 		EventDispatcher dispatcher(event);
 
 		dispatcher.Dispatch<RendererScaleChangeEvent>(UE_BIND_EVENT_FN(OnRendererScaleChange));
 	}
 
-	void VoxelGameApp::RegisterWindowEvent(std::function<bool(Event&)>& fn)
+	void UnnamedClientApp::RegisterWindowEvent(std::function<bool(Event&)>& fn)
 	{
 		m_WindowEventFns.push_back(fn);
 	}
 
-	void VoxelGameApp::RegisterInputEvent(std::function<bool(Event&)>& fn)
+	void UnnamedClientApp::RegisterInputEvent(std::function<bool(Event&)>& fn)
 	{
 		m_InputEventFns.push_back(fn);
 	}
 
-	bool VoxelGameApp::OnWindowResize(WindowResizeEvent& event)
+	bool UnnamedClientApp::OnWindowResize(WindowResizeEvent& event)
 	{
 		// Make sure the camera is always centered on the same point
 		//UEInt32 NewCameraX = (UEInt32)GlobalConfig::Rendering::DesiredWidth / -2;
@@ -173,7 +173,7 @@ namespace UE
 		return false;
 	}
 
-	bool VoxelGameApp::OnKeyPressed(KeyPressedEvent& event)
+	bool UnnamedClientApp::OnKeyPressed(KeyPressedEvent& event)
 	{
 		switch (event.GetKeyCode())
 		{
@@ -208,7 +208,7 @@ namespace UE
 		return false;
 	}
 
-	bool VoxelGameApp::OnKeyReleased(KeyReleasedEvent& event)
+	bool UnnamedClientApp::OnKeyReleased(KeyReleasedEvent& event)
 	{
 		switch (event.GetKeyCode())
 		{
@@ -235,14 +235,14 @@ namespace UE
 		return false;
 	}
 
-	bool VoxelGameApp::OnKeyTyped(KeyTypedEvent& event)
+	bool UnnamedClientApp::OnKeyTyped(KeyTypedEvent& event)
 	{
 		return false;
 	}
 
 	bool MoveAround = false;
 
-	bool VoxelGameApp::OnMousePressed(MouseButtonPressedEvent& event)
+	bool UnnamedClientApp::OnMousePressed(MouseButtonPressedEvent& event)
 	{
 		switch (event.GetMouseButton())
 		{
@@ -254,7 +254,7 @@ namespace UE
 		return false;
 	}
 
-	bool VoxelGameApp::OnMouseReleased(MouseButtonReleasedEvent& event)
+	bool UnnamedClientApp::OnMouseReleased(MouseButtonReleasedEvent& event)
 	{
 		switch (event.GetMouseButton())
 		{
@@ -269,7 +269,7 @@ namespace UE
 	float LastMouseX = 0;
 	float LastMouseY = 0;
 
-	bool VoxelGameApp::OnMouseMoved(MouseMovedEvent& event)
+	bool UnnamedClientApp::OnMouseMoved(MouseMovedEvent& event)
 	{
 		UE::Ref<UE::Camera> CurrentCamera = m_CameraController->GetCamera();
 		
@@ -294,24 +294,24 @@ namespace UE
 		return false;
 	}
 
-	bool VoxelGameApp::OnMouseScrolled(MouseScrolledEvent& event)
+	bool UnnamedClientApp::OnMouseScrolled(MouseScrolledEvent& event)
 	{
 		m_Camera->ZoomIn(event.GetXOffset() * 0.25f * GlobalConfig::Camera::ZoomInSensibility);
 
 		return false;
 	}
 
-	bool VoxelGameApp::OnGamepadButtonPressed(GamepadButtonPressedEvent& event)
+	bool UnnamedClientApp::OnGamepadButtonPressed(GamepadButtonPressedEvent& event)
 	{
 		return false;
 	}
 
-	bool VoxelGameApp::OnGamepadButtonReleased(GamepadButtonReleasedEvent& event)
+	bool UnnamedClientApp::OnGamepadButtonReleased(GamepadButtonReleasedEvent& event)
 	{
 		return false;
 	}
 
-	bool VoxelGameApp::OnRendererScaleChange(RendererScaleChangeEvent& event)
+	bool UnnamedClientApp::OnRendererScaleChange(RendererScaleChangeEvent& event)
 	{
 		GlobalConfig::Renderer::DesiredWidth = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenWidth / GlobalConfig::Renderer::PixelSize);
 		GlobalConfig::Renderer::DesiredHeight = (UEUint32)((UEFloat)GlobalConfig::Renderer::ScreenHeight / GlobalConfig::Renderer::PixelSize);
