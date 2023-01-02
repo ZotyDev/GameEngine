@@ -263,7 +263,7 @@ namespace UE
 					ProjectLocationBuffer[0] = '\0';
 				}
 
-				data->m_Window->SetTitle(Project::Header::Name);
+				data->m_Window->SetTitle("UnnamedEditor - " + Project::Header::Name + " - v" + Project::Header::Version);
 			}
 			
 			ImGui::SetItemDefaultFocus();
@@ -332,7 +332,7 @@ namespace UE
 					InvalidProjectError = false;
 				}
 
-				data->m_Window->SetTitle(Project::Header::Name);
+				data->m_Window->SetTitle("UnnamedEditor - " + Project::Header::Name + " - v" + Project::Header::Version);
 			}
 
 			ImGui::SetItemDefaultFocus();
