@@ -1,0 +1,8 @@
+# Build
+build/
+
+# Binaries
+out/
+
+# Google test
+vendor/googletest
