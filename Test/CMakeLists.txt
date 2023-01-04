@@ -37,7 +37,15 @@ enable_testing()
 target_link_libraries(
     ${TEST_NAME}
     GTest::gtest_main
+    ${ENGINE_NAME}
 )
 
 include(GoogleTest)
 gtest_discover_tests(${TEST_NAME})
+
+# Setup include directories
+target_include_directories(
+    ${TEST_NAME}
+    PRIVATE
+    ${ENGINE_SOURCE_DIR}
+)

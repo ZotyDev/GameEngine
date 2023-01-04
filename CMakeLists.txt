@@ -15,6 +15,17 @@ set(CLIENT_NAME UnnamedClient)
 set(EDITOR_NAME UnnamedEditor)
 set(TEST_NAME Test)
 
+set(ENGINE_LOCATION ${CMAKE_SOURCE_DIR}/${ENGINE_NAME})
+set(SERVER_LOCATION ${CMAKE_SOURCE_DIR}/${SERVER_NAME})
+set(CLIENT_LOCATION ${CMAKE_SOURCE_DIR}/${CLIENT_NAME})
+set(EDITOR_LOCATION ${CMAKE_SOURCE_DIR}/${EDITOR_NAME})
+set(TEST_LOCATION ${CMAKE_SOURCE_DIR}/${TEST_NAME})
+
+set(ENGINE_SOURCE_DIR ${ENGINE_LOCATION}/src/Source)
+set(SERVER_SOURCE_DIR ${SERVER_LOCATION}/src/Source)
+set(CLIENT_SOURCE_DIR ${CLIENT_LOCATION}/src/Source)
+set(EDITOR_SOURCE_DIR ${EDITOR_LOCATION}/src/Source)
+
 # Setup the environment
 project(${ENVIRONMENT_NAME} VERSION ${UNNAMED_PROJECT_VERSION})
 
@@ -23,7 +34,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 # Includes the projects
-#add_subdirectory(${ENGINE_NAME})
+add_subdirectory(${ENGINE_NAME})
 #add_subdirectory(${SERVER_NAME})
 #add_subdirectory(${CLIENT_NAME})
 #add_subdirectory(${EDITOR_NAME})
