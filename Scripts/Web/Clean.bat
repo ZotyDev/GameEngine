@@ -1,1 +1,0 @@
-UEWasm.bat clean
