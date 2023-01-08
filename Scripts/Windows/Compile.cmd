@@ -1,2 +1,1 @@
-MSBuild ../../build/Windows/UnnamedEngineEnv.sln
-PAUSE
+cmake --build ../../build/Windows/

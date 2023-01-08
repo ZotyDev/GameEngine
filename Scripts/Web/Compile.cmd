@@ -1,3 +1,1 @@
-cd ../../build/Web
-emmake make
-PAUSE
+cmake --build ../../build/Web

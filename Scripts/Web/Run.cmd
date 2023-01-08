@@ -1,3 +1,2 @@
-cd ../../bin/UnnamedClient
+cd ../../out/UnnamedClient
 emrun UnnamedClient.html
-PAUSE

@@ -1,2 +1,1 @@
-emcmake cmake ../../CMakeLists.txt -B ../../build/Web
-PAUSE
+emcmake cmake -DCMAKE_BUILD_TYPE=Debug ../../CMakeLists.txt -B ../../build/Web

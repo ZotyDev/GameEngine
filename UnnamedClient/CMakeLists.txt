@@ -4,8 +4,8 @@ project(${CLIENT_NAME} VERSION ${UNNAMED_PROJECT_VERSION})
 # Collect files
 file(
     GLOB_RECURSE CLIENT_SOURCES
-    "src/Source/*.cpp"
-    "src/Source/*.hpp"
+    "src/*.cpp"
+    "src/*.hpp"
 )
 
 # Create the executable
@@ -20,4 +20,18 @@ set_target_properties(
     PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY
     ${UNNAMED_BINARY_OUTPUT_DIRECTORY}/${CLIENT_NAME}
+)
+
+target_link_libraries(
+    ${CLIENT_NAME}
+    ${ENGINE_NAME}
+)
+
+# Setup include directories
+target_include_directories(
+    ${CLIENT_NAME}
+    PRIVATE
+    "src/Source/"
+    ${ENGINE_LOCATION}/src/Source
+    ${ENGINE_VENDOR_DIR}/spdlog/include
 )

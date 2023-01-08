@@ -48,4 +48,5 @@ target_include_directories(
     ${TEST_NAME}
     PRIVATE
     ${ENGINE_SOURCE_DIR}
+    ${ENGINE_VENDOR_DIR}/spdlog/include
 )

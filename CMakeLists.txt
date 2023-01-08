@@ -26,6 +26,8 @@ set(SERVER_SOURCE_DIR ${SERVER_LOCATION}/src/Source)
 set(CLIENT_SOURCE_DIR ${CLIENT_LOCATION}/src/Source)
 set(EDITOR_SOURCE_DIR ${EDITOR_LOCATION}/src/Source)
 
+set(ENGINE_VENDOR_DIR ${CMAKE_SOURCE_DIR}/vendor)
+
 # Setup the environment
 project(${ENVIRONMENT_NAME} VERSION ${UNNAMED_PROJECT_VERSION})
 
@@ -33,9 +35,32 @@ project(${ENVIRONMENT_NAME} VERSION ${UNNAMED_PROJECT_VERSION})
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
+if((DEFINED CMAKE_BUILD_TYPE) AND (NOT CMAKE_BUILD_TYPE STREQUAL ""))
+    message("CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        add_compile_definitions(UE_DEBUG)
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Develop")
+        add_compile_definitions(UE_DEVELOP)
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+        add_compile_definitions(UE_RELEASE)
+    endif()
+else()
+    message("CMAKE_BUILD_TYPE is unset/empty")
+endif()
+
+if(MSVC)
+    add_subdirectory(${TEST_NAME})
+else()
+    # add_compile_options(-s -static-libgcc -static-libstdc++)
+endif()
+
+if (EMSCRIPTEN)
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+else()
+endif()
+
 # Includes the projects
 add_subdirectory(${ENGINE_NAME})
 #add_subdirectory(${SERVER_NAME})
-#add_subdirectory(${CLIENT_NAME})
+add_subdirectory(${CLIENT_NAME})
 #add_subdirectory(${EDITOR_NAME})
-add_subdirectory(${TEST_NAME})

@@ -1,4 +1,35 @@
+#pragma once
+
 #include <memory>
+#include <vector>
+
+#include "Core/PlatformDetection.hpp"
+
+// Get the proper debugbreak function
+#if defined(UE_DEBUG)
+    #if defined(UE_PLATFORM_WINDOWS)
+        #define UE_DEBUG_BREAK() __debugbreak()
+    
+    #elif defined(UE_PLATFORM_LINUX)
+        #include <signal.h>
+        #define UE_DEBUG_BREAK() raise(SIGTRAP)
+
+    #elif defined(UE_PLATFORM_ANDROID)
+        #include <signal.h>
+        #define UE_DEBUG_BREAK() raise(SIGTRAP)
+
+    #elif defined(UE_PLATFORM_WEB)
+        #define UE_DEBUG_BREAK() emscripten_debugger()
+    
+    #else
+        #error "Platform doesn't support debugbreak yet!"
+    #endif
+    #define UE_ENABLE_ASSERTS
+#else
+    #define UE_DEBUG_BREAK()
+#endif 
+
+#include "Core/Types.hpp"
 
 namespace UE
 {
@@ -24,10 +55,6 @@ namespace UE
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
-
-    using UEInt8 = signed char;
-    using UEBool = bool;
-    #define UE_INT8_MAX 127
 
     // UEResult is a abstraction used to return both data and result code
     template<typename T = void>
@@ -65,6 +92,7 @@ namespace UE
         T Value;
     };
 
+    // Implementation without data
     template<>
     class UEResult<void>
     {
@@ -97,4 +125,12 @@ namespace UE
     public:
         _UEResult Result;
     };
+
+    struct EntryArgs
+    {
+        UEUint32              ArgCount = 0;
+        std::vector<UEString> ArgList;
+    };
 }
+
+#include "Core/Log.hpp"

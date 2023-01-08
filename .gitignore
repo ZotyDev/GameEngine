@@ -6,5 +6,11 @@ build/
 # Binaries
 out/
 
+# Logs
+UnnamedEngine/env/Logs/
+UnnamedServer/env/Logs/
+UnnamedClient/env/Logs/
+UnnamedEditor/env/Logs/
+
 # Google test
 vendor/googletest

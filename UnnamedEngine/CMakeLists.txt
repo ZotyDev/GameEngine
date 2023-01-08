@@ -28,4 +28,12 @@ target_include_directories(
     ${ENGINE_NAME}
     PRIVATE
     "src/Source/"
+    ${ENGINE_VENDOR_DIR}/spdlog/include
+    "D:/Projects/emsdk/upstream/emscripten/system/include"
+)
+
+target_precompile_headers(
+    ${ENGINE_NAME}
+    PRIVATE
+    "src/Source/uepch.hpp"
 )
