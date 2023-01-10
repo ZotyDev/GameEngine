@@ -2,8 +2,8 @@
 
 namespace UE
 {
-    UnnamedClientApp::UnnamedClientApp(Ref<Application::SharedData> data)
-        : Layer("UnnamedClient"), m_Data(data)
+    UnnamedClientApp::UnnamedClientApp()
+        : Layer("UnnamedClient")
     {}
 
     void UnnamedClientApp::OnAttach()

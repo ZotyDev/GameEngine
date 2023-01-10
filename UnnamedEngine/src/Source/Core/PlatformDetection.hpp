@@ -6,6 +6,7 @@
 #if defined(__EMSCRIPTEN__)
     #define UE_PLATFORM_WEB
     #include <emscripten.h>
+    #include <emscripten/html5.h>
 
 ////////////////////////////////////////////////////////////
 // - Windows x64

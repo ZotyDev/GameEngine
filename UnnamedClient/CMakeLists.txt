@@ -35,3 +35,5 @@ target_include_directories(
     ${ENGINE_LOCATION}/src/Source
     ${ENGINE_VENDOR_DIR}/spdlog/include
 )
+
+# set_target_properties(${CLIENT_NAME} PROPERTIES LINK_FLAGS "--preload-file ${CLIENT_ASSETS_DIR}")

@@ -1,18 +1,32 @@
 # Setup the project
 project(${ENGINE_NAME} VERSION ${UNNAMED_PROJECT_VERSION})
 
-# Collect files
+# Collect source files
 file(
     GLOB_RECURSE ENGINE_SOURCES
     "src/Source/*.cpp"
     "src/Source/*.hpp"
 )
 
+# Platform source files
+if(MSVC)
+    file(
+        GLOB_RECURSE ENGINE_SOURCES_PLATFORM
+        "src/Platform/Windows/*.cpp"
+    )
+elseif(EMSCRIPTEN)
+    file(
+        GLOB_RECURSE ENGINE_SOURCES_PLATFORM
+        "src/Platform/Web/*.cpp"
+    )
+endif()
+
 # Create the executable
 add_library(
     ${ENGINE_NAME}
     STATIC
     ${ENGINE_SOURCES}
+    ${ENGINE_SOURCES_PLATFORM}
 )
 
 # Setup the output dir

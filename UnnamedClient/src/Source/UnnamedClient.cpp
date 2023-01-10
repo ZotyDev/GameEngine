@@ -6,18 +6,21 @@
 namespace UE
 {
     class UnnamedClient : public Application
-    {
-    public:
-        UnnamedClient() 
-        {
-            PushLayer(CreateRef<UnnamedClientApp>(m_Data));
-        }
+	{
+	public:
+		UnnamedClient()
+		{
+			PushLayer(CreateRef<UnnamedClientApp>());
+		}
 
-        ~UnnamedClient() {}
-    };
+		~UnnamedClient()
+		{
 
-    Application* CreateApplication()
-    {
-        return new UnnamedClient();
-    }
+		}
+	};
+
+	Application* CreateApplication()
+	{
+		return new UnnamedClient();
+	}
 }
