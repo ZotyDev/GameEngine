@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 # Setup globals
 set(PROJECT_VERSION 0.0.1)
-set(BINARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/out)
 set(VENDOR_DIR ${CMAKE_SOURCE_DIR}/vendor)
 
 set(ENVIRONMENT_NAME UnnamedEngineEnv)
@@ -40,15 +39,12 @@ else()
     message("CMAKE_BUILD_TYPE is unset/empty")
 endif()
 
-if(MSVC)
-    # add_subdirectory(${TEST_NAME})
-else()
-    # add_compile_options(-s -static-libgcc -static-libstdc++)
-endif()
-
-if (EMSCRIPTEN)
+if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+    set(BINARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/out/Windows)
+elseif(EMSCRIPTEN)
+    set(BINARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/out/Web)
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
-else()
+    # add_compile_options(-s -static-libgcc -static-libstdc++)
 endif()
 
 # Includes the projects

@@ -13,6 +13,7 @@ if(MSVC)
     file(
         GLOB_RECURSE CLIENT_SOURCES_PLATFORM
         "src/Platform/Windows/*.cpp"
+        "res/**"
     )
 elseif(EMSCRIPTEN)
     file(
@@ -21,11 +22,15 @@ elseif(EMSCRIPTEN)
     )
 endif()
 
+# Icon
+set(CLIENT_ICON_RESOURCE_WINDOWS ${CMAKE_SOURCE_DIR}/${CLIENT_NAME}/res/icon.rc)
+
 # Create the executable
 add_executable(
     ${CLIENT_NAME}
     ${CLIENT_SOURCES}
     ${CLIENT_SOURCES_PLATFORM}
+    ${CLIENT_ICON_RESOURCE_WINDOWS}
 )
 
 if (EMSCRIPTEN)
