@@ -69,10 +69,7 @@ namespace UE
     void Application::MainLoop(Ref<SharedData> data)
     {
         count++;
-        if (!(count % 60))
-        {
-            UE_LOG_CORE_TRACE("Running? {} {}", data->Running, count);
-        }
+        UE_LOG_CORE_TRACE("Running? {} {}", data->Running, count);
     }
 
     void Application::Stop()

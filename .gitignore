@@ -1,10 +1,10 @@
 .vscode/
 
-# Build
+# Generated folders
 build/
-
-# Binaries
 out/
+temp/
+Scripts/Python/__pycache__
 
 # Logs
 UnnamedEngine/env/Logs/

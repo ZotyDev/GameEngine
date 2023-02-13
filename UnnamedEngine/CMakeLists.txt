@@ -1,5 +1,5 @@
 # Setup the project
-project(${ENGINE_NAME} VERSION ${UNNAMED_PROJECT_VERSION})
+project(${ENGINE_NAME} VERSION ${PROJECT_VERSION})
 
 # Collect source files
 file(
@@ -34,7 +34,7 @@ set_target_properties(
     ${ENGINE_NAME}
     PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY
-    ${UNNAMED_BINARY_OUTPUT_DIRECTORY}/${ENGINE_NAME}
+    ${BINARY_OUTPUT_DIRECTORY}/${ENGINE_NAME}
 )
 
 # Setup include directories
@@ -42,8 +42,7 @@ target_include_directories(
     ${ENGINE_NAME}
     PRIVATE
     "src/Source/"
-    ${ENGINE_VENDOR_DIR}/spdlog/include
-    "D:/Projects/emsdk/upstream/emscripten/system/include"
+    ${VENDOR_DIR}/spdlog/include
 )
 
 target_precompile_headers(

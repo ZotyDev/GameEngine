@@ -1,5 +1,5 @@
 # Setup the project
-project(${CLIENT_NAME} VERSION ${UNNAMED_PROJECT_VERSION})
+project(${CLIENT_NAME} VERSION ${PROJECT_VERSION})
 
 # Collect files
 file(
@@ -8,18 +8,39 @@ file(
     "src/*.hpp"
 )
 
+# Platform source files
+if(MSVC)
+    file(
+        GLOB_RECURSE CLIENT_SOURCES_PLATFORM
+        "src/Platform/Windows/*.cpp"
+    )
+elseif(EMSCRIPTEN)
+    file(
+        GLOB_RECURSE CLIENT_SOURCES_PLATFORM
+        "src/Platform/Web/*.cpp"
+    )
+endif()
+
 # Create the executable
 add_executable(
     ${CLIENT_NAME}
     ${CLIENT_SOURCES}
+    ${CLIENT_SOURCES_PLATFORM}
 )
+
+if (EMSCRIPTEN)
+    target_link_options(
+        ${CLIENT_NAME}
+        PRIVATE --shell-file ${CMAKE_SOURCE_DIR}/${CLIENT_NAME}/src/Platform/Web/Template.html
+    )
+endif()
 
 # Setup the output dir
 set_target_properties(
     ${CLIENT_NAME}
     PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY
-    ${UNNAMED_BINARY_OUTPUT_DIRECTORY}/${CLIENT_NAME}
+    ${BINARY_OUTPUT_DIRECTORY}/${CLIENT_NAME}
 )
 
 target_link_libraries(
@@ -33,7 +54,5 @@ target_include_directories(
     PRIVATE
     "src/Source/"
     ${ENGINE_LOCATION}/src/Source
-    ${ENGINE_VENDOR_DIR}/spdlog/include
+    ${VENDOR_DIR}/spdlog/include
 )
-
-# set_target_properties(${CLIENT_NAME} PROPERTIES LINK_FLAGS "--preload-file ${CLIENT_ASSETS_DIR}")

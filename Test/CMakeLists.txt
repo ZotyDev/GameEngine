@@ -1,5 +1,5 @@
 # Setup the project
-project(${TEST_NAME} VERSION ${UNNAMED_PROJECT_VERSION})
+project(${TEST_NAME} VERSION ${PROJECT_VERSION})
 
 # Collect files
 file(
@@ -18,7 +18,7 @@ set_target_properties(
     ${TEST_NAME}
     PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY
-    ${UNNAMED_BINARY_OUTPUT_DIRECTORY}/${TEST_NAME}
+    ${BINARY_OUTPUT_DIRECTORY}/${TEST_NAME}
 )
 
 include(FetchContent)
@@ -41,12 +41,20 @@ target_link_libraries(
 )
 
 include(GoogleTest)
-gtest_discover_tests(${TEST_NAME})
+if(MSVC)
+    gtest_discover_tests(${TEST_NAME})
+elseif(EMSCRIPTEN)
+    target_link_options(
+        ${TEST_NAME}
+        PRIVATE --shell-file ${CMAKE_SOURCE_DIR}/${TEST_NAME}/Platform/Web/Template.html
+        PRIVATE --emrun
+    )
+endif()
 
 # Setup include directories
 target_include_directories(
     ${TEST_NAME}
     PRIVATE
-    ${ENGINE_SOURCE_DIR}
-    ${ENGINE_VENDOR_DIR}/spdlog/include
+    ${ENGINE_LOCATION}/src/Source
+    ${VENDOR_DIR}/spdlog/include
 )
