@@ -1,4 +1,3 @@
-#include "uepch.hpp"
 #include "Core/Layer.hpp"
 
 namespace UE

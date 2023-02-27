@@ -1,4 +1,3 @@
-#include "uepch.hpp"
 #include "Core/Log.hpp"
 
 #pragma warning(push, 0)
@@ -63,7 +62,7 @@
 
         using web_sink_mt = web_sink<std::mutex>;
         using web_sink_st = web_sink<spdlog::details::null_mutex>;
-    #endif
+#endif
 
 namespace UE
 {
@@ -76,7 +75,8 @@ namespace UE
     {
         auto LoggerDupFilter = std::make_shared<spdlog::sinks::dup_filter_sink_mt>(std::chrono::seconds(DupFilterSeconds));
 
-        #if defined(UE_PLATFORM_WINDOWS)
+        #if defined(UE_PLATFORM_WINDOWS) || \
+            defined(UE_PLATFORM_LINUX)
             // Console logger
             auto ConsoleLogger = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
             ConsoleLogger->set_pattern("%^[%T][%l] %n: %v%$");

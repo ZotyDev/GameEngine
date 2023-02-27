@@ -4,7 +4,7 @@ project(${TEST_NAME} VERSION ${PROJECT_VERSION})
 # Collect files
 file(
     GLOB TEST_SOURCES
-    "Core/*.cpp"
+    "src/Core/*.cpp"
 )
 
 # Create the executable
@@ -41,13 +41,14 @@ target_link_libraries(
 )
 
 include(GoogleTest)
-if(MSVC)
+if(WIN32)
     gtest_discover_tests(${TEST_NAME})
 elseif(EMSCRIPTEN)
     target_link_options(
         ${TEST_NAME}
-        PRIVATE --shell-file ${CMAKE_SOURCE_DIR}/${TEST_NAME}/Platform/Web/Template.html
+        PRIVATE --shell-file ${CMAKE_SOURCE_DIR}/${TEST_NAME}/src/Platform/Web/Template.html
         PRIVATE --emrun
+        PRIVATE --preload-file ${CMAKE_SOURCE_DIR}/${TEST_NAME}/env@env
     )
 endif()
 
@@ -57,4 +58,18 @@ target_include_directories(
     PRIVATE
     ${ENGINE_LOCATION}/src/Source
     ${VENDOR_DIR}/spdlog/include
+)
+
+add_custom_command(
+    TARGET ${TEST_NAME}
+    PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E rm
+    -R -f $<TARGET_FILE_DIR:${TEST_NAME}>/Assets $<TARGET_FILE_DIR:${TEST_NAME}>/Internal
+)
+
+add_custom_command(
+    TARGET ${TEST_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/${TEST_NAME}/env $<TARGET_FILE_DIR:${TEST_NAME}>
 )

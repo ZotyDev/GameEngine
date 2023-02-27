@@ -63,8 +63,6 @@
 #elif defined(__linux__)
     #define UE_PLATFORM_LINUX
 
-    #error "Linux is not supported!"
-
 #else
     #error "Unknown platform!"
 #endif

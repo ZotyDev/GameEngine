@@ -1,0 +1,25 @@
+name: Ubuntu
+
+on:
+  push:
+    branches: [ "refactor" ]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  LLVM_VERSION: 15.0.0
+
+jobs:
+  ubuntu-clang:
+    name: Ubuntu Clang
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: CMake Config
+        run: cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug CMakeLists.txt -B build/Linux
+
+      - name: CMake Build
+        run: cmake --build build/Linux
+
+      - name: Run Tests
+        run: cd out/Linux/Test; Test.o

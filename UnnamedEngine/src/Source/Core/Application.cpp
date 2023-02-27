@@ -1,4 +1,3 @@
-#include "uepch.hpp"
 #include "Core/Application.hpp"
 
 namespace UE
@@ -51,7 +50,8 @@ namespace UE
     {
         m_Data->Running = true;
         
-        #if defined(UE_PLATFORM_WINDOWS)
+        #if defined(UE_PLATFORM_WINDOWS) || \
+            defined(UE_PLATFORM_LINUX)
         while(m_Data->Running)
         {
             MainLoop(m_Data);
@@ -64,12 +64,9 @@ namespace UE
         #endif
     }
 
-    UEUint64 count = 0;
-
     void Application::MainLoop(Ref<SharedData> data)
     {
-        count++;
-        UE_LOG_CORE_TRACE("Running? {} {}", data->Running, count);
+        
     }
 
     void Application::Stop()

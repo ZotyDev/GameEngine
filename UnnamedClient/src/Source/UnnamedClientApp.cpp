@@ -8,7 +8,7 @@ namespace UE
 
     void UnnamedClientApp::OnAttach()
     {
-
+        
     }
 
     void UnnamedClientApp::OnDetach()

@@ -71,9 +71,10 @@ namespace UE
         };
 
     public:
-        UEResult()                 : Result(UEResult::Undefined) {}
-        UEResult(_UEResult result) : Result(result) {}
-        UEResult(T value)          : Result(UEResult::Success), Value(value) {}
+        UEResult()                          : Result(UEResult::Undefined) {}
+        UEResult(T value)                   : Result(UEResult::Success), Value(value) {}
+        UEResult(T value, _UEResult result) : Result(result), Value(value) {}
+        UEResult(_UEResult result)          : Result(result) {}
 
         // Implicit operator
         operator UEBool() const
@@ -90,6 +91,43 @@ namespace UE
     public:
         _UEResult Result;
         T Value;
+    };
+
+    // Implementation for UEBool
+    template<>
+    class UEResult<UEBool>
+    {
+    public:
+        using _UEResult = UEInt8;
+        enum : _UEResult
+        {
+            Error     = -1,
+            Success   = 0,
+            Warn      = 1,
+            Undefined = UE_INT8_MAX
+        };
+
+    public:
+        UEResult()                               : Result(UEResult::Undefined) {}
+        UEResult(UEBool value)                   : Result(UEResult::Success), Value(value) {}
+        UEResult(UEBool value, _UEResult result) : Result(result), Value(value) {}
+        UEResult(_UEResult result)               : Result(result) {}
+
+        // Implicit operator
+        operator UEBool() const
+        {
+            return (Result != UEResult::Error && Result != UEResult::Undefined) && Value;
+        }
+
+        UEResult& operator = (_UEResult result)
+        {
+            Result = result;
+            return *this;
+        }
+
+    public:
+        _UEResult Result;
+        UEBool Value;
     };
 
     // Implementation without data
@@ -133,4 +171,6 @@ namespace UE
     };
 }
 
+#include "uepch.hpp"
 #include "Core/Log.hpp"
+#include "Core/Assert.hpp"

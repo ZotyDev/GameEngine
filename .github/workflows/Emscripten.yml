@@ -1,0 +1,36 @@
+name: Emscripten
+
+on:
+  push:
+    branches: [ "refactor" ]
+  pull_request:
+  workflow_dispatch:
+    
+env:
+  EM_VERSION: 3.1.32
+
+jobs:
+  emscripten-clang:
+    name: Emscripten Clang
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Respository and Submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Setup emsdk
+        uses: mymindstorm/setup-emsdk@v11
+        with:
+          version: ${{ env.EM_VERSION }}
+          actions-cache-folder: 'emsdk-cache'
+
+      - name: EMCMAKE Config
+        run: .\Scripts\Web\ConfigDebug.ps1 -RunAsAdmin
+
+      - name: EMCMAKE Build
+        run: .\Scripts\Web\BuildDebug.ps1 -RunAsAdmin
+
+      - name: Run Tests
+        run: cd .\out\Web\Test; node --experimental-wasm-eh Test.js

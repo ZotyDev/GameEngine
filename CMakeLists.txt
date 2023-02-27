@@ -13,6 +13,9 @@ set(TEST_NAME Test)
 
 set(ENGINE_LOCATION ${CMAKE_SOURCE_DIR}/${ENGINE_NAME})
 
+set(LIB_SPDLOG_LOCATION ${VENDOR_DIR}/spdlog)
+set(LIB_YAML_CPP_LOCATION ${VENDOR_DIR}/yaml-cpp)
+
 set(EMSCRIPTEN_LOCATION D:/Projects/emsdk/upstream/emscripten/system/include) 
 
 # Setup the environment
@@ -47,7 +50,13 @@ elseif(EMSCRIPTEN)
     # add_compile_options(-s -static-libgcc -static-libstdc++)
 endif()
 
-# Includes the projects
+# Policies
+cmake_policy(SET CMP0135 NEW)
+
+# Includes other projects
+add_subdirectory(${LIB_YAML_CPP_LOCATION})
+
+# Includes engien projects
 add_subdirectory(${ENGINE_NAME})
 #add_subdirectory(${SERVER_NAME})
 add_subdirectory(${CLIENT_NAME})

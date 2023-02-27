@@ -9,10 +9,16 @@ file(
 )
 
 # Platform source files
-if(MSVC)
+if(WIN32)
     file(
         GLOB_RECURSE CLIENT_SOURCES_PLATFORM
         "src/Platform/Windows/*.cpp"
+        "res/**"
+    )
+elseif(UNIX)
+    file(
+        GLOB_RECURSE CLIENT_SOURCES_PLATFORM
+        "src/Platform/Linux/*.cpp"
         "res/**"
     )
 elseif(EMSCRIPTEN)
@@ -37,6 +43,7 @@ if (EMSCRIPTEN)
     target_link_options(
         ${CLIENT_NAME}
         PRIVATE --shell-file ${CMAKE_SOURCE_DIR}/${CLIENT_NAME}/src/Platform/Web/Template.html
+        #PRIVATE --preload-file ${CMAKE_SOURCE_DIR}/${CLIENT_NAME}/env
     )
 endif()
 
@@ -61,3 +68,17 @@ target_include_directories(
     ${ENGINE_LOCATION}/src/Source
     ${VENDOR_DIR}/spdlog/include
 )
+
+add_custom_command(
+    TARGET ${CLIENT_NAME}
+    PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E rm
+    -R -f $<TARGET_FILE_DIR:${CLIENT_NAME}>/Assets $<TARGET_FILE_DIR:${CLIENT_NAME}>/Internal
+)
+
+#add_custom_command(
+#    TARGET ${CLIENT_NAME}
+#    POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E copy_directory
+#    ${CMAKE_SOURCE_DIR}/${CLIENT_NAME}/env $<TARGET_FILE_DIR:${CLIENT_NAME}>
+#)

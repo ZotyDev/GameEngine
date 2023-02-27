@@ -1,0 +1,47 @@
+name: Windows
+
+on:
+  push:
+    branches: [ "refactor" ]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  LLVM_VERSION: 15.0.0
+
+jobs:
+  windows-clang:
+    name: Windows Clang
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    
+    steps:
+      - name: Checkout Repository and Submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Cache LLVM and Clang
+        id: cache-llvm
+        uses: actions/cache@v2
+        with:
+          path: |
+            C:/Program Files/LLVM
+          key: llvm-${{ env.LLVM_VERSION }}-${{ runner.os }}
+
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: ${{ env.LLVM_VERSION }}
+          cached: ${{ steps.cache-llvm.outputs.cache-hit }}
+
+      - name: CMake Config
+        run: .\Scripts\Windows\ConfigDebug.ps1 -RunAsAdmin
+
+      - name: CMake Build
+        run: .\Scripts\Windows\BuildDebug.ps1 -RunAsAmdmin        
+
+      - name: Run Tests
+        run: cd .\out\Windows\Test; .\Test.exe

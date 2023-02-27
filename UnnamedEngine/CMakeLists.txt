@@ -9,10 +9,15 @@ file(
 )
 
 # Platform source files
-if(MSVC)
+if(WIN32)
     file(
         GLOB_RECURSE ENGINE_SOURCES_PLATFORM
         "src/Platform/Windows/*.cpp"
+    )
+elseif()
+    file(
+        GLOB_RECURSE ENGINE_SOURCES_PLATFORM
+        "src/Platform/Linux/*.cpp"
     )
 elseif(EMSCRIPTEN)
     file(
@@ -42,11 +47,17 @@ target_include_directories(
     ${ENGINE_NAME}
     PRIVATE
     "src/Source/"
-    ${VENDOR_DIR}/spdlog/include
+    ${LIB_SPDLOG_LOCATION}/include
+    ${LIB_YAML_CPP_LOCATION}/include
 )
 
 target_precompile_headers(
     ${ENGINE_NAME}
     PRIVATE
     "src/Source/uepch.hpp"
+)
+
+target_link_libraries(
+    ${ENGINE_NAME}
+    yaml-cpp
 )
