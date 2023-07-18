@@ -1,8 +1,13 @@
 #include "Core/Application.hpp"
 
+#include "Core/PlatformIndependenceLayer/Filesystem.hpp"
+#include "Core/GlobalConfigurationSerializer.hpp"
+
 namespace UE
 {
-    #if defined(UE_PLATFORM_WEB)
+    // Function that will be used by Emscripten, since we can't use while(true)
+    // loops in the browser we need to make the main loop in a different way.
+    #if defined(UE_PLATFORM_EMSCRIPTEN)
     EM_BOOL MainLoopCallback(double time, void* userData)
     {
         auto newData = CreateRef<Application::SharedData>(*(Application::SharedData*)userData);
@@ -21,35 +26,48 @@ namespace UE
 
     Application* Application::s_Instance = nullptr;
 
-    Application::Application()
+    // Constructor
+    Application::Application(const EntryArgs& args)
     {
         s_Instance = this;
         m_Data->Running = true;
+        m_Data->Args = args;
+
+        Filesystem::SetUserDataPath();
+
+        // Load the global configuration
+        GlobalConfigurationSerializer::Deserialize();
 
         Run();
     }
 
+    // Destructor
     Application::~Application()
     {
-
+        // Save the global configuration
+        GlobalConfigurationSerializer::Serialize();
     }
 
+    // Pushes a layer
     void Application::PushLayer(Ref<Layer> layer)
     {
         m_LayerStack.PushLayer(layer);
         layer->OnAttach();
     }
 
+    // Pushes a layer as a overlay
     void Application::PushOverlay(Ref<Layer> overlay)
     {
         m_LayerStack.PushOverlay(overlay);
         overlay->OnAttach();
     }
 
+    // Runs the engine
     void Application::Run()
     {
         m_Data->Running = true;
         
+        // Desktop platform
         #if defined(UE_PLATFORM_WINDOWS) || \
             defined(UE_PLATFORM_LINUX)
         while(m_Data->Running)
@@ -57,18 +75,22 @@ namespace UE
             MainLoop(m_Data);
         }
         Stop();
-        #elif defined(UE_PLATFORM_WEB)
+        
+        // Emscripten (does not allow while(true) loop)
+        #elif defined(UE_PLATFORM_EMSCRIPTEN)
         {
             emscripten_request_animation_frame_loop(MainLoopCallback, (void*)m_Data.get());
         }
         #endif
     }
 
+    // The main loop
     void Application::MainLoop(Ref<SharedData> data)
     {
         
     }
 
+    // Called when the engine stops
     void Application::Stop()
     {
         delete this;

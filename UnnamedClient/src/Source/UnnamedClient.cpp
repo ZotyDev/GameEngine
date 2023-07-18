@@ -8,7 +8,8 @@ namespace UE
     class UnnamedClient : public Application
 	{
 	public:
-		UnnamedClient()
+		UnnamedClient(const EntryArgs& args)
+			: Application(args)
 		{
 			PushLayer(CreateRef<UnnamedClientApp>());
 		}
@@ -19,8 +20,8 @@ namespace UE
 		}
 	};
 
-	Application* CreateApplication()
+	Application* CreateApplication(const EntryArgs& args)
 	{
-		return new UnnamedClient();
+		return new UnnamedClient(args);
 	}
 }

@@ -43,7 +43,7 @@ if (EMSCRIPTEN)
     target_link_options(
         ${CLIENT_NAME}
         PRIVATE --shell-file ${CMAKE_SOURCE_DIR}/${CLIENT_NAME}/src/Platform/Web/Template.html
-        #PRIVATE --preload-file ${CMAKE_SOURCE_DIR}/${CLIENT_NAME}/env
+        PRIVATE --preload-file ${CMAKE_SOURCE_DIR}/${CLIENT_NAME}/env@env
     )
 endif()
 
@@ -76,9 +76,9 @@ add_custom_command(
     -R -f $<TARGET_FILE_DIR:${CLIENT_NAME}>/Assets $<TARGET_FILE_DIR:${CLIENT_NAME}>/Internal
 )
 
-#add_custom_command(
-#    TARGET ${CLIENT_NAME}
-#    POST_BUILD
-#    COMMAND ${CMAKE_COMMAND} -E copy_directory
-#    ${CMAKE_SOURCE_DIR}/${CLIENT_NAME}/env $<TARGET_FILE_DIR:${CLIENT_NAME}>
-#)
+add_custom_command(
+    TARGET ${CLIENT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/${CLIENT_NAME}/env $<TARGET_FILE_DIR:${CLIENT_NAME}>
+)

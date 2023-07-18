@@ -35,21 +35,24 @@ This Game Engine is the base of all ZotyDev games. The main objectives are custo
 
 Go to `./Scripts/` and select the target platform.
 
-- SetupEnv will install required SDKs
-- Build will generate build files
-- Compile will compile
+- Config`<Configuration>` will create the build files
+- Build`<Configuration>` will build the project
 
 Available configurations are:
 
 - Debug
-- Develop
-- Release
 
 # License
 
-This project includes or depends on these following projects:
+This project includes or depends on the following projects:
 
 | Project                                            | License                 |
 |----------------------------------------------------|-------------------------|
 | [spdlog](https://github.com/gabime/spdlog)         | [MIT License](https://github.com/gabime/spdlog/blob/v1.x/LICENSE)             |
-| [yaml-cpp](https://github.com/jbeder/yaml-cpp)     | [MIT License](https://github.com/jbeder/yaml-cpp/blob/master/LICENSE)
+| [yaml-cpp](https://github.com/jbeder/yaml-cpp)     | [MIT License](https://github.com/jbeder/yaml-cpp/blob/master/LICENSE)         |
+
+Currently, Unname Engine does not have a license, which means you are better not using the source code until it gets a proper license.
+
+### Thanks
+
+- [The Cherno](https://www.youtube.com/@TheCherno), for his game engine series

@@ -3,14 +3,18 @@
 #include "Core/Base.hpp"
 #include "Core/LayerStack.hpp"
 
-int main(int argc, char** argv);
+#if defined (UE_PLATFORM_WINDOWS) || \
+    defined (UE_PLATFORM_LINUX)   || \
+    defined (UE_PLATFORM_EMSCRIPTEN)
+    int main(int argc, char** argv);
+#endif
 
 namespace UE
 {
     class Application
     {
     public:
-        Application();
+        Application(const EntryArgs& args);
         virtual ~Application();
 
         void PushLayer(Ref<Layer> layer);
@@ -18,8 +22,10 @@ namespace UE
         
     public:
         LayerStack m_LayerStack;
+        // Data that is constantly used across the engine
         struct SharedData
         {
+            EntryArgs Args;
             UEBool Running = true;
         };
 
@@ -34,5 +40,5 @@ namespace UE
         friend int ::main(int argc, char** argv);
     };
 
-    Application* CreateApplication();
+    Application* CreateApplication(const EntryArgs& args);
 }

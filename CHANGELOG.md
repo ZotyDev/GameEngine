@@ -1,6 +1,6 @@
 # Change Log
 
-## v0.1.270223
+## v0.1.270323
 
 Marks the first "version". Additions, changes and fixes should be logged from now on. Also marks the rewrite starting point, everything from now on is part of the rewrite.
 
@@ -22,6 +22,8 @@ Architecture and design goals drastically changed, allowing me some more flexibi
 - Basic filesystem wrapper
 - Basic UnnamedClient implementation
 - Compiles for webassembly and windows
+- Global configurations
+- Entry point args collector
 
 ### Note
 Everything before this change is marked as obsolete and will be squashed.

@@ -8,12 +8,12 @@
     #include <spdlog/sinks/daily_file_sink.h>
 #pragma warning(pop)
 
-#if defined(UE_PLATFORM_WEB)
+#if defined(UE_PLATFORM_EMSCRIPTEN)
     #include <spdlog/sinks/base_sink.h>
     #include <spdlog/details/null_mutex.h>
 #endif
 
-#if defined(UE_PLATFORM_WEB)
+#if defined(UE_PLATFORM_EMSCRIPTEN)
         template<typename Mutex>
         class web_sink : public spdlog::sinks::base_sink<Mutex>
         {
@@ -86,7 +86,7 @@ namespace UE
             auto FileLogger = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("Logs/UnnamedEngine.log", 1048576 * 100, 10, true);
             FileLogger->set_pattern("[%T][%l] %n %v");
             LoggerDupFilter->add_sink(FileLogger);
-        #elif defined(UE_PLATFORM_WEB)
+        #elif defined(UE_PLATFORM_EMSCRIPTEN)
             // Web console logger
             auto WebLogger = std::make_shared<web_sink_mt>();
             WebLogger->set_pattern("[%T][%l] %n %v");

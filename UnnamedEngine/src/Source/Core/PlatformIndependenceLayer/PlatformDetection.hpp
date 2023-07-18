@@ -3,8 +3,8 @@
 ////////////////////////////////////////////////////////////
 // - Web Browser 
 ////////////////////////////////////////////////////////////
-#if defined(__EMSCRIPTEN__)
-    #define UE_PLATFORM_WEB
+#if defined(__EMSCRIPTEN__) || defined(EMSCRIPTEN)
+    #define UE_PLATFORM_EMSCRIPTEN
     #include <emscripten.h>
     #include <emscripten/html5.h>
 

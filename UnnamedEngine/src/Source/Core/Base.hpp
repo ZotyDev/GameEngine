@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "Core/PlatformDetection.hpp"
+#include "Core/PlatformIndependenceLayer/PlatformDetection.hpp"
 
 // Get the proper debugbreak function
 #if defined(UE_DEBUG)
@@ -18,7 +18,7 @@
         #include <signal.h>
         #define UE_DEBUG_BREAK() raise(SIGTRAP)
 
-    #elif defined(UE_PLATFORM_WEB)
+    #elif defined(UE_PLATFORM_EMSCRIPTEN)
         #define UE_DEBUG_BREAK() emscripten_debugger()
     
     #else
@@ -29,7 +29,10 @@
     #define UE_DEBUG_BREAK()
 #endif 
 
-#include "Core/Types.hpp"
+#define UE_EXPAND_MACRO(x) x
+#define UE_STRINGIFY_MACRO(x) #x
+
+#include "Core/PlatformIndependenceLayer/Types.hpp"
 
 namespace UE
 {
@@ -164,10 +167,11 @@ namespace UE
         _UEResult Result;
     };
 
+    // Args that are passed to the engine at the start
     struct EntryArgs
     {
-        UEUint32              ArgCount = 0;
-        std::vector<UEString> ArgList;
+        UEUint32              Count = 0;
+        std::vector<UEString> List;
     };
 }
 

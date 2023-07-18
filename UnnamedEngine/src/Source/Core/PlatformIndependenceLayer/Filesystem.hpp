@@ -13,7 +13,7 @@ namespace UE
         {
             Internal       = 0,
             Assets         = 1,
-            UserDataFolder = 2
+            UserData       = 2
         };
 
         enum class Target : UEUint8
@@ -35,7 +35,7 @@ namespace UE
             {
                 case Filesystem::Path::Assets        : return "Assets"        ; break;
                 case Filesystem::Path::Internal      : return "Internal"      ; break;
-                case Filesystem::Path::UserDataFolder: return "UserDataFolder"; break;
+                case Filesystem::Path::UserData      : return "UserData"      ; break;
                 default: return "UE_INVALID_PATH"; break;
             }
         }
@@ -99,6 +99,9 @@ namespace UE
             {
                 std::error_code Error;
                 UEPath FinalPath = _PrependLocation(path, enginePath);
+
+                MakeSure(path.parent_path(), enginePath, Filesystem::Target::Directory);
+
                 // If the target is any, we should detect what to create
                 if (target == Filesystem::Target::Any)
                 {
@@ -267,6 +270,12 @@ namespace UE
             return UEResult<UEBool>(true);
         }
 
+        static UEResult<> SetUserDataPath();
+
+        static UEPath GetAssetsPath()   { return s_AssetsPath; }
+        static UEPath GetInternalPath() { return s_InternalPath; }
+        static UEPath GetUserDataPath() { return s_UserDataPath; }
+
     private:
         static UEBool _SameAsTarget(const UEPath& path, Filesystem::Target target)
         {
@@ -293,25 +302,25 @@ namespace UE
             default:
                 case Filesystem::Path::Assets:
                 {
-                    return (m_AssetsPath / path).string();
+                    return (s_AssetsPath / path).string();
                     break;
                 }
                 case Filesystem::Path::Internal:
                 {
-                    return (m_InternalPath / path).string();
+                    return (s_InternalPath / path).string();
                     break;
                 }
-                case Filesystem::Path::UserDataFolder:
+                case Filesystem::Path::UserData:
                 {
-                    return (m_UserDataFolderPath / path).string();
+                    return (s_UserDataPath / path).string();
                     break;
                 }
             }
         }
 
     private:
-        static UEPath m_InternalPath;
-        static UEPath m_AssetsPath;
-        static UEPath m_UserDataFolderPath;
+        static UEPath s_InternalPath;
+        static UEPath s_AssetsPath;
+        static UEPath s_UserDataPath;
     };
 }

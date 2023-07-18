@@ -1,4 +1,4 @@
-#include <Core/Filesystem.hpp>
+#include <Core/PlatformIndependenceLayer/Filesystem.hpp>
 #include <gtest/gtest.h>
 
 namespace UE
@@ -11,7 +11,6 @@ namespace UE
 
     const UEString TestFileContent = "the first line\nthe second line\n";
 
-    //////////////////////////////////////////////////
     // Exist Directories
     TEST(Filesystem, Exists_Assets_Test_Directory_Correct_Any)
     {
@@ -39,7 +38,6 @@ namespace UE
         EXPECT_FALSE(Result);
     }
 
-    ////////// ////////////////////////////////////////
     // Exist Files
     TEST(Filesystem, Exists_Assets_Test_File_Correct_Any)
     {
@@ -69,7 +67,6 @@ namespace UE
         EXPECT_FALSE(Result.Value);
     }
 
-    //////////////////////////////////////////////////
     // MakeSure
     TEST(Filesystem, MakeSure_Assets_Test_Directory_Correct)
     {
@@ -113,7 +110,6 @@ namespace UE
         EXPECT_FALSE(Result.Value);
     }
 
-    //////////////////////////////////////////////////
     // Write
     TEST(Filesystem, Write_Assets_Test_File_Overwrite)
     {
@@ -129,7 +125,6 @@ namespace UE
         EXPECT_TRUE(Result.Value);
     }
 
-    //////////////////////////////////////////////////
     // Read
     TEST(Filesystem, Read_Assets_Test_File)
     {
@@ -138,7 +133,24 @@ namespace UE
         EXPECT_EQ(Result.Value, TestFileContent + TestFileContent);
     }
 
-    //////////////////////////////////////////////////
+    TEST(Filesystem, Read_Assets_Test_File_Wrong_Name)
+    {
+        UEResult<UEString> Result = Filesystem::Read(AssetsTestFileNameWrongName, Filesystem::Path::Assets);
+        EXPECT_FALSE(Result);
+    }
+
+    TEST(Filesystem, Read_Assets_Test_File_Wrong_Path)
+    {
+        UEResult<UEString> Result = Filesystem::Read(AssetsTestFileNameCorrect, Filesystem::Path::Internal);
+        EXPECT_FALSE(Result);
+    }
+
+    TEST(Filesystem, Read_Assets_Test_File_Wrong_Name_And_Wrong_Path)
+    {
+        UEResult<UEString> Result = Filesystem::Read(AssetsTestFileNameWrongName, Filesystem::Path::Internal);
+        EXPECT_FALSE(Result);
+    }
+
     // Delete
     TEST(Filesystem, Delete_Assets_Test_Directory_Wrong_Name)
     {

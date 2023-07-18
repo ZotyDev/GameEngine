@@ -1,4 +1,4 @@
-#include <Core/Types.hpp>
+#include <Core/PlatformIndependenceLayer/Types.hpp>
 #include <gtest/gtest.h>
 
 namespace UE

@@ -21,7 +21,6 @@ namespace UE
     };
 }
 
-#define UE_TESTING
 #if defined(UE_TESTING)
     #if defined(UE_DEBUG)
         #define UE_LOG_INIT()             
