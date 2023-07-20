@@ -20,4 +20,5 @@ function Force-Resolve-Path {
 
 $BinOutput = Force-Resolve-Path $PSScriptRoot/../../build/Windows
 
-cmake --build $BinOutput
+cmake --build $BinOutput/Normal
+cmake --build $BinOutput/Test

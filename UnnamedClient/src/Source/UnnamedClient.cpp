@@ -20,8 +20,8 @@ namespace UE
 		}
 	};
 
-	Application* CreateApplication(const EntryArgs& args)
+	UE::Ref<UE::Application> CreateApplication(const EntryArgs& args)
 	{
-		return new UnnamedClient(args);
+		return UE::CreateRef<UE::Application>(args);
 	}
 }

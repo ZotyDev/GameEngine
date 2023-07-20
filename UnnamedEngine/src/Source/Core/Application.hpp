@@ -40,5 +40,5 @@ namespace UE
         friend int ::main(int argc, char** argv);
     };
 
-    Application* CreateApplication(const EntryArgs& args);
+    UE::Ref<UE::Application> CreateApplication(const EntryArgs& args);
 }

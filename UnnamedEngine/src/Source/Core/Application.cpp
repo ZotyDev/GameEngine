@@ -44,8 +44,7 @@ namespace UE
     // Destructor
     Application::~Application()
     {
-        // Save the global configuration
-        GlobalConfigurationSerializer::Serialize();
+        Stop();
     }
 
     // Pushes a layer
@@ -93,7 +92,9 @@ namespace UE
     // Called when the engine stops
     void Application::Stop()
     {
-        delete this;
+        // Save the global configuration
+        GlobalConfigurationSerializer::Serialize();
+
         UE_LOG_CORE_INFO("Everything went ok! See you again soon :D");
     }
     

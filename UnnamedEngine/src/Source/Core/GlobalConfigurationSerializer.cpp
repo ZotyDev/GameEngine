@@ -55,7 +55,7 @@ namespace UE
     {
 		//////////////////////////////////////////////////
         // Make sure that GlobalConfiguration.yaml atleast exists
-		Filesystem::MakeSure("UnnamedEngine/GlobalConfiguration.yaml", Filesystem::Path::UserData);
+		UEBool Exists = Filesystem::MakeSure("UnnamedEngine/GlobalConfiguration.yaml", Filesystem::Path::UserData).Value;
 
         //////////////////////////////////////////////////
         // Load the data from GlobalConfiguration.yaml
@@ -95,6 +95,11 @@ namespace UE
 		// Camera
 		GlobalConfiguration::Camera::ZoomInSensibility  = Camera["ZoomInSensibility"].as<UEFloat>(GlobalConfiguration::Camera::ZoomInSensibility);
 		GlobalConfiguration::Camera::ZoomOutSensibility = Camera["ZoomOutSensibility"].as<UEFloat>(GlobalConfiguration::Camera::ZoomOutSensibility);
+
+		if (!Exists)
+		{
+			GlobalConfigurationSerializer::Serialize();
+		}
 
         return UEResult<>::Success;
     }

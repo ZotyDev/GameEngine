@@ -6,6 +6,7 @@ function Force-Resolve-Path {
 }
 
 $Project = Force-Resolve-Path $PSScriptRoot/../../CMakeLists.txt
-$Output = Force-Resolve-Path $PSScriptRoot/../../build/Windows
+$Output  = Force-Resolve-Path $PSScriptRoot/../../build/Windows
 
-cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug $Project -B $Output
+cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug $Project -B $Output/Normal
+cmake -G "Ninja" -DCMAKE_TESTING=on -DCMAKE_BUILD_TYPE=Debug $Project -B $Output/Test
