@@ -21,7 +21,7 @@ jobs:
           submodules: recursive
 
       - name: CMake Config
-        run: cmake -DCMAKE_BUILD_TYPE=Debug CMakeLists.txt -B build/Linux
+        run: cmake -DCMAKE_TESTING=on -DCMAKE_BUILD_TYPE=Debug CMakeLists.txt -B build/Linux
 
       - name: CMake Build
         run: cmake --build build/Linux

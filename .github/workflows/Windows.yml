@@ -38,10 +38,10 @@ jobs:
           cached: ${{ steps.cache-llvm.outputs.cache-hit }}
 
       - name: CMake Config
-        run: .\Scripts\Windows\ConfigDebug.ps1 -RunAsAdmin
+        run: .\Scripts\Windows\ConfigDebugTestOnly.ps1 -RunAsAdmin
 
       - name: CMake Build
-        run: .\Scripts\Windows\BuildDebug.ps1 -RunAsAmdmin        
+        run: .\Scripts\Windows\BuildDebugTestOnly.ps1 -RunAsAdmin        
 
       - name: Run Tests
         run: cd .\out\Windows\Test; .\Test.exe

@@ -27,10 +27,10 @@ jobs:
           actions-cache-folder: 'emsdk-cache'
 
       - name: EMCMAKE Config
-        run: .\Scripts\Web\ConfigDebug.ps1 -RunAsAdmin
+        run: .\Scripts\Web\ConfigDebugTestOnly.ps1 -RunAsAdmin
 
       - name: EMCMAKE Build
-        run: .\Scripts\Web\BuildDebug.ps1 -RunAsAdmin
+        run: .\Scripts\Web\BuildDebugTestOnly.ps1 -RunAsAdmin
 
       - name: Run Tests
         run: cd .\out\Web\Test; node --experimental-wasm-eh Test.js
