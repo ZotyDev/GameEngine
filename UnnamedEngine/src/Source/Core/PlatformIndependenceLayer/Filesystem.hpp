@@ -29,7 +29,7 @@ namespace UE
             Append    = 1
         };
 
-        static inline constexpr UEString PathToString(Filesystem::Path path)
+        static inline UEString PathToString(Filesystem::Path path)
         {
             switch(path)
             {
@@ -40,7 +40,7 @@ namespace UE
             }
         }
 
-        static inline constexpr UEString TargetToString(Filesystem::Target target)
+        static inline UEString TargetToString(Filesystem::Target target)
         {
             switch(target)
             {
