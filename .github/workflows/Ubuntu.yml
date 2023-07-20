@@ -15,9 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: See ls
-        run: ls
-
+      - name: Checkout Repository and Submodules
+          uses: actions/checkout@v2
+          with:
+            submodules: recursive
+            
       - name: CMake Config
         run: cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug CMakeLists.txt -B build/Linux
 
