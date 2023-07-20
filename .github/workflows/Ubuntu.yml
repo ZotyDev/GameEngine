@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: See files
+      - name: See ls
         run: ls
 
       - name: CMake Config
