@@ -27,4 +27,4 @@ jobs:
         run: cmake --build build/Linux
 
       - name: Run Tests
-        run: cd out/Linux/Test; Test.o
+        run: cd out/Linux/Test; ./Test

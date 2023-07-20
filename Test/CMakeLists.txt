@@ -41,7 +41,7 @@ target_link_libraries(
 )
 
 include(GoogleTest)
-if(WIN32 OR UNIX)
+if(WIN32)
     gtest_discover_tests(${TEST_NAME})
 elseif(EMSCRIPTEN)
     target_link_options(
