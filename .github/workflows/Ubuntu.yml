@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: See files
+        run: ls
+
       - name: CMake Config
         run: cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug CMakeLists.txt -B build/Linux
 
