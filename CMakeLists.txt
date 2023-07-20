@@ -42,7 +42,7 @@ else()
     message("CMAKE_BUILD_TYPE is unset/empty")
 endif()
 
-if(WIN32 OR WIN32)
+if(WIN32 OR UNIX)
     set(BINARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/out/Windows)
 elseif(EMSCRIPTEN)
     set(BINARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/out/Web)
