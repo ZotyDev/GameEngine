@@ -16,10 +16,10 @@ jobs:
     
     steps:
       - name: Checkout Repository and Submodules
-          uses: actions/checkout@v2
-          with:
-            submodules: recursive
-            
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
       - name: CMake Config
         run: cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Debug CMakeLists.txt -B build/Linux
 
