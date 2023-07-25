@@ -51,6 +51,13 @@ target_include_directories(
     ${LIB_YAML_CPP_LOCATION}/include
 )
 
+# Set the common args
+target_compile_options(
+    ${ENGINE_NAME}
+    PRIVATE
+    ${CMAKE_CXX_FLAGS}
+)
+
 target_precompile_headers(
     ${ENGINE_NAME}
     PRIVATE

@@ -69,6 +69,13 @@ target_include_directories(
     ${VENDOR_DIR}/spdlog/include
 )
 
+# Set the common args
+target_compile_options(
+    ${CLIENT_NAME}
+    PRIVATE
+    ${CMAKE_CXX_FLAGS}
+)
+
 add_custom_command(
     TARGET ${CLIENT_NAME}
     PRE_BUILD

@@ -3,7 +3,6 @@
 #include "Core/GlobalConfiguration.hpp"
 #include "Core/PlatformIndependenceLayer/Filesystem.hpp"
 
-#define YAML_CPP_STATIC_DEFINE
 #include <yaml-cpp/yaml.h>
 
 namespace UE
