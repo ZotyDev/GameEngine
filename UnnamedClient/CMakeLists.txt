@@ -15,10 +15,16 @@ if(WIN32)
         "src/Platform/Windows/*.cpp"
         "res/**"
     )
-elseif(UNIX)
+elseif(UNIX AND NOT APPLE)
     file(
         GLOB_RECURSE CLIENT_SOURCES_PLATFORM
         "src/Platform/Linux/*.cpp"
+        "res/**"
+    )
+elseif(APPLE)
+    file(
+        GLOB_RECURSE CLIENT_SOURCES_PLATFORM
+        "src/Platform/MacOS/*.cpp"
         "res/**"
     )
 elseif(EMSCRIPTEN)
