@@ -42,8 +42,6 @@
     #elif TARGET_OS_MAC == 1
         #define UE_PLATFORM_MACOS
 
-        #error "MacOS is not supported!"
-
     #endif
 
 ////////////////////////////////////////////////////////////

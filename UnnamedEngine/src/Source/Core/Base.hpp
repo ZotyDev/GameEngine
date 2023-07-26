@@ -14,6 +14,10 @@
         #include <signal.h>
         #define UE_DEBUG_BREAK() raise(SIGTRAP)
 
+    #elif defined(UE_PLATFORM_MACOS)
+        #include <csignal>
+        #define UE_DEBUG_BREAK() std::raise(SIGTRAP)
+
     #elif defined(UE_PLATFORM_ANDROID)
         #include <signal.h>
         #define UE_DEBUG_BREAK() raise(SIGTRAP)

@@ -26,5 +26,8 @@ jobs:
       - name: CMake Build
         run: cmake --build build/MacOS
 
+      - name: LS
+        run: ls
+
       - name: Run Tests
         run: cd out/MacOS/Test; ./Test

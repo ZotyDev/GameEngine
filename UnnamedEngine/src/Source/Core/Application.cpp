@@ -68,7 +68,8 @@ namespace UE
         
         // Desktop platform
         #if defined(UE_PLATFORM_WINDOWS) || \
-            defined(UE_PLATFORM_LINUX)
+            defined(UE_PLATFORM_LINUX)   || \
+            defined(UE_PLATFORM_MACOS)
         while(m_Data->Running)
         {
             MainLoop(m_Data);
@@ -86,7 +87,7 @@ namespace UE
     // The main loop
     void Application::MainLoop(Ref<SharedData> data)
     {
-        
+
     }
 
     // Called when the engine stops

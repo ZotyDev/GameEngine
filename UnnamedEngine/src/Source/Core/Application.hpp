@@ -3,9 +3,10 @@
 #include "Core/Base.hpp"
 #include "Core/LayerStack.hpp"
 
-#if defined (UE_PLATFORM_WINDOWS) || \
-    defined (UE_PLATFORM_LINUX)   || \
-    defined (UE_PLATFORM_EMSCRIPTEN)
+#if defined (UE_PLATFORM_WINDOWS)    || \
+    defined (UE_PLATFORM_LINUX)      || \
+    defined (UE_PLATFORM_MACOS)      || \
+    defined (UE_PLATFORM_EMSCRIPTEN) 
     int main(int argc, char** argv);
 #endif
 

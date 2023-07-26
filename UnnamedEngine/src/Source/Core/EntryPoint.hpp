@@ -8,6 +8,7 @@ extern UE::Ref<UE::Application> UE::CreateApplication(const EntryArgs& args);
 
 #if defined(UE_PLATFORM_WINDOWS) || \
     defined(UE_PLATFORM_LINUX)   || \
+    defined(UE_PLATFORM_MACOS)   || \
     defined(UE_PLATFORM_EMSCRIPTEN)
 
     UE::Ref<UE::Application> App;

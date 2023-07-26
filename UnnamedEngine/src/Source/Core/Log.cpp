@@ -76,6 +76,7 @@ namespace UE
         auto LoggerDupFilter = std::make_shared<spdlog::sinks::dup_filter_sink_mt>(std::chrono::seconds(DupFilterSeconds));
 
         #if defined(UE_PLATFORM_WINDOWS) || \
+            defined(UE_PLATFORM_MACOS)   || \
             defined(UE_PLATFORM_LINUX)
             // Console logger
             auto ConsoleLogger = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
