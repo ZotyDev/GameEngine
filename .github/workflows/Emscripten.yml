@@ -15,7 +15,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout Respository and Submodules
+      - name: Checkout Repository and Submodules
         uses: actions/checkout@v2
         with:
           submodules: recursive

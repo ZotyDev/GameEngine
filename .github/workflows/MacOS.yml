@@ -1,0 +1,30 @@
+name: MacOS
+
+on:
+  push:
+    branches: [ "refactor" ]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  LLVM_VERSION: 15.0.0
+
+jobs:
+  macos-clang:
+    name: MacOS Clang
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository and Submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: CMake Config
+        run: cmake -DCMAKE_TESTING=on -DCMAKE_BUILD_TYPE=Debug CMakeLists.txt -B build/MacOS
+
+      - name: CMake Build
+        run: cmake --build build/MacOS
+
+      - name: Run Tests
+        run: cd out/MacOS/Test; ./Test
