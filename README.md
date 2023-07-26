@@ -4,6 +4,7 @@
 
 [![Windows](https://github.com/ZotyDev/GameEngine/actions/workflows/Windows.yml/badge.svg?branch=refactor)](https://github.com/ZotyDev/GameEngine/actions/workflows/Windows.yml)
 [![Ubuntu](https://github.com/ZotyDev/GameEngine/actions/workflows/Ubuntu.yml/badge.svg)](https://github.com/ZotyDev/GameEngine/actions/workflows/Ubuntu.yml)
+[![MacOS](https://github.com/ZotyDev/GameEngine/actions/workflows/MacOS.yml/badge.svg)](https://github.com/ZotyDev/GameEngine/actions/workflows/MacOS.yml)
 [![Emscripten](https://github.com/ZotyDev/GameEngine/actions/workflows/Emscripten.yml/badge.svg)](https://github.com/ZotyDev/GameEngine/actions/workflows/Emscripten.yml)
 
 This Game Engine is the base of all ZotyDev games. The main objectives are customization and performance, allowing me to create complex stuff without restrictions. (Learning is the second main goal)
@@ -11,7 +12,7 @@ This Game Engine is the base of all ZotyDev games. The main objectives are custo
 ## Supported Platforms
 - [x] Windows 10/11
 - [x] Linux
-- [ ] MacOS
+- [X] MacOS
 - [x] Web
 - [ ] Android
 - [ ] IOS
