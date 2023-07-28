@@ -36,6 +36,8 @@
 #define UE_EXPAND_MACRO(x) x
 #define UE_STRINGIFY_MACRO(x) #x
 
+#define BIT(x) (1 << x)
+
 #include "Core/PlatformIndependenceLayer/Types.hpp"
 
 namespace UE
