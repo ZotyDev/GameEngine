@@ -3,6 +3,8 @@
 #include "Core/Base.hpp"
 #include "Core/LayerStack.hpp"
 
+#include "Events/ApplicationEvents.hpp"
+
 #if defined (UE_PLATFORM_WINDOWS)    || \
     defined (UE_PLATFORM_LINUX)      || \
     defined (UE_PLATFORM_MACOS)      || \
@@ -35,6 +37,10 @@ namespace UE
         void Run();
         void MainLoop(Ref<SharedData> data);
         void Stop();
+    private:
+        void OnEvent(Event& event);
+        UEBool OnApplicationStart(ApplicationStartEvent& event);
+        UEBool OnApplicationStop(ApplicationStopEvent& event);
     public:
         static Application* s_Instance;
     private:

@@ -10,9 +10,9 @@ namespace UE
     #if defined(UE_PLATFORM_EMSCRIPTEN)
     EM_BOOL MainLoopCallback(double time, void* userData)
     {
-        auto newData = CreateRef<Application::SharedData>(*(Application::SharedData*)userData);
-        Application::s_Instance->MainLoop(newData);
-        if(newData->Running)
+        auto NewData = CreateRef<Application::SharedData>(*(Application::SharedData*)userData);
+        Application::s_Instance->MainLoop(NewData);
+        if(NewData->Running)
         {
             return EM_TRUE;
         }
@@ -87,7 +87,10 @@ namespace UE
     // The main loop
     void Application::MainLoop(Ref<SharedData> data)
     {
-
+        for (auto& layer : m_LayerStack)
+        {
+            layer->OnUpdate();
+        }
     }
 
     // Called when the engine stops
@@ -97,6 +100,32 @@ namespace UE
         GlobalConfigurationSerializer::Serialize();
 
         UE_LOG_CORE_INFO("Everything went ok! See you again soon :D");
+    }
+
+    void Application::OnEvent(Event& event)
+    {
+        EventDispatcher Dispatcher(event);
+        Dispatcher.Dispatch<ApplicationStartEvent>(UE_BIND_EVENT_FN(OnApplicationStart));
+        Dispatcher.Dispatch<ApplicationStopEvent>(UE_BIND_EVENT_FN(OnApplicationStop));
+
+        for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); it++)
+        {
+            if (event.m_Handled)
+            {
+                break;
+            }
+            (*it)->OnEvent(event);
+        }
+    }
+
+    UEBool Application::OnApplicationStart(ApplicationStartEvent& event)
+    {
+        return false;
+    }
+
+    UEBool Application::OnApplicationStop(ApplicationStopEvent& event)
+    {
+        return false;
     }
     
 }

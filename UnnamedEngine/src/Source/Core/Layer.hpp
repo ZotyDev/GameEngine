@@ -2,6 +2,8 @@
 
 #include "Core/Base.hpp"
 
+#include "Events/Event.hpp"
+
 namespace UE
 {
     class Layer
@@ -12,6 +14,9 @@ namespace UE
 
         virtual void OnAttach() {}
         virtual void OnDetach() {}
+        virtual void OnUpdate() {}
+
+        virtual void OnEvent(Event& event) {}
 
         const UEString& GetName() const { return m_Name; }
     protected:

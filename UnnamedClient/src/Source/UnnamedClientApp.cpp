@@ -15,4 +15,14 @@ namespace UE
     {
         
     }
+
+    void UnnamedClientApp::OnUpdate()
+    {
+        
+    }
+
+    void UnnamedClientApp::OnEvent(Event& event)
+    {
+        
+    }
 }
