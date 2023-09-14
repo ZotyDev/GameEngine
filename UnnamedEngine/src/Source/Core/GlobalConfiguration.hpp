@@ -6,7 +6,7 @@ namespace UE
 {
     struct GlobalConfiguration
     {
-        struct Window 
+        struct Window
         {
             static UEUint32 Width;
             static UEUint32 Height;

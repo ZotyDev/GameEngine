@@ -16,7 +16,7 @@ set(ENGINE_LOCATION ${CMAKE_SOURCE_DIR}/${ENGINE_NAME})
 set(LIB_SPDLOG_LOCATION ${VENDOR_DIR}/spdlog)
 set(LIB_YAML_CPP_LOCATION ${VENDOR_DIR}/yaml-cpp)
 
-set(EMSCRIPTEN_LOCATION C:/emsdk/upstream/emscripten/system/include) 
+set(EMSCRIPTEN_LOCATION C:/emsdk/upstream/emscripten/system/include)
 
 # Setup the environment
 project(${ENVIRONMENT_NAME} VERSION ${PROJECT_VERSION})

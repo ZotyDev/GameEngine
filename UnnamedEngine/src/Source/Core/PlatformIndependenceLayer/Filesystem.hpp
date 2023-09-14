@@ -119,7 +119,7 @@ namespace UE
                         else
                         {
                             UE_LOG_CORE_ERROR("Filesystem::MakeSure: Failed to create '{}'", FinalPath.string());
-                            return UEResult<UEBool>(false, UEResult<>::Error); 
+                            return UEResult<UEBool>(false, UEResult<>::Error);
                         }
                     }
                     else
@@ -148,7 +148,7 @@ namespace UE
                     else
                     {
                         UE_LOG_CORE_ERROR("Filesystem::MakeSure: Failed to create '{}'", FinalPath.string());
-                        return UEResult<UEBool>(false, UEResult<>::Error); 
+                        return UEResult<UEBool>(false, UEResult<>::Error);
                     }
                 }
                 // Make sure directory

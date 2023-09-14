@@ -7,13 +7,13 @@ on:
   workflow_dispatch:
 
 env:
-  LLVM_VERSION: 15.0.0
+  LLVM_VERSION: 16.0.0
 
 jobs:
   ubuntu-clang:
     name: Ubuntu Clang
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout Repository and Submodules
         uses: actions/checkout@v2

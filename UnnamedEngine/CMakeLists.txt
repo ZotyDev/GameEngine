@@ -13,6 +13,7 @@ if(WIN32)
     file(
         GLOB_RECURSE ENGINE_SOURCES_PLATFORM
         "src/Platform/Windows/*.cpp"
+        "src/Platform/Winsock/*.cpp"
     )
 elseif(UNIX AND NOT APPLE)
     file(
@@ -52,6 +53,7 @@ target_include_directories(
     ${ENGINE_NAME}
     PRIVATE
     "src/Source/"
+    "src/Platform/"
     ${LIB_SPDLOG_LOCATION}/include
     ${LIB_YAML_CPP_LOCATION}/include
 )
@@ -73,3 +75,11 @@ target_link_libraries(
     ${ENGINE_NAME}
     yaml-cpp
 )
+
+# Windows specific libraries
+if(WIN32)
+    target_link_libraries(
+        ${ENGINE_NAME}
+        Ws2_32
+    )
+endif()

@@ -13,7 +13,7 @@ namespace UE
         ApplicationStopEvent,
         ApplicationHaltEvent,
 
-        // Window events   
+        // Window events
         WindowCloseEvent,
         WindowResizeEvent,
         WindowFocusEvent,
@@ -30,7 +30,7 @@ namespace UE
         KeyPressedEvent,
         KeyReleasedEvent,
         KeyTypedEvent,
-    
+
         // Gamepad events
         GamepadButtonPressedEvent,
         GamepadButtonReleasedEvent,

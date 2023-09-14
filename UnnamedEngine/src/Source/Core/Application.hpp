@@ -8,7 +8,7 @@
 #if defined (UE_PLATFORM_WINDOWS)    || \
     defined (UE_PLATFORM_LINUX)      || \
     defined (UE_PLATFORM_MACOS)      || \
-    defined (UE_PLATFORM_EMSCRIPTEN) 
+    defined (UE_PLATFORM_EMSCRIPTEN)
     int main(int argc, char** argv);
 #endif
 
@@ -22,7 +22,7 @@ namespace UE
 
         void PushLayer(Ref<Layer> layer);
         void PushOverlay(Ref<Layer> overlay);
-        
+
     public:
         LayerStack m_LayerStack;
         // Data that is constantly used across the engine

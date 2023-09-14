@@ -1,26 +1,40 @@
 // Platform detection using predefined macros
 
 ////////////////////////////////////////////////////////////
-// - Web Browser 
+// - Web Browser
 ////////////////////////////////////////////////////////////
 #if defined(__EMSCRIPTEN__) || defined(EMSCRIPTEN)
     #define UE_PLATFORM_EMSCRIPTEN
+
     #include <emscripten.h>
     #include <emscripten/html5.h>
+    #include <byteswap.h>
+
+    #define UE_BYTESWAP_16(x) bswap_16(x)
+    #define UE_BYTESWAP_32(x) bswap_32(x)
+    #define UE_BYTESWAP_64(x) bswap_64(x)
 
 ////////////////////////////////////////////////////////////
 // - Windows x64
 ////////////////////////////////////////////////////////////
-#elif defined(_WIN32) 
+#elif defined(_WIN32)
     #if defined(_WIN64)
         #define UE_PLATFORM_WINDOWS
+
+        #include <stdlib.h>
+
+        #define UE_BYTESWAP_16(x) _byteswap_ushort(x)
+        #define UE_BYTESWAP_32(x) _byteswap_ulong(x)
+        #define UE_BYTESWAP_64(x) _byteswap_uint64(x)
+
+        #define UE_API_WINSOCK
     #else
         #error "x86 builds are not supported!"
     #endif
 
 ////////////////////////////////////////////////////////////
 // - Apple Platforms (IPhone and MacOS)
-// We need to check all the platforms since all of them 
+// We need to check all the platforms since all of them
 // contain TARGET_OS_MAC (the order is important)
 ////////////////////////////////////////////////////////////
 #elif defined(__APPLE__) || defined(__MACH__)
@@ -42,6 +56,9 @@
     #elif TARGET_OS_MAC == 1
         #define UE_PLATFORM_MACOS
 
+        #define UE_BYTESWAP_16(x) _OSSwapInt16(x)
+        #define UE_BYTESWAP_32(x) _OSSwapInt32(x)
+        #define UE_BYTESWAP_64(x) _OSSwapInt64(x)
     #endif
 
 ////////////////////////////////////////////////////////////
@@ -61,6 +78,11 @@
 #elif defined(__linux__)
     #define UE_PLATFORM_LINUX
 
+    #include <byteswap.h>
+
+    #define UE_BYTESWAP_16(x) bswap_16(x)
+    #define UE_BYTESWAP_32(x) bswap_32(x)
+    #define UE_BYTESWAP_64(x) bswap_64(x)
 #else
     #error "Unknown platform!"
 #endif

@@ -14,7 +14,7 @@ namespace UE
 		B5			= 5,
 		B6			= 6,
 		B7			= 7,
-		
+
 		Last		= B7,
 		Left		= B0,
 		Right		= B1,

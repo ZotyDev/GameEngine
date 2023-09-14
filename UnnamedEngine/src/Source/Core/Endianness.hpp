@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
-// - Big-Endian 
+// - Big-Endian
 ////////////////////////////////////////////////////////////
 #if defined(__BYTE_ORDER) && __BYTE_ORDER == __BIG_ENDIAN                      || \
     defined(__FLOAT_WORD_ORDER) && __FLOAT_WORD_ORDER == __ORDER_BIG_ENDIAN    || \
@@ -18,7 +18,7 @@
 
     #define UE_BIG_ENDIAN
 ////////////////////////////////////////////////////////////
-// - Little-Endian 
+// - Little-Endian
 ////////////////////////////////////////////////////////////
 #elif defined(__BYTE_ORDER) && __BYTE_ORDER == LITTLE_ENDIAN                   || \
     defined(__FLOAT_WORD_ORDER) && __FLOAT_WORD_ORDER == __ORDER_LITTLE_ENDIAN || \

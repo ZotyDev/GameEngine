@@ -7,6 +7,7 @@
 #include "Core/Layer.hpp"
 #include "Core/Log.hpp"
 
+#include "Core/PlatformIndependenceLayer/PlatformUtilities.hpp"
 #include "Core/PlatformIndependenceLayer/Filesystem.hpp"
 
 #include "Input/Keyboard.hpp"

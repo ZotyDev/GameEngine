@@ -23,15 +23,15 @@ namespace UE
 
 #if defined(UE_TESTING)
     #if defined(UE_DEBUG)
-        #define UE_LOG_INIT()             
-    
+        #define UE_LOG_INIT()
+
         #define UE_LOG_CORE_TRACE(...)    spdlog::trace(__VA_ARGS__)
         #define UE_LOG_CORE_DEBUG(...)    spdlog::debug(__VA_ARGS__)
         #define UE_LOG_CORE_INFO(...)     spdlog::info(__VA_ARGS__)
         #define UE_LOG_CORE_WARN(...)     spdlog::warn(__VA_ARGS__)
         #define UE_LOG_CORE_ERROR(...)    spdlog::error(__VA_ARGS__)
         #define UE_LOG_CORE_CRITICAL(...) spdlog::critical(__VA_ARGS__)
-    
+
         #define UE_LOG_APP_TRACE(...)     spdlog::trace(__VA_ARGS__)
         #define UE_LOG_APP_DEBUG(...)     spdlog::debug(__VA_ARGS__)
         #define UE_LOG_APP_INFO(...)      spdlog::info(__VA_ARGS__)
@@ -41,19 +41,19 @@ namespace UE
     #else
         #define UE_LOG_INIT()
 
-        #define UE_LOG_CORE_TRACE(...)    
-        #define UE_LOG_CORE_DEBUG(...)    
-        #define UE_LOG_CORE_INFO(...)     
-        #define UE_LOG_CORE_WARN(...)     
-        #define UE_LOG_CORE_ERROR(...)    
-        #define UE_LOG_CORE_CRITICAL(...) 
-    
-        #define UE_LOG_APP_TRACE(...)     
-        #define UE_LOG_APP_DEBUG(...)     
-        #define UE_LOG_APP_INFO(...)      
-        #define UE_LOG_APP_WARN(...)      
-        #define UE_LOG_APP_ERROR(...)     
-        #define UE_LOG_APP_CRITICAL(...)  
+        #define UE_LOG_CORE_TRACE(...)
+        #define UE_LOG_CORE_DEBUG(...)
+        #define UE_LOG_CORE_INFO(...)
+        #define UE_LOG_CORE_WARN(...)
+        #define UE_LOG_CORE_ERROR(...)
+        #define UE_LOG_CORE_CRITICAL(...)
+
+        #define UE_LOG_APP_TRACE(...)
+        #define UE_LOG_APP_DEBUG(...)
+        #define UE_LOG_APP_INFO(...)
+        #define UE_LOG_APP_WARN(...)
+        #define UE_LOG_APP_ERROR(...)
+        #define UE_LOG_APP_CRITICAL(...)
     #endif
 #else
     #define UE_LOG_INIT()             ::UE::Log::Init()

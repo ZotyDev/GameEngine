@@ -74,7 +74,7 @@ namespace UE
         auto Mouse    = Data["Mouse"];
         auto Camera   = Data["Camera"];
 
-        // Window  		
+        // Window
         GlobalConfiguration::Window::Width  = Window["Width"].as<UEUint32>(GlobalConfiguration::Window::Width);
 		GlobalConfiguration::Window::Height = Window["Height"].as<UEUint32>(GlobalConfiguration::Window::Height);
 

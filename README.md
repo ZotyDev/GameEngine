@@ -12,14 +12,14 @@ This Game Engine is the base of all ZotyDev games. The main objectives are custo
 ## Supported Platforms
 - [x] Windows 10/11
 - [x] Linux
-- [X] MacOS
+- [x] MacOS
 - [x] Web
 - [ ] Android
 - [ ] IOS
-  
+
 ## Current Features
 - [x] Async Logger
-- [ ] Event System
+- [x] Event System
 - [ ] Config System
 - [ ] Object Parsing
 - [ ] Network System
@@ -52,7 +52,7 @@ This project includes or depends on the following projects:
 | [spdlog](https://github.com/gabime/spdlog)         | [MIT License](https://github.com/gabime/spdlog/blob/v1.x/LICENSE)             |
 | [yaml-cpp](https://github.com/jbeder/yaml-cpp)     | [MIT License](https://github.com/jbeder/yaml-cpp/blob/master/LICENSE)         |
 
-Currently, Unname Engine does not have a license, which means you are better not using the source code until it gets a proper license.
+Currently, UnnamedEngine does not have a license, which means you are better not using the source code until it gets a proper license.
 
 ### Thanks
 

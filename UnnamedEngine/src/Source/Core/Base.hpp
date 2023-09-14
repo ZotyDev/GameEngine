@@ -9,7 +9,7 @@
 #if defined(UE_DEBUG)
     #if defined(UE_PLATFORM_WINDOWS)
         #define UE_DEBUG_BREAK() __debugbreak()
-    
+
     #elif defined(UE_PLATFORM_LINUX)
         #include <signal.h>
         #define UE_DEBUG_BREAK() raise(SIGTRAP)
@@ -24,14 +24,14 @@
 
     #elif defined(UE_PLATFORM_EMSCRIPTEN)
         #define UE_DEBUG_BREAK() emscripten_debugger()
-    
+
     #else
         #error "Platform doesn't support debugbreak yet!"
     #endif
     #define UE_ENABLE_ASSERTS
 #else
     #define UE_DEBUG_BREAK()
-#endif 
+#endif
 
 #define UE_EXPAND_MACRO(x) x
 #define UE_STRINGIFY_MACRO(x) #x
@@ -54,7 +54,7 @@ namespace UE
     {
         return std::make_unique<T>(std::forward<Args>(args)...);
     }
-    
+
     // A Ref is a shared pointer that can have more than one owner, but free()
     // is called on the data if the owner count gets to 0
     template<typename T>
@@ -164,7 +164,7 @@ namespace UE
         {
             return (Result != UEResult::Error && Result != UEResult::Undefined);
         }
-        
+
         UEResult& operator = (_UEResult result)
         {
             Result = result;

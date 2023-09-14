@@ -18,7 +18,7 @@ namespace UE
     //}
 
     UEResult<> Filesystem::SetUserDataPath()
-    {        
+    {
         LPWSTR LocalAppData = NULL;
 		HRESULT Result = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &LocalAppData);
 		if (SUCCEEDED(Result))
@@ -26,7 +26,7 @@ namespace UE
 			std::wstringstream ss;
 			ss << LocalAppData;
 			UEPath LocalAppDataPath(ss.str());
-			
+
 			CoTaskMemFree(static_cast<void*>(LocalAppData));
 
 			s_UserDataPath = LocalAppDataPath.string();

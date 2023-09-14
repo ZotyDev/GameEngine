@@ -4,7 +4,7 @@ namespace UE
 {
 	UEUint32 GlobalConfiguration::Window::Width  = 1280;
 	UEUint32 GlobalConfiguration::Window::Height = 720;
-	
+
 	UEFloat  GlobalConfiguration::Renderer::PixelSize     = 1.0f;
 	UEUint32 GlobalConfiguration::Renderer::ScreenWidth   = GlobalConfiguration::Window::Width;
 	UEUint32 GlobalConfiguration::Renderer::ScreenHeight  = GlobalConfiguration::Window::Height;

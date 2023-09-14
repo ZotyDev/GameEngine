@@ -9,9 +9,9 @@ namespace UE
         // Buttons
 		A					= 0,
 		B					= 1,
-		X					= 2, 
+		X					= 2,
 		Y					= 3,
-						
+
 		LeftBumper			= 4,
 		RightBumper			= 5,
 		Back				= 6,
@@ -23,7 +23,7 @@ namespace UE
 		DPadRight			= 12,
 		DPadDown			= 13,
 		DPadLeft			= 14,
-						
+
 		LastButton			= DPadLeft,
 
 		Cross				= A,

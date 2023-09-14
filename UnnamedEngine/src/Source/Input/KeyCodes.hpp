@@ -126,7 +126,7 @@ namespace UE
 		KPEnter			= 335,
 		KPEqual			= 336,
 
-		LeftShift		= 340,	
+		LeftShift		= 340,
 		LeftControl		= 341,
 		LeftAlt			= 342,
 		LeftSuper		= 343,

@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  LLVM_VERSION: 15.0.0
+  LLVM_VERSION: 16.0.0
 
 jobs:
   windows-clang:
@@ -16,7 +16,7 @@ jobs:
     defaults:
       run:
         shell: pwsh
-    
+
     steps:
       - name: Checkout Repository and Submodules
         uses: actions/checkout@v2
@@ -41,7 +41,7 @@ jobs:
         run: .\Scripts\Windows\ConfigDebugTestOnly.ps1 -RunAsAdmin
 
       - name: CMake Build
-        run: .\Scripts\Windows\BuildDebugTestOnly.ps1 -RunAsAdmin        
+        run: .\Scripts\Windows\BuildDebugTestOnly.ps1 -RunAsAdmin
 
       - name: Run Tests
         run: cd .\out\Windows\Test; .\Test.exe

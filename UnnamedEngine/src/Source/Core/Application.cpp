@@ -1,7 +1,10 @@
 #include "Core/Application.hpp"
 
+#include "Core/PlatformIndependenceLayer/PlatformUtilities.hpp"
 #include "Core/PlatformIndependenceLayer/Filesystem.hpp"
 #include "Core/GlobalConfigurationSerializer.hpp"
+
+#include "Networking/NetworkAPI.hpp"
 
 namespace UE
 {
@@ -35,8 +38,15 @@ namespace UE
 
         Filesystem::SetUserDataPath();
 
+        // Setup platform utilities
+        PlatformUtilities::Setup();
+        UE_LOG_CORE_INFO("Platform is {}", PlatformUtilities::s_IsBigEndian ? "BIG_ENDIAN" : "LITTLE_ENDIAN");
+
         // Load the global configuration
         GlobalConfigurationSerializer::Deserialize();
+
+        // Initialize the networking API
+        NetworkAPI::Init();
 
         Run();
     }
@@ -65,7 +75,7 @@ namespace UE
     void Application::Run()
     {
         m_Data->Running = true;
-        
+
         // Desktop platform
         #if defined(UE_PLATFORM_WINDOWS) || \
             defined(UE_PLATFORM_LINUX)   || \
@@ -75,7 +85,7 @@ namespace UE
             MainLoop(m_Data);
         }
         Stop();
-        
+
         // Emscripten (does not allow while(true) loop)
         #elif defined(UE_PLATFORM_EMSCRIPTEN)
         {
@@ -127,5 +137,4 @@ namespace UE
     {
         return false;
     }
-    
 }
